@@ -1,0 +1,41 @@
+{
+    "name": "dega-api",
+    "version": "0.1.0",
+    "description": "Public API to access dega",
+    "author": "Factly Media &amp; Research LLC",
+    "main": "index.js",
+    "scripts": {
+        "test": "grunt test",
+        "build": "grunt build",
+        "start": "nodemon server.js",
+        "all": "npm run build && npm run test"
+    },
+    "dependencies": {
+        "construx": "^1.0.0",
+        "construx-copier": "^1.0.0",
+        "eslint": "^1.10.3",
+        "express": "^4.12.2",
+        "kraken-js": "^2.0.0",
+        "mongodb": "~3.0.5",
+        "q": "~1.1.1",
+        "lodash": "^4.17.11",
+        "deref": "^0.6.4",
+        "tv4": "^1.3.0",
+        "tv4-formats": "^2.0.0",
+        "logger": "^0.0.1",
+        "confit": "^2.0.3",
+        "mongo-cursor-pagination": "^7.1.0",
+        "nodemon": "^1.18.7"
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-cli": "^0.1.13",
+        "grunt-config-dir": "^0.3.2",
+        "grunt-contrib-clean": "^0.6.0",
+        "grunt-copy-to": "0.0.10",
+        "grunt-eslint": "^17.3.2",
+        "grunt-mocha-cli": "^1.14.0",
+        "mocha": "^1.18.0",
+        "supertest": "^0.9.0"
+    }
+}
