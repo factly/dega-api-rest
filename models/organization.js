@@ -1,5 +1,7 @@
 
 const MongoBase = require('../lib/MongoBase');
+const utils = require('../lib/utils');
+const Utils = new utils();
 const Q = require('q');
 
 class OrganizationModel extends MongoBase {
@@ -9,7 +11,8 @@ class OrganizationModel extends MongoBase {
      * @param errorCode The errorCode to use when generating errors.
      */
     constructor(logger, errorCode) {
-        super(logger, 'organization');
+        const dbName = Utils.getDatabaseName('core');
+        super(logger, 'organization', dbName);
     }
 
     getOrganization(clientId) {
