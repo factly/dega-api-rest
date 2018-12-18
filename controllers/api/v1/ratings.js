@@ -3,7 +3,7 @@ const model = new RatingModel();
 
 function getRating(req, res) {
     const clientId = req.query.client_id;
-    return model.getRating(clientId).then((result) => {
+    return model.getRating(req.app.kraken, clientId).then((result) => {
         if (result) {
             res.status(200).json(result);
         }

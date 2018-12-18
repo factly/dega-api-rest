@@ -3,7 +3,7 @@ const model = new StatusModel();
 
 function getStatus(req, res) {
     const clientId = req.query.clientId;
-    return model.getStatus(clientId).then((result) => {
+    return model.getStatus(req.app.kraken, clientId).then((result) => {
         if (result) {
             res.status(200).json(result);
         }

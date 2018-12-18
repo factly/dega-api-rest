@@ -3,7 +3,7 @@ const model = new ClaimantModel();
 
 function getClaimant(req, res) {
     const clientId = req.query.client_id;
-    return model.getClaimant(clientId).then((result) => {
+    return model.getClaimant(req.app.kraken, clientId).then((result) => {
         if (result) {
             res.status(200).json(result);
         }

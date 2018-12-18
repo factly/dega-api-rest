@@ -1,4 +1,15 @@
 {
+    "databaseConfig": {
+        "hosts": [
+            "localhost:27017"
+        ],
+        "databases": {
+            "core": "core",
+            "factCheck": "fact-check"
+        },
+        "username": "",
+        "passwd": ""
+    },
     "specialization": {
     },
     "middleware": {

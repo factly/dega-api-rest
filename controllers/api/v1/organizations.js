@@ -3,7 +3,7 @@ const model = new OrganizationModel();
 
 function getOrganization(req, res) {
     const clientId = req.query.client_id;
-    return model.getOrganization(clientId).then((result) => {
+    return model.getOrganization(req.app.kraken, clientId).then((result) => {
         if (result) {
             res.status(200).json(result);
         }

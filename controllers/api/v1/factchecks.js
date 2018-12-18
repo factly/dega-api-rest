@@ -3,7 +3,7 @@ const model = new FactcheckModel();
 
 function getFactcheck(req, res) {
     const clientId = req.query.client_id;
-    return model.getFactcheck(clientId).then((result) => {
+    return model.getFactcheck(req.app.kraken, clientId).then((result) => {
         if (result) {
             res.status(200).json(result);
         }

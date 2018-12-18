@@ -13,7 +13,7 @@ class PostsModel extends MongoBase {
         super(logger, 'post');
     }
 
-    getPosts(clientId, slug, sortBy, sortAsc, limit, next, previous) {
+    getPosts(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
         const queryObj = {};
         const pagingObj = {};
         console.log('entered model');
@@ -49,7 +49,7 @@ class PostsModel extends MongoBase {
 
         console.log(pagingObj);
 
-        return Q(MongoPaging.find(this.collection(), pagingObj))
+        return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
             .then((result) => {
                 const posts = result.results;
                 return posts.map((post) => {

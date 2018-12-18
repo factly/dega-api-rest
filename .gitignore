@@ -141,3 +141,5 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+
+package-lock.json

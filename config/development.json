@@ -3,7 +3,10 @@
         "hosts": [
             "localhost:27017"
         ],
-        "database": "core",
+        "databases": {
+            "core": "core",
+            "factCheck": "fact-check"
+        },
         "username": "",
         "passwd": ""
     },

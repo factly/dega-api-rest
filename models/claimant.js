@@ -12,14 +12,14 @@ class ClaimantModel extends MongoBase {
         super(logger, 'claimant');
     }
 
-    getClaimant(clientId) {
+    getClaimant(config, clientId) {
         const query = {};
 
         if (clientId) {
             query.client_id = clientId;
         }
 
-        return Q(this.collection().find(query).toArray())
+        return Q(this.collection(config.get('databaseConfig:databases:core')).find(query).toArray())
             .then((results) => {
                 this.logger.info('Retrieved the results');
                 return results;
