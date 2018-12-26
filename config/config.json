@@ -5,7 +5,7 @@
         ],
         "databases": {
             "core": "core",
-            "factCheck": "fact-check"
+            "factCheck": "factcheck"
         },
         "username": "",
         "passwd": ""
