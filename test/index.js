@@ -37,8 +37,9 @@ describe('index', function () {
             .expect(200)
             .expect('Content-Type', /html/)
             
-                .expect(/"name": "index"/)
-            
+            .expect(/"name": "index"/)
+
+            /* eslint-disable no-unused-vars */
             .end(function (err, res) {
                 done(err);
             });

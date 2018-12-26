@@ -2,6 +2,7 @@
 const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
+var logger = require('logger').createLogger();
 
 class PostsModel extends MongoBase {
     /**
@@ -9,14 +10,14 @@ class PostsModel extends MongoBase {
      * @param logger The logger to use.
      * @param errorCode The errorCode to use when generating errors.
      */
-    constructor(logger, errorCode) {
+    constructor(logger) {
         super(logger, 'post');
     }
 
     getPosts(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
         const queryObj = {};
         const pagingObj = {};
-        console.log('entered model');
+        logger.debug('entered model');
 
         if (clientId) {
             queryObj.client_id = clientId;
@@ -27,9 +28,8 @@ class PostsModel extends MongoBase {
         }
 
         pagingObj.query = queryObj;
-        console.log(limit);
         pagingObj.limit = (limit) ? parseInt(limit): 2;
-        console.log(pagingObj.limit);
+        logger.debug(pagingObj.limit);
 
         if (sortBy) {
             pagingObj.paginatedField = sortBy;
@@ -47,7 +47,7 @@ class PostsModel extends MongoBase {
             pagingObj.previous = previous;
         }
 
-        console.log(pagingObj);
+        logger.debug(pagingObj);
 
         return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
             .then((result) => {

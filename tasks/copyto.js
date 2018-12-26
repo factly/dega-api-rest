@@ -1,6 +1,5 @@
 'use strict';
 
-
 module.exports = function copyto(grunt) {
     // Load task
     grunt.loadNpmTasks('grunt-copy-to');
@@ -15,8 +14,6 @@ module.exports = function copyto(grunt) {
             }],
             options: {
                 ignore: [
-                    
-                    
                     'public/templates/**/*'
                 ]
             }

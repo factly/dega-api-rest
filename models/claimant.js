@@ -8,7 +8,7 @@ class ClaimantModel extends MongoBase {
      * @param logger The logger to use.
      * @param errorCode The errorCode to use when generating errors.
      */
-    constructor(logger, errorCode) {
+    constructor(logger) {
         super(logger, 'claimant');
     }
 

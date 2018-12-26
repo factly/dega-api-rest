@@ -39,8 +39,9 @@ describe('posts', function () {
             .expect(200)
             .expect('Content-Type', /html/)
 
-                .expect(/"name": "posts"/)
+            .expect(/"name": "posts"/)
 
+            /* eslint-disable no-unused-vars */
             .end(function (err, res) {
                 done(err);
             });
@@ -49,6 +50,8 @@ describe('posts', function () {
     it('check for db connection', (done) => {
         confit(path.join(__dirname, 'config')).create((confitErr, config2) => {
             const dbConfig = config2.get('databaseConfig');
+
+            /* eslint-disable no-unused-vars */
             db.config(dbConfig, logger).then((result) => {
                 db.serverStatus()
                     .then((status) => {

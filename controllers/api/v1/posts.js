@@ -1,10 +1,6 @@
 const PostsModel = require('../../../models/post');
 const model = new PostsModel();
 
-function getPost(req, res) {
-
-}
-
 function getPosts(req, res) {
     // clientId, slug, sortBy, sortAsc, limit, next, previous
     return model.getPosts(
@@ -21,10 +17,10 @@ function getPosts(req, res) {
         }
         res.sendStatus(404);
 
-        });
+    });
 }
 
 module.exports = function routes(router) {
     router.get('/', getPosts);
-    router.get('/:slug', getPost);
+    router.get('/:slug', getPosts);
 };
