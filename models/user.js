@@ -19,10 +19,51 @@ class UserModel extends MongoBase {
             query.client_id = clientId;
         }
 
-        return Q(this.collection(config.get('databaseConfig:databases:core')).find(query).toArray())
-            .then((results) => {
+        // get database from env config
+        const database = config.get('databaseConfig:databases:core');
+
+        // get all users
+        return Q(this.collection(database).find(query).toArray())
+            .then((users) => {
                 this.logger.info('Retrieved the results');
-                return results;
+
+                const workers = [];
+                users.forEach((user) => {
+                    const roleID = user.role.oid;
+                    const collection = user.role.namespace;
+                    const promiseChain = Q(this.collection(database, collection).findOne({_id: roleID}))
+                        .then((role) => {
+                            user.role = role;
+
+                            // query org current
+                            const collection = user.organizationCurrent.namespace;
+                            const orgID = user.organizationCurrent.oid;
+                            return Q(this.collection(database, collection).findOne({_id: orgID}));
+                        }).then((org) => {
+                            user.organizationCurrent = org;
+
+                            // query org default
+                            const collection = user.organizationDefault.namespace;
+                            const orgID = user.organizationDefault.oid;
+                            return Q(this.collection(database, collection).findOne({_id: orgID}));
+                        }).then((org) => {
+                            user.organizationDefault = org;
+
+                            // query all orgs
+                            const orgs = user.organizations;
+                            const workers = [];
+                            orgs.forEach((org) => {
+                                workers.push(Q(this.collection(database, org.namespace).findOne({_id: org.oid})));
+                            });
+                            return Q.all(workers);
+                        }).then((orgs) => {
+                            user.organizations = orgs;
+                            return user;
+                        });
+                    workers.push(promiseChain);
+                });
+                // return users;
+                return Q.all(workers);
             });
     }
 }
