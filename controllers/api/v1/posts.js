@@ -1,4 +1,5 @@
 const PostsModel = require('../../../models/post');
+const logger = require('logger').createLogger();
 const model = new PostsModel();
 
 function getPosts(req, res) {
@@ -17,6 +18,9 @@ function getPosts(req, res) {
         }
         res.sendStatus(404);
 
+    }).catch((err) => {
+        logger.error(`Unknown error, ${err}`);
+        throw err;
     });
 }
 

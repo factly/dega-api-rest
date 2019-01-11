@@ -29,11 +29,19 @@ class UserModel extends MongoBase {
 
                 const workers = [];
                 users.forEach((user) => {
-                    const roleID = user.role.oid;
-                    const collection = user.role.namespace;
-                    const promiseChain = Q(this.collection(database, collection).findOne({_id: roleID}))
+                    const promise = Q();
+
+                    if (user.role) {
+                        const roleID = user.role.oid;
+                        const collection = user.role.namespace;
+                        promise.then(() => Q(this.collection(database, collection).findOne({_id: roleID})));
+                    }
+                    const promiseChain = promise
                         .then((role) => {
                             user.role = role;
+                            if (!user.organizationCurrent) {
+                                return Q();
+                            }
 
                             // query org current
                             const collection = user.organizationCurrent.namespace;
@@ -41,6 +49,9 @@ class UserModel extends MongoBase {
                             return Q(this.collection(database, collection).findOne({_id: orgID}));
                         }).then((org) => {
                             user.organizationCurrent = org;
+                            if (!user.organizationDefault) {
+                                return Q();
+                            }
 
                             // query org default
                             const collection = user.organizationDefault.namespace;
@@ -48,6 +59,9 @@ class UserModel extends MongoBase {
                             return Q(this.collection(database, collection).findOne({_id: orgID}));
                         }).then((org) => {
                             user.organizationDefault = org;
+                            if (!user.organizations) {
+                                return Q();
+                            }
 
                             // query all orgs
                             const orgs = user.organizations;

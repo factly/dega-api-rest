@@ -2,7 +2,7 @@
 const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-var logger = require('logger').createLogger();
+const logger = require('logger').createLogger();
 
 class PostsModel extends MongoBase {
     /**
@@ -58,29 +58,40 @@ class PostsModel extends MongoBase {
                     return post;
                 });
 
-                const workers = [];
-                posts.forEach((post) => {
+                return posts.map((post) => {
                     // query all orgs
                     const tagWorkers = [];
-                    post.tags.forEach((tag) => {
-                        tagWorkers.push(Q(this.collection(database, tag.namespace).findOne({_id: tag.oid})));
-                    });
-                    const promiseChain = Q.all(tagWorkers)
+                    if (post.tags && post.tags.length > 0) {
+                        post.tags.forEach((tag) => {
+                            tagWorkers.push(Q(this.collection(database, tag.namespace).findOne({_id: tag.oid})));
+                        });
+                    }
+
+                    return Q.all(tagWorkers)
                         .then((tags) => {
                             post.tags = tags;
                             const catWorkers = [];
+                            if (!post.categories) {
+                                return Q();
+                            }
                             post.categories.forEach((category) => {
                                 catWorkers.push(Q(this.collection(database, category.namespace).findOne({_id: category.oid})));
                             });
                             return Q.all(catWorkers);
                         }).then((categories) => {
                             post.categories = categories;
+                            if (!post.status) {
+                                return Q();
+                            }
                             // query status doc
                             const collection = post.status.namespace;
                             const statusID = post.status.oid;
                             return Q(this.collection(database, collection).findOne({_id: statusID}));
                         }).then((status) => {
                             post.status = status;
+                            if (!post.format) {
+                                return Q();
+                            }
                             // query format doc
                             const collection = post.format.namespace;
                             const formatID = post.format.oid;
@@ -88,6 +99,9 @@ class PostsModel extends MongoBase {
                         }).then((format) => {
                             post.format = format;
                             const authorWorkers = [];
+                            if (!post.authors) {
+                                return Q();
+                            }
                             post.authors.forEach((author) => {
                                 authorWorkers.push(Q(this.collection(database, author.namespace).findOne({_id: author.oid})));
                             });
@@ -96,13 +110,9 @@ class PostsModel extends MongoBase {
                             post.authors = authors;
                             return post;
                         });
-                    workers.push(promiseChain);
-                }).catch((err) => {
-                    logger.error(`Unknown error, ${err}`);
-                    throw err;
                 });
-                // return users;
-                return Q.all(workers);
+            }).then((arrayOfPromises) => {
+                return Q.all(arrayOfPromises);
             });
     }
 }

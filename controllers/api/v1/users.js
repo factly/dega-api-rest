@@ -1,4 +1,5 @@
 const UserModel = require('../../../models/user');
+const logger = require('logger').createLogger();
 const model = new UserModel();
 
 function getUser(req, res) {
@@ -8,7 +9,9 @@ function getUser(req, res) {
             res.status(200).json(result);
         }
         res.sendStatus(404);
-
+    }).catch((err) => {
+        logger.error(`Unknown error, ${err}`);
+        throw err;
     });
 }
 
