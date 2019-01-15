@@ -77,11 +77,11 @@ class PostsModel extends MongoBase {
 
                     return Q.all(tagWorkers)
                         .then((tags) => {
-                            tags.map((tag) => {
-                                if (tag.slug === tagSlug) {
-                                    throw Error('SkipPost');
-                                }
-                            });
+                            const tagSlugs = tags.map(tag => tag.slug);
+                            const isTagFound = tagSlugs.includes(tagSlug);
+                            if (tagSlug && !isTagFound) {
+                                throw Error('SkipPost');
+                            }
                             post.tags = tags;
                             const catWorkers = [];
                             if (!post.categories) {
@@ -92,11 +92,12 @@ class PostsModel extends MongoBase {
                             });
                             return Q.all(catWorkers);
                         }).then((categories) => {
-                            categories.map((category) => {
-                                if (category.slug === categorySlug) {
-                                    throw Error('SkipPost');
-                                }
-                            });
+                            const categorySlugs = categories.map(category => category.slug);
+                            const isCategoryFound = categorySlugs.includes(categorySlug);
+                            if (categorySlug && !isCategoryFound) {
+                                throw Error('SkipPost');
+                            }
+
                             post.categories = categories;
                             if (!post.status) {
                                 return Q();
@@ -125,11 +126,12 @@ class PostsModel extends MongoBase {
                             });
                             return Q.all(authorWorkers);
                         }).then((authors) => {
-                            authors.map((author) => {
-                                if (author.slug === authorSlug) {
-                                    throw Error('SkipPost');
-                                }
-                            });
+                            const authorSlugs = authors.map(author => author.slug);
+                            const isAuthorFound = authorSlugs.includes(authorSlug);
+                            if (authorSlug && !isAuthorFound) {
+                                throw Error('SkipPost');
+                            }
+
                             post.authors = authors;
                             return post;
                         }).catch((err) => {
