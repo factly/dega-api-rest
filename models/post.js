@@ -2,7 +2,7 @@
 const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-const logger = require('logger').createLogger();
+const _ = require('lodash');
 
 class PostsModel extends MongoBase {
     /**
@@ -14,22 +14,11 @@ class PostsModel extends MongoBase {
         super(logger, 'post');
     }
 
-    getPosts(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
-        const queryObj = {};
+
+    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
         const pagingObj = {};
-        logger.debug('entered model');
-
-        if (clientId) {
-            queryObj.client_id = clientId;
-        }
-
-        if (slug) {
-            queryObj.slug = slug;
-        }
-
         pagingObj.query = queryObj;
-        pagingObj.limit = (limit) ? parseInt(limit): 2;
-        logger.debug(pagingObj.limit);
+        pagingObj.limit = (limit) ? parseInt(limit): 20;
 
         if (sortBy) {
             pagingObj.paginatedField = sortBy;
@@ -46,8 +35,27 @@ class PostsModel extends MongoBase {
         if (previous) {
             pagingObj.previous = previous;
         }
+        return pagingObj;
+    }
 
-        logger.debug(pagingObj);
+    getQueryObject(clientId, slug) {
+        const queryObj = {};
+        if (clientId) {
+            queryObj.client_id = clientId;
+        }
+
+        if (slug) {
+            queryObj.slug = slug;
+        }
+        return queryObj;
+    }
+
+    getPosts(config, clientId, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
+        // get query object
+        const queryObj = this.getQueryObject(clientId, slug);
+
+        // get paging object
+        const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
 
         const database = config.get('databaseConfig:databases:core');
         return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
@@ -69,6 +77,11 @@ class PostsModel extends MongoBase {
 
                     return Q.all(tagWorkers)
                         .then((tags) => {
+                            tags.map((tag) => {
+                                if (tag.slug === tagSlug) {
+                                    throw Error('SkipPost');
+                                }
+                            });
                             post.tags = tags;
                             const catWorkers = [];
                             if (!post.categories) {
@@ -79,6 +92,11 @@ class PostsModel extends MongoBase {
                             });
                             return Q.all(catWorkers);
                         }).then((categories) => {
+                            categories.map((category) => {
+                                if (category.slug === categorySlug) {
+                                    throw Error('SkipPost');
+                                }
+                            });
                             post.categories = categories;
                             if (!post.status) {
                                 return Q();
@@ -107,13 +125,23 @@ class PostsModel extends MongoBase {
                             });
                             return Q.all(authorWorkers);
                         }).then((authors) => {
+                            authors.map((author) => {
+                                if (author.slug === authorSlug) {
+                                    throw Error('SkipPost');
+                                }
+                            });
                             post.authors = authors;
                             return post;
+                        }).catch((err) => {
+                            if (err && err.message === 'SkipPost') {
+                                return null;
+                            }
+                            throw err;
                         });
                 });
             }).then((arrayOfPromises) => {
                 return Q.all(arrayOfPromises);
-            });
+            }).then(posts => _.compact(posts));
     }
 }
 
