@@ -1,0 +1,13 @@
+# To Do:
+# Add working directory
+
+version: "3"
+
+services:
+    api:
+        build: .
+        container_name: dega-api
+        restart: always
+        ports:
+            - "8000:8000"
+        command: "npm run start"

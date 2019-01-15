@@ -19,7 +19,7 @@ class FactcheckModel extends MongoBase {
             query.client_id = clientId;
         }
 
-        return Q(this.collection(config.get('databaseConfig:databases:factCheck')).find(query).toArray())
+        return Q(this.collection(config.get('databaseConfig:databases:factcheck')).find(query).toArray())
             .then((results) => {
                 this.logger.info('Retrieved the results');
                 return results;
