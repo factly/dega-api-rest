@@ -3,6 +3,7 @@
 var express = require('express');
 var kraken = require('kraken-js');
 var db = require('./lib/database.js');
+var cors = require('cors');
 
 var options, app;
 var logger = require('logger').createLogger();
@@ -24,6 +25,7 @@ options = {
 };
 
 app = module.exports = express();
+app.use(cors())
 app.use(kraken(options));
 app.on('start', function () {
     logger.debug('Application ready to serve requests.');

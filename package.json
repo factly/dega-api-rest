@@ -15,6 +15,7 @@
         "confit": "^2.3.0",
         "construx": "^1.0.1",
         "construx-copier": "^1.0.0",
+        "cors": "^2.8.5",
         "deref": "^0.7.6",
         "eslint": "^5.11.0",
         "express": "^4.16.4",
