@@ -2,8 +2,12 @@ const FactcheckModel = require('../../../models/factcheck');
 const model = new FactcheckModel();
 
 function getFactcheck(req, res) {
-    const clientId = req.query.client_id;
-    return model.getFactcheck(req.app.kraken, clientId).then((result) => {
+    return model.getFactcheck(
+        req.app.kraken,
+        req.query.client,
+        req.query.tag,
+        req.query.category,
+        req.query.claimant).then((result) => {
         if (result) {
             res.status(200).json(result);
         }

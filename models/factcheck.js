@@ -1,6 +1,7 @@
 
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
+const _ = require('lodash');
 
 class FactcheckModel extends MongoBase {
     /**
@@ -12,7 +13,7 @@ class FactcheckModel extends MongoBase {
         super(logger, 'factcheck');
     }
 
-    getFactcheck(config, clientId) {
+    getFactcheck(config, clientId, tagSlug, categorySlug, claimantSlug) {
         const query = {};
 
         if (clientId) {
@@ -35,7 +36,6 @@ class FactcheckModel extends MongoBase {
                     }
                     const promiseChain = Q.all(claimsWorkers)
                         .then((claims) => {
-
                             const claimPromises = claims.map((claim) => {
                                 // TODO: single promise fails to retrieve, fix it later
                                 const workers = [];
@@ -61,13 +61,23 @@ class FactcheckModel extends MongoBase {
 
                             return Q.all(claimPromises);
                         }).then((claims) => {
+                            const claimantSlugs = claims.map(c => c.claimant.slug);
+                            const isClaimantFound = claimantSlugs.includes(claimantSlug);
+                            if (claimantSlug && !isClaimantFound) {
+                                throw Error('SkipFactCheck');
+                            }
                             fact.claims = claims;
                             return fact;
+                        }).catch((err) => {
+                            if (err && err.message === 'SkipFactCheck') {
+                                return null;
+                            }
+                            throw err;
                         });
                     workers.push(promiseChain);
                 });
                 return Q.all(workers);
-            });
+            }).then(factchecks => _.compact(factchecks));
     }
 }
 
