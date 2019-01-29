@@ -13,15 +13,25 @@ class FactcheckModel extends MongoBase {
         super(logger, 'factcheck');
     }
 
-    getFactcheck(config, clientId, tagSlug, categorySlug, claimantSlug) {
-        const query = {};
-
+    getQueryObject(clientId, slug) {
+        const queryObj = {};
         if (clientId) {
-            query.client_id = clientId;
+            queryObj.client_id = clientId;
         }
 
+        if (slug) {
+            queryObj.slug = slug;
+        }
+        return queryObj;
+    }
+
+    getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug) {
+
+        // get query object
+        const queryObj = this.getQueryObject(clientId, slug);
+
         const database = config.get('databaseConfig:databases:factcheck');
-        return Q(this.collection(database).find(query).toArray())
+        return Q(this.collection(database).find(queryObj).toArray())
             .then((facts) => {
                 this.logger.info('Retrieved the results');
 

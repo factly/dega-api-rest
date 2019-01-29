@@ -5,6 +5,7 @@ function getFactcheck(req, res) {
     return model.getFactcheck(
         req.app.kraken,
         req.query.client,
+        req.query.slug,
         req.query.tag,
         req.query.category,
         req.query.claimant).then((result) => {
