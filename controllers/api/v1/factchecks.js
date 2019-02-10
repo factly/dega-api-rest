@@ -8,7 +8,8 @@ function getFactcheck(req, res) {
         req.query.slug,
         req.query.tag,
         req.query.category,
-        req.query.claimant)
+        req.query.claimant,
+        req.query.user)
         .then((factchecks) => {
             const factchecksWithSchemas = (factchecks || []).map((factcheck) => {
                 // add claim review schema here for every claim

@@ -25,7 +25,7 @@ class FactcheckModel extends MongoBase {
         return queryObj;
     }
 
-    getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug) {
+    getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug, userSlug) {
 
         // get query object
         const queryObj = this.getQueryObject(clientId, slug);
@@ -85,6 +85,11 @@ class FactcheckModel extends MongoBase {
                             return Q.all(tagPromises);
                         }).
                         then((tags) => {
+                            const tagSlugs = tags.map(t => t.slug);
+                            const isTagFound = tagSlugs.includes(tagSlug);
+                            if (tagSlug && !isTagFound) {
+                                throw Error('SkipFactCheck');
+                            }
                             fact.tags = tags;
 
                             // get all categories
@@ -93,6 +98,11 @@ class FactcheckModel extends MongoBase {
                             return Q.all(categoriesPromises);
                         }).
                         then((categories) => {
+                            const categorySlugs = categories.map(t => t.slug);
+                            const isCategoryFound = categorySlugs.includes(categorySlug);
+                            if (categorySlug && !isCategoryFound) {
+                                throw Error('SkipFactCheck');
+                            }
                             fact.categories = categories;
 
                             // get all dega users
@@ -101,6 +111,11 @@ class FactcheckModel extends MongoBase {
                             return Q.all(degaUserPromises);
                         }).
                         then((degaUsers) => {
+                            const degaUserSlugs = degaUsers.map(u => u.slug);
+                            const isDegaUserFound = degaUserSlugs.includes(userSlug);
+                            if (userSlug && !isDegaUserFound) {
+                                throw Error('SkipFactCheck');
+                            }
                             fact.degaUsers = degaUsers;
                             return fact;
                         }).
