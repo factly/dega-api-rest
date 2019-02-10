@@ -31,6 +31,7 @@ class FactcheckModel extends MongoBase {
         const queryObj = this.getQueryObject(clientId, slug);
 
         const database = config.get('databaseConfig:databases:factcheck');
+        const coreDatabase = config.get('databaseConfig:databases:core');
         return Q(this.collection(database).find(queryObj).toArray())
             .then((facts) => {
                 this.logger.info('Retrieved the results');
@@ -77,8 +78,33 @@ class FactcheckModel extends MongoBase {
                                 throw Error('SkipFactCheck');
                             }
                             fact.claims = claims;
+
+                            // get all tags
+                            const tagPromises = (fact.tags || []).map((t) =>
+                                Q(this.collection(coreDatabase, t.namespace).findOne({_id: t.oid})));
+                            return Q.all(tagPromises);
+                        }).
+                        then((tags) => {
+                            fact.tags = tags;
+
+                            // get all categories
+                            const categoriesPromises = (fact.categories || []).map((c) =>
+                                Q(this.collection(coreDatabase, c.namespace).findOne({_id: c.oid})));
+                            return Q.all(categoriesPromises);
+                        }).
+                        then((categories) => {
+                            fact.categories = categories;
+
+                            // get all dega users
+                            const degaUserPromises = (fact.degaUsers || []).map((u) =>
+                                Q(this.collection(coreDatabase, u.namespace).findOne({_id: u.oid})));
+                            return Q.all(degaUserPromises);
+                        }).
+                        then((degaUsers) => {
+                            fact.degaUsers = degaUsers;
                             return fact;
-                        }).catch((err) => {
+                        }).
+                        catch((err) => {
                             if (err && err.message === 'SkipFactCheck') {
                                 return null;
                             }
