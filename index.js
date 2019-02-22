@@ -25,7 +25,7 @@ options = {
 };
 
 app = module.exports = express();
-app.use(cors())
+app.use(cors());
 app.use(kraken(options));
 app.on('start', function () {
     logger.debug('Application ready to serve requests.');
