@@ -12,7 +12,7 @@ WORKDIR ${APP_ROOT}
 
 # install node modules
 COPY ./package.json ${APP_ROOT}
-#RUN npm install
+RUN npm install
 
 # copy source files to image and build
 COPY . ${APP_ROOT}

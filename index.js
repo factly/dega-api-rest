@@ -13,9 +13,10 @@ var logger = require('logger').createLogger();
  */
 options = {
     onconfig: function (config, next) {
-        db.config(config.get('databaseConfig'), logger).then(() => {
-            logger.debug('Database setup is complete');
-        });
+        db.config(config.get('databaseConfig'), logger)
+            .then(() => {
+                logger.debug('Database setup is complete');
+            });
         /*
          * Add any additional config setup or overrides here. `config` is an initialized
          * `confit` (https://github.com/krakenjs/confit/) configuration object.
