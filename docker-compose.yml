@@ -4,10 +4,22 @@
 version: "3"
 
 services:
-    api:
-        build: .
+    mongodb:
+        image: mongo:4.0.2
+        container_name: mongodb
+        ports:
+            - "27017:27017"
+        volumes:
+            - ~/volumes/dega/mongodb/:/data/db/
+    dega-api:
+        build:
+            dockerfile: Dockerfile
+            context: .
         container_name: dega-api
         restart: always
+        environment:
+            - DATABASE_HOST=mongodb
+            - DATABASE_PORT=27017
         ports:
             - "8000:8000"
-        command: "npm run start"
+        command: "npm run dev"

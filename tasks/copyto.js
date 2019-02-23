@@ -6,7 +6,7 @@ module.exports = function copyto(grunt) {
 
     // Options
     return {
-        build: {
+        copy: {
             files: [{
                 cwd: 'public',
                 src: ['**/*'],
@@ -20,3 +20,4 @@ module.exports = function copyto(grunt) {
         }
     };
 };
+
