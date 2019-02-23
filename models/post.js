@@ -14,42 +14,6 @@ class PostsModel extends MongoBase {
         super(logger, 'post');
     }
 
-
-    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
-        const pagingObj = {};
-        pagingObj.query = queryObj;
-        pagingObj.limit = (limit) ? parseInt(limit): 20;
-
-        if (sortBy) {
-            pagingObj.paginatedField = sortBy;
-        }
-
-        if (sortAsc) {
-            pagingObj.sortAscending = (sortAsc === 'true');
-        }
-
-        if (next) {
-            pagingObj.next = next;
-        }
-
-        if (previous) {
-            pagingObj.previous = previous;
-        }
-        return pagingObj;
-    }
-
-    getQueryObject(clientId, slug) {
-        const queryObj = {};
-        if (clientId) {
-            queryObj.client_id = clientId;
-        }
-
-        if (slug) {
-            queryObj.slug = slug;
-        }
-        return queryObj;
-    }
-
     getPosts(config, clientId, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
         const queryObj = this.getQueryObject(clientId, slug);
@@ -107,6 +71,11 @@ class PostsModel extends MongoBase {
                             const statusID = post.status.oid;
                             return Q(this.collection(database, collection).findOne({_id: statusID}));
                         }).then((status) => {
+                            // filter all posts on Publish posts
+                            if (status.name !== 'Publish') {
+                                throw Error('SkipPost');
+                            }
+
                             post.status = status;
                             if (!post.format) {
                                 return Q();
@@ -144,6 +113,41 @@ class PostsModel extends MongoBase {
             }).then((arrayOfPromises) => {
                 return Q.all(arrayOfPromises);
             }).then(posts => _.compact(posts));
+    }
+
+    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
+        const pagingObj = {};
+        pagingObj.query = queryObj;
+        pagingObj.limit = (limit) ? parseInt(limit): 20;
+
+        if (sortBy) {
+            pagingObj.paginatedField = sortBy;
+        }
+
+        if (sortAsc) {
+            pagingObj.sortAscending = (sortAsc === 'true');
+        }
+
+        if (next) {
+            pagingObj.next = next;
+        }
+
+        if (previous) {
+            pagingObj.previous = previous;
+        }
+        return pagingObj;
+    }
+
+    getQueryObject(clientId, slug) {
+        const queryObj = {};
+        if (clientId) {
+            queryObj.client_id = clientId;
+        }
+
+        if (slug) {
+            queryObj.slug = slug;
+        }
+        return queryObj;
     }
 }
 
