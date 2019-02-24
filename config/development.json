@@ -1,14 +1,10 @@
 {
     "databaseConfig": {
-        "hosts": [
-            "localhost:27017"
-        ],
+        "uri": "mongodb://localhost:27017",
         "databases": {
             "core": "core",
             "factcheck": "factcheck"
-        },
-        "username": "",
-        "passwd": ""
+        }
     },
     "middleware": {
         "devtools": {

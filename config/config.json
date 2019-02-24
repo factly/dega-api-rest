@@ -1,14 +1,10 @@
 {
     "databaseConfig": {
-        "hosts": [
-            "localhost:27017"
-        ],
+        "uri": "",
         "databases": {
             "core": "core",
             "factcheck": "factcheck"
-        },
-        "username": "",
-        "passwd": ""
+        }
     },
     "specialization": {
     },

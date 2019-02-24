@@ -25,7 +25,7 @@ class FactcheckModel extends MongoBase {
         return queryObj;
     }
 
-    getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug, userSlug) {
+    getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug) {
 
         // get query object
         const queryObj = this.getQueryObject(clientId, slug);
@@ -104,6 +104,16 @@ class FactcheckModel extends MongoBase {
                                 throw Error('SkipFactCheck');
                             }
                             fact.categories = categories;
+
+                            // get all dega users
+                            const status = fact.status;
+                            return Q(this.collection(coreDatabase, status.namespace).findOne({_id: status.oid}));
+                        }).
+                        then((status) => {
+                            if (statusSlug && status.slug === statusSlug) {
+                                throw Error('SkipFactCheck');
+                            }
+                            fact.status = status;
 
                             // get all dega users
                             const degaUserPromises = (fact.degaUsers || []).map((u) =>
