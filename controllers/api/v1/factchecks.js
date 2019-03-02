@@ -1,5 +1,6 @@
 const FactcheckModel = require('../../../models/factcheck');
 const model = new FactcheckModel();
+const logger = require('logger').createLogger();
 const cleamReviewSchema = require('../../../claim-review-schema/ldschema');
 
 function getFactcheck(req, res) {
@@ -36,6 +37,11 @@ function getFactcheck(req, res) {
                 return;
             }
             res.sendStatus(404);
+        })
+        .catch((err) => {
+            const msg = (err) ? err.stack: err;
+            logger.error(msg);
+            res.sendStatus(500).json(msg);
         });
 }
 

@@ -1,8 +1,8 @@
-
 const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
+const logger = require('logger').createLogger();
 
 class PostsModel extends MongoBase {
     /**
@@ -17,6 +17,7 @@ class PostsModel extends MongoBase {
     getPosts(config, clientId, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
         const queryObj = this.getQueryObject(clientId, slug);
+        logger.info(`Query Object ${JSON.stringify(queryObj)}`);
 
         // get paging object
         const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
@@ -29,6 +30,7 @@ class PostsModel extends MongoBase {
                     delete post.degaUsers;
                     return post;
                 });
+                logger.info(`Posts retrieved ${posts.length}`);
 
                 return posts.map((post) => {
                     // query all orgs
@@ -44,7 +46,7 @@ class PostsModel extends MongoBase {
                             const tagSlugs = tags.map(tag => tag.slug);
                             const isTagFound = tagSlugs.includes(tagSlug);
                             if (tagSlug && !isTagFound) {
-                                throw Error('SkipPost');
+                                throw Error('SkipPost tag slug not found');
                             }
                             post.tags = tags;
                             const catWorkers = [];
@@ -59,7 +61,7 @@ class PostsModel extends MongoBase {
                             const categorySlugs = categories.map(category => category.slug);
                             const isCategoryFound = categorySlugs.includes(categorySlug);
                             if (categorySlug && !isCategoryFound) {
-                                throw Error('SkipPost');
+                                throw Error('SkipPost category slug not found');
                             }
 
                             post.categories = categories;
@@ -73,7 +75,7 @@ class PostsModel extends MongoBase {
                         }).then((status) => {
                             // filter all posts on Publish posts
                             if (status.name !== 'Publish') {
-                                throw Error('SkipPost');
+                                throw Error('SkipPost fact not published');
                             }
 
                             post.status = status;
@@ -98,13 +100,14 @@ class PostsModel extends MongoBase {
                             const authorSlugs = authors.map(author => author.slug);
                             const isAuthorFound = authorSlugs.includes(authorSlug);
                             if (authorSlug && !isAuthorFound) {
-                                throw Error('SkipPost');
+                                throw Error('SkipPost author slug not found');
                             }
 
                             post.authors = authors;
                             return post;
                         }).catch((err) => {
-                            if (err && err.message === 'SkipPost') {
+                            if (err && err.message.startsWith('SkipPost')) {
+                                logger.warn(`Skipped the post with message ${err}`);
                                 return null;
                             }
                             throw err;

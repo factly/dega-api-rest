@@ -106,8 +106,11 @@ class FactcheckModel extends MongoBase {
                             fact.categories = categories;
 
                             // get all dega users
-                            const status = fact.status;
-                            return Q(this.collection(coreDatabase, status.namespace).findOne({_id: status.oid}));
+                            if (fact.status) {
+                                const status = fact.status;
+                                return Q(this.collection(coreDatabase, status.namespace).findOne({_id: status.oid}));
+                            }
+                            return Q();
                         }).
                         then((status) => {
                             if (statusSlug && status.slug === statusSlug) {
