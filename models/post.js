@@ -75,7 +75,7 @@ class PostsModel extends MongoBase {
                         }).then((status) => {
                             // filter all posts on Publish posts
                             if (status.name !== 'Publish') {
-                                throw Error('SkipPost fact not published');
+                                throw Error('SkipPost post not published');
                             }
 
                             post.status = status;

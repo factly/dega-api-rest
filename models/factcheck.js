@@ -33,8 +33,14 @@ class FactcheckModel extends MongoBase {
         const database = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
         return Q(this.collection(database).find(queryObj).toArray())
-            .then((facts) => {
+            .then((results) => {
                 this.logger.info('Retrieved the results');
+
+                const facts = results.map((f) => {
+                    f.authors = f.degaUsers;
+                    delete f.degaUsers;
+                    return f;
+                });
 
                 const workers = [];
                 facts.forEach((fact) => {
@@ -75,7 +81,7 @@ class FactcheckModel extends MongoBase {
                             const claimantSlugs = claims.map(c => c.claimant.slug);
                             const isClaimantFound = claimantSlugs.includes(claimantSlug);
                             if (claimantSlug && !isClaimantFound) {
-                                throw Error('SkipFactCheck');
+                                throw Error('SkipFactCheck claim slug not found');
                             }
                             fact.claims = claims;
 
@@ -88,7 +94,7 @@ class FactcheckModel extends MongoBase {
                             const tagSlugs = tags.map(t => t.slug);
                             const isTagFound = tagSlugs.includes(tagSlug);
                             if (tagSlug && !isTagFound) {
-                                throw Error('SkipFactCheck');
+                                throw Error('SkipFactCheck tag slug not found');
                             }
                             fact.tags = tags;
 
@@ -101,7 +107,7 @@ class FactcheckModel extends MongoBase {
                             const categorySlugs = categories.map(t => t.slug);
                             const isCategoryFound = categorySlugs.includes(categorySlug);
                             if (categorySlug && !isCategoryFound) {
-                                throw Error('SkipFactCheck');
+                                throw Error('SkipFactCheck category slug not found');
                             }
                             fact.categories = categories;
 
@@ -113,27 +119,27 @@ class FactcheckModel extends MongoBase {
                             return Q();
                         }).
                         then((status) => {
-                            if (statusSlug && status.slug === statusSlug) {
-                                throw Error('SkipFactCheck');
+                            if (status.name !== 'Publish') {
+                                throw Error('SkipFactCheck factcheck not published');
                             }
                             fact.status = status;
 
                             // get all dega users
-                            const degaUserPromises = (fact.degaUsers || []).map((u) =>
+                            const degaUserPromises = (fact.authors || []).map((u) =>
                                 Q(this.collection(coreDatabase, u.namespace).findOne({_id: u.oid})));
                             return Q.all(degaUserPromises);
                         }).
-                        then((degaUsers) => {
-                            const degaUserSlugs = degaUsers.map(u => u.slug);
-                            const isDegaUserFound = degaUserSlugs.includes(userSlug);
-                            if (userSlug && !isDegaUserFound) {
-                                throw Error('SkipFactCheck');
+                        then((authors) => {
+                            const authorSlugs = authors.map(u => u.slug);
+                            const isAuthorFound = authorSlugs.includes(userSlug);
+                            if (userSlug && !isAuthorFound) {
+                                throw Error('SkipFactCheck user slug not found');
                             }
-                            fact.degaUsers = degaUsers;
+                            fact.authors = authors;
                             return fact;
                         }).
                         catch((err) => {
-                            if (err && err.message === 'SkipFactCheck') {
+                            if (err && err.message.startsWith('SkipFactCheck')) {
                                 return null;
                             }
                             throw err;
