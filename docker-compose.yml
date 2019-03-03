@@ -18,7 +18,9 @@ services:
         container_name: dega-api
         restart: always
         environment:
-            - MONGODB_URI=mongodb://localhost:27017
+            - MONGODB_URI=mongodb://mongodb:27017
         ports:
             - "8000:8000"
         command: "npm run dev"
+        depends_on:
+          - mongodb
