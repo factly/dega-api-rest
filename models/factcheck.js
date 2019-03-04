@@ -119,7 +119,7 @@ class FactcheckModel extends MongoBase {
                             return Q();
                         }).
                         then((status) => {
-                            if (status.name !== 'Publish') {
+                            if (status && status.name !== 'Publish') {
                                 throw Error('SkipFactCheck factcheck not published');
                             }
                             fact.status = status;

@@ -6,7 +6,7 @@ function getPosts(req, res) {
     // clientId, slug, sortBy, sortAsc, limit, next, previous
     return model.getPosts(
         req.app.kraken,
-        req.query.client,
+        req.query.client_id,
         req.query.slug,
         req.query.category,
         req.query.tag,

@@ -11,6 +11,7 @@ services:
             - "27017:27017"
         volumes:
             - ~/volumes/dega/mongodb/:/data/db/
+
     dega-api:
         build:
             dockerfile: Dockerfile

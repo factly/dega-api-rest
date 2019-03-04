@@ -74,7 +74,7 @@ class PostsModel extends MongoBase {
                             return Q(this.collection(database, collection).findOne({_id: statusID}));
                         }).then((status) => {
                             // filter all posts on Publish posts
-                            if (status.name !== 'Publish') {
+                            if (status && status.name !== 'Publish') {
                                 throw Error('SkipPost post not published');
                             }
 

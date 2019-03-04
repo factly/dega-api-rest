@@ -5,7 +5,7 @@ const cleamReviewSchema = require('../../../claim-review-schema/ldschema');
 
 function getFactcheck(req, res) {
     return model.getFactcheck(req.app.kraken,
-        req.query.client,
+        req.query.client_id,
         req.query.slug,
         req.query.tag,
         req.query.category,
