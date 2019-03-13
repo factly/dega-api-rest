@@ -4,18 +4,10 @@ info:
   title: Dega Public API
   description: >
     # Introduction
+      - **Data Journalism/Fact Check:** - Factly’s written and visual stories lay out facts with evidence and help separate the wheat from the chaff in times of hyper connectivity and constant information bombardment. The content aims to simplify public data & information that might otherwise be in complex forms.
+      - **Information Tools:** - Creating and developing tools that will increase access to public data and information by making it easy, interactive and intuitive.  Counting India is Factly’s first tool in its beta version that focuses on accessibility and data visualization of  Census-2011 data. Factly is currently working on other tools that are in the development stage.
+      - **Advocating Open Data:** - Factly believes that for better public engagement with government data, the supply side also has to be strengthened. Factly actively advocates ‘Open Data’ policy to governments and agencies that house large amounts of public information. Factly collaborates and provides services to governments and institutions to release data to the public domain. Besides these, Factly engages with various stakeholders from across the ‘Open Data’ spectrum to build successful case studies & use cases. Factly also conducts training sessions on accessing, understanding & analysing public data to journalists, public policy enthusiasts, NGOs etc.
 
-    Data Journalism/Fact Check: Factly’s written and visual stories lay out facts with evidence and help separate the wheat from the chaff in times of hyper connectivity and constant information bombardment. The content aims to simplify public data & information that might otherwise be in complex forms.
-    Information Tools: Creating and developing tools that will increase access to public data and information by making it easy, interactive and intuitive.  Counting India is Factly’s first tool in its beta version that focuses on accessibility and data visualization of  Census-2011 data. Factly is currently working on other tools that are in the development stage.
-    Advocating Open Data: Factly believes that for better public engagement with government data, the supply side also has to be strengthened. Factly actively advocates ‘Open Data’ policy to governments and agencies that house large amounts of public information. Factly collaborates and provides services to governments and institutions to release data to the public domain. Besides these, Factly engages with various stakeholders from across the ‘Open Data’ spectrum to build successful case studies & use cases. Factly also conducts training sessions on accessing, understanding & analysing public data to journalists, public policy enthusiasts, NGOs etc.
-
-
-    # Available APIs
-
-    Dega offers apis for:
-      - **Posts** -
-      - **Factchecks** -
-      - **Stories** -
   termsOfService: 'https://factly.in/tos/'
   contact:
     email: support@factly.in
@@ -40,7 +32,51 @@ paths:
     get:
       tags:
         - Factchecks
-      summary: List All Facts
+      summary: Get Published Facts
+      produces:
+        - application/json
+      parameters:
+        - name: slug
+          in: query
+          description: factcheck slug to filter
+          required: false
+          type: string
+        - name: client
+          in: query
+          description: client slug to filter
+          type: string
+        - name: category
+          in: query
+          description: category slug to filter
+          type: string
+        - name: tag
+          in: query
+          description: tag slug to filter
+          type: string
+        - name: author
+          in: query
+          description: author slug to filter
+          type: string
+        - name: sortBy
+          in: query
+          description: field name to sort the results
+          type: string
+        - name: sortAsc
+          in: query
+          description: Boolean flag to control order of sorting
+          type: boolean
+        - name: limit
+          in: query
+          description: Number of results to be returned for a single page
+          type: integer
+        - name: next
+          in: query
+          description: guid returned by the api to access next page in pagination
+          type: guid
+        - name: previous
+          in: query
+          description: guid returned by the api to access previous page in pagination
+          type: guid
       responses:
         '200':
           description: Successful Response
@@ -49,7 +85,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Factcheck'
+                  $ref: '#/components/schemas/factcheck'
               examples:
                 response:
                   value:
@@ -264,48 +300,113 @@ paths:
                           }
                         ]
                       }
+        404:
+          description: No data found
+
 servers:
-  - url: 'https://factcheck.factly.in/'
+  - url: 'http://api.factly.in/'
 components:
   schemas:
-    Factcheck:
+    factcheck:
       title: Factcheck
       type: object
       properties:
-        id:
+        _id:
+          type: guid
+        title:
           type: string
-        created_at:
-          type: integer
-        updated_at:
-          type: integer
-        destination:
+        client_id:
           type: string
-        name:
+        introduction:
           type: string
-        group:
+        summary:
           type: string
-        host:
+        published_date:
+          type: date
+        last_updated_date:
+          type: date
+        featured:
           type: string
-        protocol:
+        sticky:
+          type: string
+        slug:
+          type: string
+        featured_media:
+          type: string
+        created_date:
+          type: date
+        claims:
+          type: array
+          items:
+            $ref: '#/components/schemas/claim'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/tag'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/category'
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/author'
+        status:
+          type: object
+          $ref: '#/components/schemas/status'
+    claim:
+      title: claim
+      type: object
+      properties:
+        _id:
+          type: guid
+        claim:
           type: string
         description:
           type: string
-        crypto:
+        claim_date:
+          type: date
+        claim_source:
           type: string
-      example:
-        created_at: 1534409264
-        updated_at: 1534409264
-        id: b3237483-e96e-4f3a-905c-0d9603d66c1f
-        destination: 'http://localhost:8090'
-        name: tunnel
-        group: ''
-        addr: ''
-        host: tunnelx.webrelay.io
-        mode: active
-        protocol: http
-        account_id: bd7e1dfc-54c8-408c-a885-7498bf1d8522
-        description: ''
-        features: null
-        agent_id: ''
-        ingress_rules: null
-        crypto: 'off'
+        checked_date:
+          type: date
+        review:
+          type: string
+        client_id:
+          type: string
+        slug:
+          type: string
+        created_date:
+          type: date
+        last_updated_date:
+          type: date
+        rating:
+          type: object
+        claimant:
+          type: object
+        factchecks:
+          type: array
+    tag:
+      title: tag
+      type: object
+      properties:
+        _id:
+          type: guid
+    category:
+      title: category
+      type: object
+      properties:
+        _id:
+          type: guid
+    author:
+      title: author
+      type: object
+      properties:
+        _id:
+          type: guid
+    status:
+      title: status
+      type: object
+      properties:
+        _id:
+          type: guid
