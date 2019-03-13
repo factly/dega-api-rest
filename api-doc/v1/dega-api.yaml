@@ -193,28 +193,6 @@ paths:
                             email_verified: true,
                             email: 'shashi@factly.in',
                             created_date: '2018-12-27T16:14:40.200Z',
-                            role: {
-                              $ref: 'role',
-                              $id: '5c0ed4eaf2be6078676e4886',
-                              $db: ''
-                            },
-                            organizations: [
-                              {
-                                $ref: 'organization',
-                                $id: '5c1fbe8141e7c425ed54c82b',
-                                $db: ''
-                              }
-                            ],
-                            organizationDefault: {
-                              $ref: 'organization',
-                              $id: '5c1fbe8141e7c425ed54c82b',
-                              $db: ''
-                            },
-                            organizationCurrent: {
-                              $ref: 'organization',
-                              $id: '5c1fbe8141e7c425ed54c82b',
-                              $db: ''
-                            },
                             posts: [],
                             _class: 'com.factly.dega.domain.DegaUser'
                           }
