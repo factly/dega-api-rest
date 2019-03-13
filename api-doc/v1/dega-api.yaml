@@ -290,9 +290,6 @@ components:
           type: string
         description:
           type: string
-        auth:
-          type: object
-          $ref: '#/components/schemas/TunnelAuth'
         crypto:
           type: string
       example:
