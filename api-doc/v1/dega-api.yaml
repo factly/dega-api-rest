@@ -231,7 +231,7 @@ paths:
                               image: 'http://static.politifact.com/mediapage/jpgs/politifact-logo-big.jpg',
                               sameAs: 'https://twitter.com/politifact'
                             },
-                            claimReviewed: 'More than 3,000 homicides were committed by 'illegal aliens' over the past six years.',
+                            claimReviewed: 'More than 3,000 homicides were committed by illegal aliens over the past six years.',
                             reviewRating: {
                               ratingValue: 3,
                               bestRating: 5
