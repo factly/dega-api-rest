@@ -306,11 +306,6 @@ components:
         account_id: bd7e1dfc-54c8-408c-a885-7498bf1d8522
         description: ''
         features: null
-        auth:
-          created_at: 1534409264
-          updated_at: 1534409264
-          id: eb3fbc49-0713-48b1-8971-a7c4a9c64dfb
-          type: none
         agent_id: ''
         ingress_rules: null
         crypto: 'off'
