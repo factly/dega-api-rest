@@ -1,0 +1,341 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: Dega Public API
+  description: >
+    # Introduction
+
+    Data Journalism/Fact Check: Factly’s written and visual stories lay out facts with evidence and help separate the wheat from the chaff in times of hyper connectivity and constant information bombardment. The content aims to simplify public data & information that might otherwise be in complex forms.
+    Information Tools: Creating and developing tools that will increase access to public data and information by making it easy, interactive and intuitive.  Counting India is Factly’s first tool in its beta version that focuses on accessibility and data visualization of  Census-2011 data. Factly is currently working on other tools that are in the development stage.
+    Advocating Open Data: Factly believes that for better public engagement with government data, the supply side also has to be strengthened. Factly actively advocates ‘Open Data’ policy to governments and agencies that house large amounts of public information. Factly collaborates and provides services to governments and institutions to release data to the public domain. Besides these, Factly engages with various stakeholders from across the ‘Open Data’ spectrum to build successful case studies & use cases. Factly also conducts training sessions on accessing, understanding & analysing public data to journalists, public policy enthusiasts, NGOs etc.
+
+
+    # Available APIs
+
+    Dega offers apis for:
+      - **Posts** -
+      - **Factchecks** -
+      - **Stories** -
+  termsOfService: 'https://factly.in/tos/'
+  contact:
+    email: support@factly.in
+externalDocs:
+  description: Find out more in the official documentation.
+  url: 'https://factly.in/v1/guide/'
+tags:
+  - name: Factchecks
+    description: >-
+      It pulls all the published factchecks from the dega repository.
+  - name: Stories
+    description: >-
+      It pulls all the stories.
+
+x-tagGroups:
+  - name: Webhook Forwarding
+    tags:
+      - Factchecks
+      - Stories
+paths:
+  /api/v1/factchecks:
+    get:
+      tags:
+        - Factchecks
+      summary: List All Facts
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Factcheck'
+              examples:
+                response:
+                  value:
+                    - {
+                        _id: '5c71d32bfd3c00900fae209c',
+                        title: 'test 02232019',
+                        client_id: 'Factly',
+                        introduction: '<p>test intro\t</p>',
+                        summary: 'test summary',
+                        published_date: '2019-02-23T23:11:39.223Z',
+                        last_updated_date: '2019-02-23T23:11:39.223Z',
+                        featured: false,
+                        sticky: false,
+                        slug: 'test-02232019',
+                        featured_media: 'http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png',
+                        created_date: '2019-02-23T23:11:39.223Z',
+                        claims: [
+                          {
+                            _id: '5c3e36db569ed47d94519423',
+                            claim: 'Broad Gauge line commissioned between the years 2009 and 2014 is 7,600 kms where as it is 9,528 kms between 2014 and 2018.',
+                            description: '<p><strong>Has there been a 50% increase in track renewal?</strong></p>...',
+                            claim_date: '2018-12-12T06:00:00.000Z',
+                            claim_source: 'https://48months.mygov.in/wp-content/uploads/2018/05/10000000001249737483.png',
+                            checked_date: '2019-01-15T06:00:00.000Z',
+                            review_sources: 'http://164.100.47.190/loksabhaquestions/annex/13/AU1529.pdf',
+                            review: 'Track renewal data collated from the annual reports of the ministry of railways, ...',
+                            client_id: 'Factly',
+                            slug: 'broad-gauge-line-commissioned-between-the-years-2009-and-2014-is-7600-kms-where-as-it-is-9528-kms-between-2014-and-2018',
+                            created_date: '2019-01-15T19:39:07.478Z',
+                            last_updated_date: '2019-01-15T19:39:07.478Z',
+                            rating: {
+                              _id: '5c1120caf2be60044e35d1b8',
+                              name: 'True',
+                              numeric_value: 5,
+                              is_default: true,
+                              client_id: 'default',
+                              slug: 'true',
+                              created_date: '2018-12-12T07:00:00.000Z',
+                              last_updated_date: '2018-12-12T07:00:00.000Z',
+                              claim: [],
+                              _class: 'com.factly.dega.domain.Rating'
+                            },
+                            claimant: {
+                              _id: '5c3e3517569ed47d9451940f',
+                              name: 'Government of India',
+                              description: 'This is the description for Govt of India',
+                              client_id: 'Factly',
+                              slug: 'government-of-india',
+                              created_date: '2019-01-15T19:31:35.627Z',
+                              last_updated_date: '2019-01-15T19:31:35.627Z',
+                              claim: [],
+                              _class: 'com.factly.dega.domain.Claimant'
+                            },
+                            factchecks: [],
+                            _class: 'com.factly.dega.domain.Claim'
+                          },
+                          {
+                            _id: '5c3e3762569ed47d9451942b',
+                            claim: 'Broad Gauge line commissioned between the years 2009 and 2014 is 7,600 kms where as it is 9,528 kms between 2014 and 2018.',
+                            description: '<p>Another claim is that broad gauge line commissioned between the years 2009 and 2014 is 7,600 kms where as it is 9,528 kms between 2014 and 2018.</p>',
+                            claim_date: '2018-12-12T06:00:00.000Z',
+                            claim_source: 'https://48months.mygov.in/wp-content/uploads/2018/05/10000000001249737483.png',
+                            checked_date: '2019-01-15T06:00:00.000Z',
+                            review_sources: 'http://pib.gov.in/PressReleseDetail.aspx?PRID=1557756, http://www.indianrailways.gov.in/railwayboard/view_section_new.jsp?lang=0&id=0,1,304,366,554,941',
+                            review: 'There is wide variation between the numbers mentioned in the press release of the government and the data from the annual reports. As per the press release of the government, the annual average during the UPA-2 (2009-14) is 1520 kms where as it is 2049 kms as per the annual reports of the Ministry of Railways. Because of these varied numbers, this claim remains UNVERIFIED.',
+                            client_id: 'Factly',
+                            slug: 'broad-gauge-line-commissioned-between-the-years-2009-and-2014-is-7600-kms-where-as-it-is-9528-kms-between-2014-and-20181',
+                            created_date: '2019-01-15T19:41:22.742Z',
+                            last_updated_date: '2019-01-15T19:41:22.742Z',
+                            rating: {
+                              _id: '5c11201ef2be60044e35d1b2',
+                              name: 'Unverified',
+                              numeric_value: 3,
+                              is_default: true,
+                              client_id: 'default',
+                              slug: 'unverified',
+                              created_date: '2018-12-12T07:00:00.000Z',
+                              last_updated_date: '2018-12-12T07:00:00.000Z',
+                              claim: [],
+                              _class: 'com.factly.dega.domain.Rating'
+                            },
+                            claimant: {
+                              _id: '5c3e3517569ed47d9451940f',
+                              name: 'Government of India',
+                              description: 'This is the description for Govt of India',
+                              client_id: 'Factly',
+                              slug: 'government-of-india',
+                              created_date: '2019-01-15T19:31:35.627Z',
+                              last_updated_date: '2019-01-15T19:31:35.627Z',
+                              claim: [],
+                              _class: 'com.factly.dega.domain.Claimant'
+                            },
+                            factchecks: [],
+                            _class: 'com.factly.dega.domain.Claim'
+                          }
+                        ],
+                        tags: [
+                          {
+                            _id: '5c38f4f5569ed47e00c70045',
+                            name: 'Crude Oil',
+                            slug: 'Crude-Oil',
+                            client_id: 'Factly',
+                            created_date: '2019-01-11T19:56:37.736Z',
+                            last_updated_date: '2019-01-11T19:56:37.736Z',
+                            posts: [],
+                            _class: 'com.factly.dega.domain.Tag'
+                          }
+                        ],
+                        categories: [
+                          {
+                            _id: '5c38f470569ed47e00c7002b',
+                            name: 'Business',
+                            slug: 'business',
+                            client_id: 'Factly',
+                            created_date: '2019-01-11T19:54:24.264Z',
+                            last_updated_date: '2019-01-11T19:54:24.264Z',
+                            posts: [],
+                            _class: 'com.factly.dega.domain.Category'
+                          }
+                        ],
+                        status: {
+                          _id: '5c2691852308247c7669a51a',
+                          name: 'Publish',
+                          client_id: 'Factly',
+                          is_default: true,
+                          slug: 'Publish',
+                          created_date: '2018-12-28T21:11:33.769Z',
+                          last_updated_date: '2018-12-28T21:11:33.769Z',
+                          post: [],
+                          _class: 'com.factly.dega.domain.Status'
+                        },
+                        _class: 'com.factly.dega.domain.Factcheck',
+                        authors: [
+                          {
+                            _id: '5c24fa70d654062b1dcf96d2',
+                            first_name: 'Shashi',
+                            last_name: 'Deshetti',
+                            display_name: 'Shashi Deshetti',
+                            slug: 'shashi-deshetti',
+                            enabled: true,
+                            email_verified: true,
+                            email: 'shashi@factly.in',
+                            created_date: '2018-12-27T16:14:40.200Z',
+                            role: {
+                              $ref: 'role',
+                              $id: '5c0ed4eaf2be6078676e4886',
+                              $db: ''
+                            },
+                            organizations: [
+                              {
+                                $ref: 'organization',
+                                $id: '5c1fbe8141e7c425ed54c82b',
+                                $db: ''
+                              }
+                            ],
+                            organizationDefault: {
+                              $ref: 'organization',
+                              $id: '5c1fbe8141e7c425ed54c82b',
+                              $db: ''
+                            },
+                            organizationCurrent: {
+                              $ref: 'organization',
+                              $id: '5c1fbe8141e7c425ed54c82b',
+                              $db: ''
+                            },
+                            posts: [],
+                            _class: 'com.factly.dega.domain.DegaUser'
+                          }
+                        ],
+                        schemas: [
+                          {
+                            '@context': 'http://schema.org',
+                            '@type': 'ClaimReview',
+                            datePublished: '2019-02-23T23:11:39.223Z',
+                            url: 'http://www.politifact.com/texas/statements/2014/jul/23/rick-perry/rick-perry-claim-about-3000-homicides-illegal-immi/',
+                            author: {
+                              '@type': 'Organization',
+                              url: 'http://www.politifact.com/',
+                              image: 'http://static.politifact.com/mediapage/jpgs/politifact-logo-big.jpg',
+                              sameAs: 'https://twitter.com/politifact'
+                            },
+                            claimReviewed: 'More than 3,000 homicides were committed by 'illegal aliens' over the past six years.',
+                            reviewRating: {
+                              ratingValue: 3,
+                              bestRating: 5
+                            },
+                            itemReviewed: {
+                              '@type': 'CreativeWork',
+                              author: {
+                                '@type': 'Person',
+                                name: 'Rich Perry',
+                                jobTitle: 'Former Governor of Texas',
+                                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Gov._Perry_CPAC_February_2015.jpg/440px-Gov._Perry_CPAC_February_2015.jpg',
+                                sameAs: [
+                                  'https://en.wikipedia.org/wiki/Rick_Perry',
+                                  'https://rickperry.org/'
+                                ]
+                              },
+                              datePublished: '2014-07-17',
+                              name: 'The St. Petersburg Times interview [...]'
+                            }
+                          },
+                          {
+                            '@context': 'http://schema.org',
+                            '@type': 'ClaimReview',
+                            datePublished: '2019-02-23T23:11:39.223Z',
+                            url: 'http://www.politifact.com/texas/statements/2014/jul/23/rick-perry/rick-perry-claim-about-3000-homicides-illegal-immi/',
+                            author: {
+                              '@type': 'Organization',
+                              url: 'http://www.politifact.com/',
+                              image: 'http://static.politifact.com/mediapage/jpgs/politifact-logo-big.jpg',
+                              sameAs: 'https://twitter.com/politifact'
+                            },
+                            claimReviewed: 'More than 3,000 homicides were committed by illegal aliens over the past six years.',
+                            reviewRating: {
+                              ratingValue: 3,
+                              bestRating: 5
+                            },
+                            itemReviewed: {
+                              '@type': 'CreativeWork',
+                              author: {
+                                '@type': 'Person',
+                                name: 'Rich Perry',
+                                jobTitle: 'Former Governor of Texas',
+                                image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Gov._Perry_CPAC_February_2015.jpg/440px-Gov._Perry_CPAC_February_2015.jpg',
+                                sameAs: [
+                                  'https://en.wikipedia.org/wiki/Rick_Perry',
+                                  'https://rickperry.org/'
+                                ]
+                              },
+                              datePublished: '2014-07-17',
+                              name: 'The St. Petersburg Times interview [...]'
+                            }
+                          }
+                        ]
+                      }
+servers:
+  - url: 'https://factcheck.factly.in/'
+components:
+  schemas:
+    Factcheck:
+      title: Factcheck
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          type: integer
+        updated_at:
+          type: integer
+        destination:
+          type: string
+        name:
+          type: string
+        group:
+          type: string
+        host:
+          type: string
+        protocol:
+          type: string
+        description:
+          type: string
+        auth:
+          type: object
+          $ref: '#/components/schemas/TunnelAuth'
+        crypto:
+          type: string
+      example:
+        created_at: 1534409264
+        updated_at: 1534409264
+        id: b3237483-e96e-4f3a-905c-0d9603d66c1f
+        destination: 'http://localhost:8090'
+        name: tunnel
+        group: ''
+        addr: ''
+        host: tunnelx.webrelay.io
+        mode: active
+        protocol: http
+        account_id: bd7e1dfc-54c8-408c-a885-7498bf1d8522
+        description: ''
+        features: null
+        auth:
+          created_at: 1534409264
+          updated_at: 1534409264
+          id: eb3fbc49-0713-48b1-8971-a7c4a9c64dfb
+          type: none
+        agent_id: ''
+        ingress_rules: null
+        crypto: 'off'
