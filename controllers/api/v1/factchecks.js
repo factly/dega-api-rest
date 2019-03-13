@@ -18,7 +18,7 @@ function getFactcheck(req, res) {
                 const claimSchemas = (factcheck.claims || []).map((c) => {
                     // our schema from claim evolves here
                     const claimSchema = {
-                        reviewRating: {},
+                        reviewRating: {}
                     };
                     claimSchema.datePublished = factcheck.published_date;
                     claimSchema.reviewRating.ratingValue = c.rating.numeric_value;

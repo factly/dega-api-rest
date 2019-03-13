@@ -15,7 +15,7 @@ module.exports = function eslint(grunt) {
             'controllers/**/*.js',
             'lib/**/*.js',
             'models/**/*.js',
-            'public/js/**/*.js'
+            'public/js/**/*.js',
         ]
     };
 };

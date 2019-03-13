@@ -1,8 +1,7 @@
 {
     "rules": {
         "indent": [
-            2,
-            4
+            2
         ],
         "quotes": [
             2,
@@ -16,7 +15,30 @@
             2,
             "always"
         ],
-        "no-console": 1
+        "no-console": 1,
+        // "no-param-reassign"": ["warn", { "props"": true }]
+        "comma-dangle": ["error", {
+            "arrays": "always-multiline",
+            "imports": "always-multiline",
+            "exports": "always-multiline",
+            "functions": "never" //deviation from airbnb - 6.9.4 will not run
+        }],
+
+        // max-len set to 120 based on team poll
+        "max-len": ["error", {
+            "code": 120,
+            "ignoreUrls": true,
+            "ignoreComments": false,
+            "ignoreRegExpLiterals": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true
+        }],
+
+        // Allow using functions before they are defined
+        "no-use-before-define": ["error", {
+            "functions": false,
+            "classes": true,
+        }]
     },
     "env": {
         "node": true,

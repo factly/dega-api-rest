@@ -12,7 +12,9 @@ var server;
  */
 
 server = http.createServer(app);
-server.listen(process.env.PORT || 8000);
+var port = process.env.PORT || 8000;
+server.listen(port);
 server.on('listening', function () {
-    logger.debug('Server listening on http://localhost:%d', this.address().port);
+    logger.info('Server listening on http://localhost:'+port);
+    console.log('Server listening on http://localhost:'+port);
 });

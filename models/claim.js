@@ -28,7 +28,8 @@ class ClaimModel extends MongoBase {
                     // TODO: single promise fails to retrieve, fix it later
                     const workers = [];
                     if(claim.rating) {
-                        workers.push(Q(this.collection(database, claim.rating.namespace).findOne({_id: claim.rating.oid})));
+                        workers.push(
+                            Q(this.collection(database, claim.rating.namespace).findOne({_id: claim.rating.oid})));
                     }
                     return Q.all(workers).then((rating) => {
                         if (rating && rating.length > 0) {

@@ -54,7 +54,8 @@ class PostsModel extends MongoBase {
                                 return Q();
                             }
                             post.categories.forEach((category) => {
-                                catWorkers.push(Q(this.collection(database, category.namespace).findOne({_id: category.oid})));
+                                catWorkers.push(Q(this.collection(database, category.namespace)
+                                    .findOne({_id: category.oid})));
                             });
                             return Q.all(catWorkers);
                         }).then((categories) => {
@@ -93,7 +94,8 @@ class PostsModel extends MongoBase {
                                 return Q();
                             }
                             post.authors.forEach((author) => {
-                                authorWorkers.push(Q(this.collection(database, author.namespace).findOne({_id: author.oid})));
+                                authorWorkers.push(Q(this.collection(database, author.namespace)
+                                    .findOne({_id: author.oid})));
                             });
                             return Q.all(authorWorkers);
                         }).then((authors) => {
