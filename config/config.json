@@ -6,9 +6,31 @@
             "factcheck": "factcheck"
         }
     },
+    "loggerConfig": {
+        "writeToDisk": true,
+        "exitOnError": false,
+        "componentName": "DEGA-API",
+        "writeToConsole": {
+            "enabled": true,
+            "colorize": false
+        },
+        "level": "info"
+    },
     "specialization": {
     },
     "middleware": {
+        "compress": {
+            "enabled": true
+        },
+        "logger": {
+            "enabled": true,
+            "route": "/api*",
+            "priority": 1,
+            "module": {
+                "name": "path:middleware/logger",
+                "arguments": []
+            }
+        },
         "static": {
             "module": {
                 "arguments": [ "path:./.build" ]

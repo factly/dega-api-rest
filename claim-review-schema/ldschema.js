@@ -27,7 +27,7 @@ const schema = {
             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Gov._Perry_CPAC_February_2015.jpg/440px-Gov._Perry_CPAC_February_2015.jpg',
             sameAs: [
                 'https://en.wikipedia.org/wiki/Rick_Perry',
-                'https://rickperry.org/'
+                'https://rickperry.org/',
             ]
         },
         datePublished: '2014-07-17',

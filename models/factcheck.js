@@ -25,6 +25,7 @@ class FactcheckModel extends MongoBase {
         return queryObj;
     }
 
+    // eslint-disable-next-line no-unused-vars
     getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug) {
 
         // get query object
@@ -57,7 +58,8 @@ class FactcheckModel extends MongoBase {
                                 // TODO: single promise fails to retrieve, fix it later
                                 const workers = [];
                                 if(claim.rating) {
-                                    workers.push(Q(this.collection(database, claim.rating.namespace).findOne({_id: claim.rating.oid})));
+                                    workers.push(Q(this.collection(database, claim.rating.namespace)
+                                        .findOne({_id: claim.rating.oid})));
                                 }
                                 return Q.all(workers).then((rating) => {
                                     if (rating && rating.length > 0) {
@@ -69,7 +71,8 @@ class FactcheckModel extends MongoBase {
                                     }
 
                                     const claimant = claim.claimant;
-                                    return Q(this.collection(database, claimant.namespace).findOne({_id: claimant.oid}));
+                                    return Q(this.collection(database, claimant.namespace)
+                                        .findOne({_id: claimant.oid}));
                                 }).then((claimant) => {
                                     claim.claimant = claimant;
                                     return claim;

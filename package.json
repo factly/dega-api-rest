@@ -7,17 +7,21 @@
     "scripts": {
         "test": "grunt test",
         "build": "grunt build",
+        "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+        "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
         "prod": "NODE_ENV=production node server.js",
         "dev": "NODE_ENV=development nodemon server.js",
         "all": "npm run build && npm run test"
     },
     "dependencies": {
+        "chance": "^1.0.18",
         "confit": "^2.3.0",
         "construx": "^1.0.1",
         "construx-copier": "^1.0.0",
         "cors": "^2.8.5",
         "deref": "^0.7.6",
         "eslint": "^5.11.0",
+        "eslint-config-airbnb": "^17.1.0",
         "express": "^4.16.4",
         "kraken-js": "^2.2.0",
         "lodash": "^4.17.11",

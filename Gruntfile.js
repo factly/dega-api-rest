@@ -25,7 +25,7 @@ module.exports = function (grunt) {
                 'tasks/**',
                 'test/**',
                 'index.js',
-                'server.js'
+                'server.js',
             ]
         }
     });
