@@ -6,29 +6,28 @@
             "factcheck": "factcheck"
         }
     },
-    "loggerConfig": {
-        "writeToDisk": true,
-        "exitOnError": false,
-        "componentName": "DEGA-API",
-        "writeToConsole": {
-            "enabled": true,
-            "colorize": false
-        },
-        "level": "info"
-    },
     "specialization": {
     },
     "middleware": {
         "compress": {
+            "priority": 10,
             "enabled": true
         },
         "logger": {
             "enabled": true,
             "route": "/api*",
-            "priority": 1,
+            "priority": 20,
             "module": {
-                "name": "path:middleware/logger",
-                "arguments": []
+                "name": "path:middleware/logHandler",
+                "arguments": [
+                    {
+                        "writeToDisk": true,
+                        "component": "dega_api",
+                        "logDir": "/tmp/dega",
+                        "writeToConsole": true,
+                        "level": "info"
+                    }
+                ]
             }
         },
         "static": {
@@ -40,7 +39,14 @@
             "module": {
                 "arguments": [{ "directory": "path:./controllers" }]
             }
+        },
+        "errorHandler": {
+            "enabled": true,
+            "priority": 140,
+            "module": {
+                "name": "path:middleware/errorHandler",
+                "arguments": []
+            }
         }
-
     }
 }

@@ -10,6 +10,7 @@ class TagModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'tag');
+        this.logger = logger;
     }
 
     getTag(config, clientId) {

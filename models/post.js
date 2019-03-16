@@ -2,7 +2,6 @@ const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
-const logger = require('logger').createLogger();
 
 class PostsModel extends MongoBase {
     /**
@@ -12,12 +11,13 @@ class PostsModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'post');
+        this.logger = logger;
     }
 
     getPosts(config, clientId, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
         const queryObj = this.getQueryObject(clientId, slug);
-        logger.info(`Query Object ${JSON.stringify(queryObj)}`);
+        this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
 
         // get paging object
         const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
@@ -25,13 +25,14 @@ class PostsModel extends MongoBase {
         const database = config.get('databaseConfig:databases:core');
         return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
             .then((result) => {
+                this.logger.info('Converting degaUsers to authors');
                 const posts = result.results.map((post) => {
                     post.authors = post.degaUsers;
                     delete post.degaUsers;
                     return post;
                 });
-                logger.info(`Posts retrieved ${posts.length}`);
 
+                this.logger.info('Expanding sub-documents');
                 return posts.map((post) => {
                     // query all orgs
                     const tagWorkers = [];
@@ -76,7 +77,7 @@ class PostsModel extends MongoBase {
                         }).then((status) => {
                             // filter all posts on Publish posts
                             if (status.name !== 'Publish') {
-                                throw Error('SkipPost post not published');
+                                throw Error('SkipPost not published');
                             }
 
                             post.status = status;
@@ -109,7 +110,8 @@ class PostsModel extends MongoBase {
                             return post;
                         }).catch((err) => {
                             if (err && err.message.startsWith('SkipPost')) {
-                                logger.warn(`Skipped the post with message ${err}`);
+                                const msg = err.message.split('SkipPost')[1];
+                                this.logger.debug(`Ignoring post -${msg}`);
                                 return null;
                             }
                             throw err;

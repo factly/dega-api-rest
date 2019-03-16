@@ -12,6 +12,13 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['eslint']);
     grunt.registerTask('test', [ 'eslint', 'mochacli' ]);
 
+
+    grunt.registerTask('test', [
+        'test:prep',
+        'eslint:local',
+        'mocha_istanbul:tests',
+    ]);
+
     // ESLint options
     grunt.initConfig({
         eslint: {
@@ -31,5 +38,5 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', ['eslint']);
-    
+
 };

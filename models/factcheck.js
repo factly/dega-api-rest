@@ -1,4 +1,3 @@
-
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
@@ -11,6 +10,7 @@ class FactcheckModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'factcheck');
+        this.logger = logger;
     }
 
     getQueryObject(clientId, slug) {
@@ -35,8 +35,7 @@ class FactcheckModel extends MongoBase {
         const coreDatabase = config.get('databaseConfig:databases:core');
         return Q(this.collection(database).find(queryObj).toArray())
             .then((results) => {
-                this.logger.info('Retrieved the results');
-
+                this.logger.info('Converting degaUsers to authors');
                 const facts = results.map((f) => {
                     f.authors = f.degaUsers;
                     delete f.degaUsers;
@@ -44,6 +43,7 @@ class FactcheckModel extends MongoBase {
                 });
 
                 const workers = [];
+                this.logger.info('Expanding sub-documents');
                 facts.forEach((fact) => {
                     const claimsWorkers = [];
                     if (fact.claims) {
@@ -123,7 +123,7 @@ class FactcheckModel extends MongoBase {
                         }).
                         then((status) => {
                             if (status.name !== 'Publish') {
-                                throw Error('SkipFactCheck factcheck not published');
+                                throw Error('SkipFactCheck not published');
                             }
                             fact.status = status;
 
@@ -143,6 +143,8 @@ class FactcheckModel extends MongoBase {
                         }).
                         catch((err) => {
                             if (err && err.message.startsWith('SkipFactCheck')) {
+                                const msg = err.message.split('SkipFactCheck')[1];
+                                this.logger.debug(`Ignoring factcheck -${msg}`);
                                 return null;
                             }
                             throw err;

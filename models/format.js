@@ -10,6 +10,7 @@ class FormatModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'format');
+        this.logger = logger;
     }
 
     getFormat(config, clientId) {

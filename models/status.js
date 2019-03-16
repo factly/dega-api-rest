@@ -10,6 +10,7 @@ class StatusModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'status');
+        this.logger = logger;
     }
 
     getStatus(config, clientId) {
@@ -21,7 +22,7 @@ class StatusModel extends MongoBase {
 
         return Q(this.collection(config.get('databaseConfig:databases:core')).find(query).toArray())
             .then((results) => {
-                this.logger.info('Retrieved the results');
+                this.logger.debug('Retrieved the results');
                 return results;
             });
     }

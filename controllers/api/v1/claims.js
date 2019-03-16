@@ -1,8 +1,10 @@
 const ClaimModel = require('../../../models/claim');
-const model = new ClaimModel();
+const utils = require('../../../lib/utils');
 
 function getClaim(req, res) {
-
+    const logger = req.logger;
+    utils.setLogTokens(logger, 'claims', 'getClaim', req.query.client, null);
+    const model = new ClaimModel(logger);
     return model.getClaim(
         req.app.kraken,
         req.query.client,

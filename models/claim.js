@@ -1,4 +1,3 @@
-
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
@@ -11,6 +10,7 @@ class ClaimModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'claim');
+        this.logger = logger;
     }
 
     getClaim(config, clientId, ratingSlug, claimantSlug) {
@@ -54,6 +54,8 @@ class ClaimModel extends MongoBase {
                         return claim;
                     }).catch((err) => {
                         if (err && err.message === 'SkipClaim') {
+                            const msg = err.message.split('SkipClaim')[1];
+                            this.logger.debug(`Ignoring claim -${msg}`);
                             return null;
                         }
                         throw err;
