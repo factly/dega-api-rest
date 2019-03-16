@@ -1,9 +1,10 @@
 const PostsModel = require('../../../models/post');
-const logger = require('logger').createLogger();
-const model = new PostsModel();
+const utils = require('../../../lib/utils');
 
-function getPosts(req, res) {
-    // clientId, slug, sortBy, sortAsc, limit, next, previous
+function getPosts(req, res, next) {
+    const logger = req.logger;
+    utils.setLogTokens(logger, 'posts', 'getPosts', req.query.client, null);
+    const model = new PostsModel(logger);
     return model.getPosts(
         req.app.kraken,
         req.query.client,
@@ -15,16 +16,16 @@ function getPosts(req, res) {
         req.query.sortAsc,
         req.query.limit,
         req.query.next,
-        req.query.previous).then((result) => {
-        if (result) {
-            res.status(200).json(result);
-        } else {
-            res.sendStatus(404);
-        }
-    }).catch((err) => {
-        logger.error(`Unknown error with message ${err.message} and stack ${err.stack}`);
-        res.status(err.statusCode || 500).json(err.message);
-    });
+        req.query.previous,
+        logger)
+        .then((result) => {
+            if (result) {
+                res.status(200).json(result);
+            } else {
+                res.sendStatus(404);
+            }
+        })
+        .catch(next);
 }
 
 module.exports = function routes(router) {

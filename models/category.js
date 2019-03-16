@@ -1,4 +1,3 @@
-
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 
@@ -10,6 +9,7 @@ class CategoryModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'category');
+        this.logger = logger;
     }
 
     getCategory(config, clientId) {

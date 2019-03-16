@@ -1,4 +1,3 @@
-
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 
@@ -10,6 +9,7 @@ class UserModel extends MongoBase {
      */
     constructor(logger) {
         super(logger, 'dega_user');
+        this.logger = logger;
     }
 
     getUser(config, clientId) {

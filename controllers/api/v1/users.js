@@ -1,9 +1,11 @@
 const UserModel = require('../../../models/user');
-const logger = require('logger').createLogger();
-const model = new UserModel();
+const utils = require('../../../lib/utils');
 
 function getUser(req, res) {
-    const clientId = req.query.client_id;
+    const logger = req.logger;
+    utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
+    const model = new UserModel(logger);
+    const clientId = req.query.client;
     return model.getUser(req.app.kraken, clientId).then((result) => {
         if (result) {
             res.status(200).json(result);

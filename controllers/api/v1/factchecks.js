@@ -1,9 +1,12 @@
 const FactcheckModel = require('../../../models/factcheck');
-const model = new FactcheckModel();
-const logger = require('logger').createLogger();
+const utils = require('../../../lib/utils');
 const cleamReviewSchema = require('../../../claim-review-schema/ldschema');
 
 function getFactcheck(req, res) {
+    const logger = req.logger;
+    utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.query.client, null);
+    const model = new FactcheckModel(logger);
+
     return model.getFactcheck(req.app.kraken,
         req.query.client,
         req.query.slug,
