@@ -1,0 +1,50 @@
+{
+    "databaseConfig": {
+        "uri": "mongodb://localhost:27017/",
+        "databases": {
+            "core": "degaUnit",
+            "factcheck": "degaUnit"
+        }
+    },
+    "middleware": {
+        "compress": {
+            "priority": 10,
+            "enabled": true
+        },
+        "logger": {
+            "enabled": true,
+            "route": "/api*",
+            "priority": 20,
+            "module": {
+                "name": "path:middleware/logHandler",
+                "arguments": [
+                    {
+                        "writeToDisk": true,
+                        "component": "dega_api",
+                        "logDir": "./logs",
+                        "writeToConsole": false,
+                        "level": "debug"
+                    }
+                ]
+            }
+        },
+        "static": {
+            "module": {
+                "arguments": [ "path:./.build" ]
+            }
+        },
+        "router": {
+            "module": {
+                "arguments": [{ "directory": "path:./controllers" }]
+            }
+        },
+        "errorHandler": {
+            "enabled": true,
+            "priority": 140,
+            "module": {
+                "name": "path:middleware/errorHandler",
+                "arguments": []
+            }
+        }
+    }
+}

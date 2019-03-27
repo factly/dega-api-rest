@@ -21,9 +21,9 @@ function getPosts(req, res, next) {
         .then((result) => {
             if (result) {
                 res.status(200).json(result);
-            } else {
-                res.sendStatus(404);
+                return;
             }
+            res.sendStatus(404);
         })
         .catch(next);
 }

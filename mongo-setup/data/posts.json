@@ -1,0 +1,44 @@
+[
+    {
+        "title" : "Why are discounted SMS rates not valid on certain days?",
+        "client_id" : "Factly",
+        "content" : "<p>Many of you might have received that customary message from your Telecom Service Provider (mobile operators) about discounted and free SMS rates not being valid on certain days.&nbsp;Why is that mobile operators charge normal rates on some specific days and not charge us the usual package rate on these days? The answer lies in&nbsp;<strong><em>‘Black Out Days’</em></strong>&nbsp;as listed by the respective service provider.</p><p><br></p><p><strong>Transparency in Tariff Offers</strong></p><p>The Telecom Regulatory Authority of India (TRAI), the apex regulatory body in the telecom sector issued&nbsp;<span style=\"color: rgb(229, 78, 83);\">detailed direction in September, 2008</span>&nbsp;to all telecom service providers regarding transparency in their tariff offers. The direction was an outcome of large number of complaints from consumers and consumer organizations that the tariffs plans offered by the service providers are complex to understand and are confusing, which makes it difficult for consumers to make an informed choice.</p><p>TRAI initiated a consultation process on this issue and also held open house discussions before coming up with these directions. The directions were issued in four broad areas namely</p><ul><li>Directions relating to Key Tariff Information</li><li>Directions relating to Promotional Offers</li><li>Direction relating to condition or barrier in cases of migration from one plan to another in certain cases</li><li>Directions relating to Black out days</li></ul><p><br></p><p><strong>Key Tariff Information</strong></p><p>TRAI directed all telecom service providers to provide detailed information to consumers on each tariff plan offered by them in both Vernacular &amp; English language. The information about each plan should include the following:</p><ul><li>Title</li><li>Rental/Fixed Fee</li><li>Billing Cycle/Validity</li><li>Free Call Allowance/Talk time</li><li>Tariff per Unit for:</li><li class=\"ql-indent-1\">Local Call</li><li class=\"ql-indent-1\">STD</li><li class=\"ql-indent-1\">ISD</li><li class=\"ql-indent-1\">SMS</li><li class=\"ql-indent-1\">National roaming</li></ul><p>Not just this, all this information has to be prominently displayed at all the retail outlets of the telecom service providers.</p><p><br></p><p><strong>Promotional Offers</strong></p><p>All the service providers must provide the following information to public with respect to any promotional offer,</p><ul><li>The eligibility criteria for such promotional offer</li><li>The opening and closing dates of such promotional offer</li><li><br></li></ul><p><strong>Barrier in cases of migration from one plan to another in certain cases</strong></p><p>No service provider should put any condition or barrier such as the requirement of obtaining new SIM or change of telephone number, etc., to a consumer who wishes to migrate across plans or across postpaid and prepaid platforms.</p><p><br></p><p><strong>The Black Out Days</strong></p><p>Coming to black out days, TRAI has allowed the service providers to fix a maximum of five (5) ‘black out’ days in a calendar year. ‘Black out’ days are those days on which free or concessional Voice Calls/SMS offered under any plan/ package including discounted rates are not valid. Normal rates will be applicable on these blackout days. In the beginning of each year, the telecom service providers are asked to specify the ‘black out’ days for that year. They are free to specify different set of dates for each telecom circle. Different service providers can fix different black out days. But once they are fixed, the dates cannot be modified. For example, the list of&nbsp;<span style=\"color: rgb(229, 78, 83);\">black out days for 2018</span>&nbsp;has different days listed for different circles.</p>",
+        "excerpt" : "Why are discounted SMS rates not valid on certain days? What are the rules that govern these days? Can Mobile operators specify as many days as they wish?  Here is an explainer.",
+        "last_updated_date" : "2019-01-30T12:20:38.282Z",
+        "featured" : true,
+        "sticky" : false,
+        "slug" : "why-are-discounted-sms-rates-not-valid-on-certain-days",
+        "created_date" : "2019-01-14T17:21:00.000Z",
+        "tags" : [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f513569ed47e00c7004f"
+            }
+        ],
+        "categories" : [
+            {
+                "$ref" : "category",
+                "$id" : "5c38f470569ed47e00c7002b"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a"
+        },
+        "format" : {
+            "$ref" : "format",
+            "$id" : "5c2a71152308247c7669a60f"
+        },
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5c24fa70d654062b1dcf96d2"
+            },
+            {
+                "$ref" : "dega_user",
+                "$id" : "5c519643569ed43016a90249"
+            }
+        ],
+        "_class" : "com.factly.dega.domain.Post"
+    }
+]

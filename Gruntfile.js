@@ -7,36 +7,16 @@ module.exports = function (grunt) {
         configDir: require('path').resolve('tasks')
     });
 
-    // Register group tasks
-    //grunt.registerTask('build', ['eslint', 'copyto']);
-    grunt.registerTask('build', ['eslint']);
-    grunt.registerTask('test', [ 'eslint', 'mochacli' ]);
-
-
-    grunt.registerTask('test', [
-        'test:prep',
-        'eslint:local',
-        'mocha_istanbul:tests',
+    grunt.registerTask('test:load', [
+        'env:unit',        // set environment
+        'shell:load_data',      // load data into dega db
     ]);
 
-    // ESLint options
-    grunt.initConfig({
-        eslint: {
-            options:{
-                fix: true
-            },
-            target: [
-                'controllers/**',
-                'lib/**',
-                'models/**',
-                'tasks/**',
-                'test/**',
-                'index.js',
-                'server.js',
-            ]
-        }
-    });
+    grunt.registerTask('lint', ['eslint']);
 
-    grunt.registerTask('default', ['eslint']);
-
+    grunt.registerTask('test', [
+        'test:load',
+        'eslint',
+        'mocha_istanbul:tests',
+    ]);
 };

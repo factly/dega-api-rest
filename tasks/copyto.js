@@ -11,12 +11,7 @@ module.exports = function copyto(grunt) {
                 cwd: 'public',
                 src: ['**/*'],
                 dest: '.build/'
-            }],
-            options: {
-                ignore: [
-                    'public/templates/**/*',
-                ]
-            }
+            }]
         }
     };
 };

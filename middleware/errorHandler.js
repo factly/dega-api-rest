@@ -32,6 +32,7 @@ module.exports = () => {
                 } });
             }
         } catch (e) {
+            const msg = e.message;
             res.status(500).json({
                 message: 'Unknown error occured',
                 code: '500-000'
