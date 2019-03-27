@@ -1,0 +1,14 @@
+[{
+    "_id": "5c1fbe8141e7c425ed54c82b",
+    "name": "Factly",
+    "site_title": "Factly",
+    "client_id": "Factly",
+    "slug": "factly",
+    "email": "hi@factly.in",
+    "created_date": "2018-12-23T16:57:37.464Z",
+    "last_updated_date": "2018-12-23T16:57:37.465Z",
+    "degaUsers": [],
+    "degaUserDefault": [],
+    "degaUserCurrent": [],
+    "_class": "com.factly.dega.domain.Organization"
+}]

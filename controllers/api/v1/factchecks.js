@@ -2,7 +2,7 @@ const FactcheckModel = require('../../../models/factcheck');
 const utils = require('../../../lib/utils');
 const cleamReviewSchema = require('../../../claim-review-schema/ldschema');
 
-function getFactcheck(req, res) {
+function getFactcheck(req, res, next) {
     const logger = req.logger;
     utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.query.client, null);
     const model = new FactcheckModel(logger);
@@ -24,7 +24,7 @@ function getFactcheck(req, res) {
                         reviewRating: {}
                     };
                     claimSchema.datePublished = factcheck.published_date;
-                    claimSchema.reviewRating.ratingValue = c.rating.numeric_value;
+                    claimSchema.reviewRating.ratingValue = (c.rating) ? c.rating.numeric_value : 5;
                     claimSchema.reviewRating.bestRating = 5;
 
                     const mergedObject = Object.assign(cleamReviewSchema, claimSchema);
@@ -40,12 +40,7 @@ function getFactcheck(req, res) {
                 return;
             }
             res.sendStatus(404);
-        })
-        .catch((err) => {
-            const msg = (err) ? err.stack: err;
-            logger.error(msg);
-            res.sendStatus(500).json(msg);
-        });
+        }).catch(next);
 }
 
 module.exports = function routes(router) {

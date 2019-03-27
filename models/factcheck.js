@@ -81,7 +81,7 @@ class FactcheckModel extends MongoBase {
 
                             return Q.all(claimPromises);
                         }).then((claims) => {
-                            const claimantSlugs = claims.map(c => c.claimant.slug);
+                            const claimantSlugs = claims.filter(c => c.claimant).map(c => c.claimant.slug);
                             const isClaimantFound = claimantSlugs.includes(claimantSlug);
                             if (claimantSlug && !isClaimantFound) {
                                 throw Error('SkipFactCheck claim slug not found');

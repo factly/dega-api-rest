@@ -1,7 +1,7 @@
 const UserModel = require('../../../models/user');
 const utils = require('../../../lib/utils');
 
-function getUser(req, res) {
+function getUser(req, res, next) {
     const logger = req.logger;
     utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
     const model = new UserModel(logger);
@@ -12,10 +12,7 @@ function getUser(req, res) {
         } else {
             res.sendStatus(404);
         }
-    }).catch((err) => {
-        logger.error(`Unknown error with message ${err.message} and stack ${err.stack}`);
-        res.status(err.statusCode || 500).json(err.message);
-    });
+    }).catch(next);
 }
 
 module.exports = function routes(router) {

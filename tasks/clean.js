@@ -8,6 +8,15 @@ module.exports = function clean(grunt) {
     // Options
     return {
         tmp: 'tmp',
-        build: '.build/templates'
+        build: '.build/templates',
+        coverage : 'coverage/**/*.*',
+        jenkins: 'build',
+        rpm: 'target/rpm',
+        before:{
+            src:['.build','dist','temp', 'tmp']
+        },
+        after: {
+            src:['temp', 'dist', 'tmp']
+        }
     };
 };

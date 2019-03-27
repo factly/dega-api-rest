@@ -9,7 +9,7 @@ const server = require('http').createServer(app);
 const db = require('../lib/database');
 let mock;
 
-describe('/api/v1/posts', () => {
+describe('/api/v1/organizations', () => {
     before((done) => {
         app.on('start', done);
         app.use(kraken({
@@ -37,9 +37,9 @@ describe('/api/v1/posts', () => {
         mock.close(done);
     });
 
-    it('Should get all posts', () => {
+    it('Should get all organizations', () => {
         return request(mock)
-            .get('/api/v1/posts')
+            .get('/api/v1/organizations')
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {

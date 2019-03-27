@@ -117,6 +117,7 @@ Desktop.ini
 ######################
 # Logs
 ######################
+/logs
 *.log*
 
 ######################
@@ -141,3 +142,7 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+
+report.html
+/coverage
+

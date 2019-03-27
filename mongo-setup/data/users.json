@@ -1,0 +1,161 @@
+[
+    {
+        "_id": "5c24fa70d654062b1dcf96d2",
+        "first_name" : "Shashi",
+        "last_name" : "Deshetti",
+        "display_name" : "Shashi Deshetti",
+        "slug" : "shashi-deshetti",
+        "enabled" : true,
+        "email_verified" : true,
+        "email" : "shashi@factly.in",
+        "created_date" : "2018-12-27T16:14:40.200Z",
+        "role" : {
+            "$ref" : "role",
+            "$id" : "5c0ed4eaf2be6078676e4886"
+        },
+        "organizations" : [
+            {
+                "$ref" : "organization",
+                "$id" : "5c1fbe8141e7c425ed54c82b"
+            }
+        ],
+        "organizationDefault" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "organizationCurrent" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "posts" : [],
+        "_class" : "com.factly.dega.domain.DegaUser"
+    },
+    {
+        "_id": "5c24fa70d654062b1dcf96d2",
+        "first_name" : "Rakesh",
+        "last_name" : "Dubbudu",
+        "display_name" : "Rakesh Dubbudu",
+        "website" : "www.factly.in",
+        "facebook_url" : "",
+        "description" : "Rakesh closely watched the ‘Jan Satyagraha’ in 2012 and the courage and conviction of the man who led it inspired him to make ‘ engagement and not confrontation’ his core principle. Rakesh is an Open Data evangelist and experienced transparency (RTI) campaigner in India who won the US State Department Fellowship in 2014. Rakesh graduated from National Institute of Technology (NIT), Warangal. He has immense knowledge and experience in understanding government policy & data. He is a fearless leader with an empirical world view. Rakesh is the editorial lead and the idea machine at FACTLY.",
+        "slug" : "rakesh-dubbudu",
+        "enabled" : true,
+        "email_verified" : true,
+        "email" : "rakesh@factly.in",
+        "created_date" : "2019-01-30T12:19:14.648Z",
+        "role" : {
+            "$ref" : "role",
+            "$id" : "5c0ed4eaf2be6078676e4886"
+        },
+        "organizations" : [
+            {
+                "$ref" : "organization",
+                "$id" : "5c1fbe8141e7c425ed54c82b"
+            }
+        ],
+        "organizationDefault" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "organizationCurrent" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "posts" : [],
+        "_class" : "com.factly.dega.domain.DegaUser"
+    },
+    {
+        "_id": "5c519643569ed43016a90249",
+        "first_name" : "Niranjan",
+        "last_name" : "Tallapalli",
+        "display_name" : "ntalla6",
+        "facebook_url" : "Niranjan Tallapalli",
+        "slug" : "ntalla6",
+        "enabled" : false,
+        "email_verified" : false,
+        "email" : "niranjan.tallapalli@gmail.com",
+        "created_date" : "2019-03-01T21:10:02.913Z",
+        "role" : {
+            "$ref" : "role",
+            "$id" : "5c0ed4eaf2be6078676e4886"
+        },
+        "organizations" : [
+            {
+                "$ref" : "organization",
+                "$id" : "5c1fbe8141e7c425ed54c82b"
+            }
+        ],
+        "organizationDefault" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "organizationCurrent" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "posts" : [],
+        "_class" : "com.factly.dega.domain.DegaUser"
+    },
+    {
+        "first_name" : "Niranjan",
+        "last_name" : "Tallapalli",
+        "display_name" : "ntalla7",
+        "facebook_url" : "Niranjan Tallapalli",
+        "slug" : "ntalla7",
+        "enabled" : true,
+        "email_verified" : true,
+        "email" : "niranjan.tallapalli2@gmail.com",
+        "created_date" : "2019-03-01T21:11:13.179Z",
+        "role" : {
+            "$ref" : "role",
+            "$id" : "5c0ed4eaf2be6078676e4886"
+        },
+        "organizations" : [
+            {
+                "$ref" : "organization",
+                "$id" : "5c1fbe8141e7c425ed54c82b"
+            }
+        ],
+        "organizationDefault" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "organizationCurrent" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "posts" : [],
+        "_class" : "com.factly.dega.domain.DegaUser"
+    },
+    {
+        "first_name" : "Niranjan",
+        "last_name" : "Tallapalli",
+        "display_name" : "ntalla6",
+        "facebook_url" : "Niranjan Tallapalli",
+        "slug" : "ntalla6",
+        "enabled" : true,
+        "email_verified" : true,
+        "email" : "niranjansa@gmail.com",
+        "created_date" : "2019-03-03T22:50:35.873Z",
+        "role" : {
+            "$ref" : "role",
+            "$id" : "5c0ed4b8f2be6078676e4883"
+        },
+        "organizations" : [
+            {
+                "$ref" : "organization",
+                "$id" : "5c1fbe8141e7c425ed54c82b"
+            }
+        ],
+        "organizationDefault" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "organizationCurrent" : {
+            "$ref" : "organization",
+            "$id" : "5c1fbe8141e7c425ed54c82b"
+        },
+        "posts" : [],
+        "_class" : "com.factly.dega.domain.DegaUser"
+    }
+]

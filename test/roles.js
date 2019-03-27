@@ -9,7 +9,7 @@ const server = require('http').createServer(app);
 const db = require('../lib/database');
 let mock;
 
-describe('/api/v1/posts', () => {
+describe('/api/v1/roles', () => {
     before((done) => {
         app.on('start', done);
         app.use(kraken({
@@ -37,14 +37,41 @@ describe('/api/v1/posts', () => {
         mock.close(done);
     });
 
-    it('Should get all posts', () => {
+    it('Should get all roles', () => {
         return request(mock)
-            .get('/api/v1/posts')
+            .get('/api/v1/roles')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const result = JSON.parse(res.text);
+                expect(result.length).eq(6);
+
+            });
+    });
+
+    it('Should list all roles by client', () => {
+        return request(mock)
+            .get('/api/v1/roles?client=default')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const result = JSON.parse(res.text);
+                expect(result.length).eq(6);
+
+            });
+    });
+
+    it('Should get role by slug', () => {
+        return request(mock)
+            .get('/api/v1/roles?slug=super-admin')
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
                 const result = JSON.parse(res.text);
                 expect(result.length).eq(1);
+                const superAdminRole = result[0];
+                expect(superAdminRole).to.have.property('name');
+                expect(superAdminRole).to.have.property('name').eq('Super Admin');
             });
     });
 });
