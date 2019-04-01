@@ -14,6 +14,8 @@ class PostsModel extends MongoBase {
         this.logger = logger;
     }
 
+    // MANDATORY sub documents: status, format and degaUsers
+    // OPTIONAL: All other sub docs are optional
     getPosts(config, clientId, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
         const queryObj = this.getQueryObject(clientId, slug);
@@ -111,9 +113,10 @@ class PostsModel extends MongoBase {
                         }).catch((err) => {
                             if (err && err.message.startsWith('SkipPost')) {
                                 const msg = err.message.split('SkipPost')[1];
-                                this.logger.debug(`Ignoring post -${msg}`);
+                                this.logger.debug(`Ignoring post ${post._id} -${msg}`);
                                 return null;
                             }
+                            this.logger.error(`Errored on post ${post._id}`);
                             throw err;
                         });
                 });

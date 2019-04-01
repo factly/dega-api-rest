@@ -25,6 +25,8 @@ class FactcheckModel extends MongoBase {
         return queryObj;
     }
 
+    // MANDATORY sub documents: claims, status and degaUsers
+    // OPTIONAL: All other sub docs are optional
     // eslint-disable-next-line no-unused-vars
     getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug) {
 
@@ -46,14 +48,14 @@ class FactcheckModel extends MongoBase {
                 this.logger.info('Expanding sub-documents');
                 facts.forEach((fact) => {
                     const claimsWorkers = [];
-                    if (fact.claims) {
-                        const claims = fact.claims;
-                        claims.forEach((claim) => {
-                            claimsWorkers.push(Q(this.collection(database, claim.namespace).findOne({_id: claim.oid})));
-                        });
-                    }
+                    (fact.claims || []).forEach((claim) => {
+                        claimsWorkers.push(Q(this.collection(database, claim.namespace).findOne({_id: claim.oid})));
+                    });
                     const promiseChain = Q.all(claimsWorkers)
                         .then((claims) => {
+                            if (!claims || claims.length === 0) {
+                                throw Error('SkipFactCheck claims not found');
+                            }
                             const claimPromises = claims.map((claim) => {
                                 // TODO: single promise fails to retrieve, fix it later
                                 const workers = [];
@@ -81,7 +83,8 @@ class FactcheckModel extends MongoBase {
 
                             return Q.all(claimPromises);
                         }).then((claims) => {
-                            const claimantSlugs = claims.filter(c => c.claimant).map(c => c.claimant.slug);
+                            const claimantSlugs = ((claims || []).filter(c => c.claimant) || [])
+                                .map(c => (c.claimant) ? c.claimant.slug : '');
                             const isClaimantFound = claimantSlugs.includes(claimantSlug);
                             if (claimantSlug && !isClaimantFound) {
                                 throw Error('SkipFactCheck claim slug not found');
@@ -94,7 +97,7 @@ class FactcheckModel extends MongoBase {
                             return Q.all(tagPromises);
                         }).
                         then((tags) => {
-                            const tagSlugs = tags.map(t => t.slug);
+                            const tagSlugs = (tags || []).map(t => (t) ? t.slug: '');
                             const isTagFound = tagSlugs.includes(tagSlug);
                             if (tagSlug && !isTagFound) {
                                 throw Error('SkipFactCheck tag slug not found');
@@ -107,7 +110,7 @@ class FactcheckModel extends MongoBase {
                             return Q.all(categoriesPromises);
                         }).
                         then((categories) => {
-                            const categorySlugs = categories.map(t => t.slug);
+                            const categorySlugs = categories.map(c => (c) ? c.slug: '');
                             const isCategoryFound = categorySlugs.includes(categorySlug);
                             if (categorySlug && !isCategoryFound) {
                                 throw Error('SkipFactCheck category slug not found');
@@ -122,7 +125,7 @@ class FactcheckModel extends MongoBase {
                             return Q();
                         }).
                         then((status) => {
-                            if (status.name !== 'Publish') {
+                            if (!status || status.name !== 'Publish') {
                                 throw Error('SkipFactCheck not published');
                             }
                             fact.status = status;
@@ -133,7 +136,10 @@ class FactcheckModel extends MongoBase {
                             return Q.all(degaUserPromises);
                         }).
                         then((authors) => {
-                            const authorSlugs = authors.map(u => u.slug);
+                            if (!authors || authors.length === 0) {
+                                throw Error('SkipFactCheck users not linked to this factcheck');
+                            }
+                            const authorSlugs = authors.map(u => (u)? u.slug: '');
                             const isAuthorFound = authorSlugs.includes(userSlug);
                             if (userSlug && !isAuthorFound) {
                                 throw Error('SkipFactCheck user slug not found');
@@ -144,9 +150,10 @@ class FactcheckModel extends MongoBase {
                         catch((err) => {
                             if (err && err.message.startsWith('SkipFactCheck')) {
                                 const msg = err.message.split('SkipFactCheck')[1];
-                                this.logger.debug(`Ignoring factcheck -${msg}`);
+                                this.logger.debug(`Ignoring factcheck ${fact._id} -${msg}`);
                                 return null;
                             }
+                            this.logger.error(`Errored on factcheck ${fact._id}`);
                             throw err;
                         });
                     workers.push(promiseChain);

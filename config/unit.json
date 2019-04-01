@@ -22,7 +22,7 @@
                         "writeToDisk": true,
                         "component": "dega_api",
                         "logDir": "./logs",
-                        "writeToConsole": false,
+                        "writeToConsole": true,
                         "level": "debug"
                     }
                 ]

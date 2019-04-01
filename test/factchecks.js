@@ -44,7 +44,7 @@ describe('/api/v1/factchecks', () => {
             .expect('Content-Type', /json/)
             .then((res) => {
                 const factchecks = JSON.parse(res.text);
-                expect(factchecks.length).eq(1);
+                expect(factchecks.length).eq(2);
                 const factcheck = factchecks[0];
 
                 // check for fields inside factcheck document
@@ -99,6 +99,51 @@ describe('/api/v1/factchecks', () => {
                 expect(tags.length).eq(1);
                 const tag = tags[0];
                 expect(tag).to.have.property('slug').eq('Crude-Oil');
+            });
+    });
+
+
+    it('Should get factchecks with only mandatory sub docs', () => {
+        return request(mock)
+            .get('/api/v1/factchecks')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text);
+                expect(factchecks.length).eq(2);
+            });
+    });
+
+    it('Should skip factcheck on missing status sub doc', () => {
+        return request(mock)
+            .get('/api/v1/factchecks')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text);
+                expect(factchecks.length).eq(2);
+            });
+    });
+
+    it('Should skip factcheck on missing claims sub docs', () => {
+        return request(mock)
+            .get('/api/v1/factchecks')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text);
+                expect(factchecks.length).eq(2);
+            });
+    });
+
+    it('Should skip factcheck on missing users sub docs', () => {
+        return request(mock)
+            .get('/api/v1/factchecks')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text);
+                expect(factchecks.length).eq(2);
             });
     });
 });
