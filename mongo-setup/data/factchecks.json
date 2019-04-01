@@ -49,5 +49,131 @@
             "$db" : "degaUnit"
         },
         "_class" : "com.factly.dega.domain.Factcheck"
+    },
+    {
+        "_id": "5c71d32bfd3c00900fae209c-1",
+        "title": "test 02232019",
+        "client_id": "Factly",
+        "introduction": "<p>test intro\t</p>",
+        "summary": "test summary",
+        "published_date": "2019-02-23T23:11:39.223Z",
+        "last_updated_date": "2019-02-23T23:11:39.223Z",
+        "featured": false,
+        "sticky": false,
+        "slug": "test-02232019",
+        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
+        "created_date": "2019-02-23T23:11:39.223Z",
+        "claims" : [
+            {
+                "$ref" : "claim",
+                "$id" : "5c3e3988569ed47d94519432"
+            },
+            {
+                "$ref" : "claim",
+                "$id" : "5c3e3762569ed47d9451942b"
+            }
+        ],
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5c24fa70d654062b1dcf96d2",
+                "$db" : "degaUnit"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a",
+            "$db" : "degaUnit"
+        },
+        "_class" : "com.factly.dega.domain.Factcheck"
+    },
+    {
+        "_id": "5c71d32bfd3c00900fae209c-2",
+        "title": "test 02232019",
+        "client_id": "Factly",
+        "introduction": "<p>test intro\t</p>",
+        "summary": "test summary",
+        "published_date": "2019-02-23T23:11:39.223Z",
+        "last_updated_date": "2019-02-23T23:11:39.223Z",
+        "featured": false,
+        "sticky": false,
+        "slug": "test-02232019",
+        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
+        "created_date": "2019-02-23T23:11:39.223Z",
+        "claims" : [
+            {
+                "$ref" : "claim",
+                "$id" : "5c3e3988569ed47d94519432"
+            },
+            {
+                "$ref" : "claim",
+                "$id" : "5c3e3762569ed47d9451942b"
+            }
+        ],
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5c24fa70d654062b1dcf96d2",
+                "$db" : "degaUnit"
+            }
+        ],
+        "_class" : "com.factly.dega.domain.Factcheck"
+    },
+    {
+        "_id": "5c71d32bfd3c00900fae209c-3",
+        "title": "test 02232019",
+        "client_id": "Factly",
+        "introduction": "<p>test intro\t</p>",
+        "summary": "test summary",
+        "published_date": "2019-02-23T23:11:39.223Z",
+        "last_updated_date": "2019-02-23T23:11:39.223Z",
+        "featured": false,
+        "sticky": false,
+        "slug": "test-02232019",
+        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
+        "created_date": "2019-02-23T23:11:39.223Z",
+        "claims" : [
+            {
+                "$ref" : "claim",
+                "$id" : "5c3e3988569ed47d94519432"
+            },
+            {
+                "$ref" : "claim",
+                "$id" : "5c3e3762569ed47d9451942b"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a",
+            "$db" : "degaUnit"
+        },
+        "_class" : "com.factly.dega.domain.Factcheck"
+    },
+    {
+        "_id": "5c71d32bfd3c00900fae209c-4",
+        "title": "test 02232019",
+        "client_id": "Factly",
+        "introduction": "<p>test intro\t</p>",
+        "summary": "test summary",
+        "published_date": "2019-02-23T23:11:39.223Z",
+        "last_updated_date": "2019-02-23T23:11:39.223Z",
+        "featured": false,
+        "sticky": false,
+        "slug": "test-02232019",
+        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
+        "created_date": "2019-02-23T23:11:39.223Z",
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5c24fa70d654062b1dcf96d2",
+                "$db" : "degaUnit"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a",
+            "$db" : "degaUnit"
+        },
+        "_class" : "com.factly.dega.domain.Factcheck"
     }
 ]
