@@ -84,10 +84,10 @@ describe('/api/v1/factchecks', () => {
                 const schema = schemas[0];
                 expect(schema).to.have.property('@type').eq('ClaimReview');
                 expect(schema).to.have.property('url').eq('http://www.politifact.com/texas/statements/2014/jul/23/rick-perry/rick-perry-claim-about-3000-homicides-illegal-immi/');
-                expect(schema).to.have.property('claimReviewed').eq('More than 3,000 homicides were committed by \'illegal aliens\' over the past six years.');
+                expect(schema).to.have.property('claimReviewed').eq('Broad Gauge line commissioned between the years 2009 and 2014 is 7,600 kms where as it is 9,528 kms between 2014 and 2018.');
                 expect(schema).to.have.property('reviewRating');
                 expect(schema.reviewRating).to.have.property('bestRating').eq(5);
-                expect(schema.reviewRating).to.have.property('ratingValue').eq(5);
+                expect(schema.reviewRating).to.have.property('worstRating').eq(1);
 
                 // status
                 expect(factcheck).to.have.property('status');
