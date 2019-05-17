@@ -2,6 +2,7 @@ const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
+var ObjectId = require('mongodb').ObjectID
 
 class PostsModel extends MongoBase {
     /**
@@ -16,9 +17,9 @@ class PostsModel extends MongoBase {
 
     // MANDATORY sub documents: status, format and degaUsers
     // OPTIONAL: All other sub docs are optional
-    getPosts(config, clientId, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
+    getPosts(config, clientId,id, ids,slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
-        const queryObj = this.getQueryObject(clientId, slug);
+        const queryObj = this.getQueryObject(clientId, slug, id, ids);
         this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
 
         // get paging object
@@ -148,7 +149,7 @@ class PostsModel extends MongoBase {
         return pagingObj;
     }
 
-    getQueryObject(clientId, slug) {
+    getQueryObject(clientId, slug, id ,ids) {
         const queryObj = {};
         if (clientId) {
             queryObj.client_id = clientId;
@@ -156,6 +157,16 @@ class PostsModel extends MongoBase {
 
         if (slug) {
             queryObj.slug = slug;
+        }
+
+        if (id) {
+            queryObj._id= new ObjectId(id);
+        }
+        if (ids){
+            queryObj._id = {$in:[]}
+            for(let id of ids){
+                queryObj._id.$in.push(new ObjectId(id))
+            }
         }
         return queryObj;
     }
