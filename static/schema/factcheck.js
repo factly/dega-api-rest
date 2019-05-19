@@ -5,6 +5,7 @@ const schema = {
     datePublished: '2014-07-23',
     url: 'http://factcheck.factly.in/factcheck/-fact-checking-government-claims-on-direct-benefit-transfer-0',
     author: {
+        name: 'Factly',
         '@type': 'Organization',
         url: 'http://factcheck.factly.in/',
         image: 'http://gateway.factly.in/core/dega-content/factly-telugu/2019/4/factly-logo.png'
