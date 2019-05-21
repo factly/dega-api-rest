@@ -8,6 +8,8 @@ function getPosts(req, res, next) {
     return model.getPosts(
         req.app.kraken,
         req.query.client,
+        req.query.id,
+        req.query.ids,
         req.query.slug,
         req.query.category,
         req.query.tag,
