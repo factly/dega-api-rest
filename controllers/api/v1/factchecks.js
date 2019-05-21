@@ -9,12 +9,13 @@ function getFactcheck(req, res, next) {
     utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.query.client, null);
     const model = new FactcheckModel(logger);
     const orgModel = new OrganizationModel(logger);
-
     const clientId = req.query.client;
     const conf = req.app.kraken;
     return model.getFactcheck(
         conf,
         clientId,
+        req.query.id,
+        req.query.ids,
         req.query.slug,
         req.query.tag,
         req.query.category,
