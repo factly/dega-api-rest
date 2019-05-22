@@ -1,6 +1,7 @@
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
+var ObjectId = require('mongodb').ObjectID
 
 class FactcheckModel extends MongoBase {
     /**
@@ -13,7 +14,7 @@ class FactcheckModel extends MongoBase {
         this.logger = logger;
     }
 
-    getQueryObject(clientId, slug) {
+    getQueryObject(clientId, slug, id, ids) {
         const queryObj = {};
         if (clientId) {
             queryObj.client_id = clientId;
@@ -22,17 +23,27 @@ class FactcheckModel extends MongoBase {
         if (slug) {
             queryObj.slug = slug;
         }
+
+        if (id) {
+            queryObj._id = new ObjectId(id);
+        }
+
+        if (ids) {
+            queryObj._id = { $in: [] }
+            for (let id of ids) {
+                queryObj._id.$in.push(new ObjectId(id))
+            }
+        }
         return queryObj;
     }
 
     // MANDATORY sub documents: claims, status and degaUsers
     // OPTIONAL: All other sub docs are optional
     // eslint-disable-next-line no-unused-vars
-    getFactcheck(config, clientId, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug) {
+    getFactcheck(config, clientId, id, ids, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug) {
 
         // get query object
-        const queryObj = this.getQueryObject(clientId, slug);
-
+        const queryObj = this.getQueryObject(clientId, slug, id, ids);
         const database = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
         return Q(this.collection(database).find(queryObj).toArray())
@@ -49,7 +60,7 @@ class FactcheckModel extends MongoBase {
                 facts.forEach((fact) => {
                     const claimsWorkers = [];
                     (fact.claims || []).forEach((claim) => {
-                        claimsWorkers.push(Q(this.collection(database, claim.namespace).findOne({_id: claim.oid})));
+                        claimsWorkers.push(Q(this.collection(database, claim.namespace).findOne({ _id: claim.oid })));
                     });
                     const promiseChain = Q.all(claimsWorkers)
                         .then((claims) => {
@@ -59,22 +70,22 @@ class FactcheckModel extends MongoBase {
                             const claimPromises = claims.map((claim) => {
                                 // TODO: single promise fails to retrieve, fix it later
                                 const workers = [];
-                                if(claim.rating) {
+                                if (claim.rating) {
                                     workers.push(Q(this.collection(database, claim.rating.namespace)
-                                        .findOne({_id: claim.rating.oid})));
+                                        .findOne({ _id: claim.rating.oid })));
                                 }
                                 return Q.all(workers).then((rating) => {
                                     if (rating && rating.length > 0) {
                                         claim.rating = rating[0];
                                     }
 
-                                    if(!claim.claimant) {
+                                    if (!claim.claimant) {
                                         return Q();
                                     }
 
                                     const claimant = claim.claimant;
                                     return Q(this.collection(database, claimant.namespace)
-                                        .findOne({_id: claimant.oid}));
+                                        .findOne({ _id: claimant.oid }));
                                 }).then((claimant) => {
                                     claim.claimant = claimant;
                                     return claim;
@@ -93,11 +104,11 @@ class FactcheckModel extends MongoBase {
 
                             // get all tags
                             const tagPromises = (fact.tags || []).map((t) =>
-                                Q(this.collection(coreDatabase, t.namespace).findOne({_id: t.oid})));
+                                Q(this.collection(coreDatabase, t.namespace).findOne({ _id: t.oid })));
                             return Q.all(tagPromises);
                         }).
                         then((tags) => {
-                            const tagSlugs = (tags || []).map(t => (t) ? t.slug: '');
+                            const tagSlugs = (tags || []).map(t => (t) ? t.slug : '');
                             const isTagFound = tagSlugs.includes(tagSlug);
                             if (tagSlug && !isTagFound) {
                                 throw Error('SkipFactCheck tag slug not found');
@@ -106,11 +117,11 @@ class FactcheckModel extends MongoBase {
 
                             // get all categories
                             const categoriesPromises = (fact.categories || []).map((c) =>
-                                Q(this.collection(coreDatabase, c.namespace).findOne({_id: c.oid})));
+                                Q(this.collection(coreDatabase, c.namespace).findOne({ _id: c.oid })));
                             return Q.all(categoriesPromises);
                         }).
                         then((categories) => {
-                            const categorySlugs = categories.map(c => (c) ? c.slug: '');
+                            const categorySlugs = categories.map(c => (c) ? c.slug : '');
                             const isCategoryFound = categorySlugs.includes(categorySlug);
                             if (categorySlug && !isCategoryFound) {
                                 throw Error('SkipFactCheck category slug not found');
@@ -120,7 +131,7 @@ class FactcheckModel extends MongoBase {
                             // get all dega users
                             if (fact.status) {
                                 const status = fact.status;
-                                return Q(this.collection(coreDatabase, status.namespace).findOne({_id: status.oid}));
+                                return Q(this.collection(coreDatabase, status.namespace).findOne({ _id: status.oid }));
                             }
                             return Q();
                         }).
@@ -132,14 +143,14 @@ class FactcheckModel extends MongoBase {
 
                             // get all dega users
                             const degaUserPromises = (fact.authors || []).map((u) =>
-                                Q(this.collection(coreDatabase, u.namespace).findOne({_id: u.oid})));
+                                Q(this.collection(coreDatabase, u.namespace).findOne({ _id: u.oid })));
                             return Q.all(degaUserPromises);
                         }).
                         then((authors) => {
                             if (!authors || authors.length === 0) {
                                 throw Error('SkipFactCheck users not linked to this factcheck');
                             }
-                            const authorSlugs = authors.map(u => (u)? u.slug: '');
+                            const authorSlugs = authors.map(u => (u) ? u.slug : '');
                             const isAuthorFound = authorSlugs.includes(userSlug);
                             if (userSlug && !isAuthorFound) {
                                 throw Error('SkipFactCheck user slug not found');
