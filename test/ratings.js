@@ -43,8 +43,22 @@ describe('/api/v1/ratings', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(5);
+                const ratings = JSON.parse(res.text);
+                expect(ratings.length).eq(5);
+                const rating = ratings[0];
+                
+                 //expect(rating).to.have.property('_id').eq('ObjectId("5ce24d82cc90bda1f1e2716b")');
+                  //expect(rating).to.have.property('numeric_value').eq('1.0');
+                  //expect(rating).to.have.property('is_default').eq('true');
+                 expect(rating).to.have.property('client_id').eq('default');
+                 expect(rating).to.have.property('slug').eq('false');
+                 expect(rating).to.have.property('name').eq('False');
+                 expect(rating).to.have.property('created_date').eq('2018-12-12T07:00:00.000Z');
+                 expect(rating).to.have.property('last_updated_date').eq('2018-12-12T07:00:00.000Z');
+                 //claim
+                 expect(rating).to.have.property('claim');
+                 const Rating = rating.claim;;
+                 expect(Rating.length).eq(0);
             });
     });
 });
