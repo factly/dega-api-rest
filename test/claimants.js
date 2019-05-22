@@ -43,8 +43,22 @@ describe('/api/v1/claimants', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(3);
+                const claimants = JSON.parse(res.text);
+                expect(claimants.length).eq(3);
+                const claimant = claimants[0];
+                 // check for fields inside claimants document
+                 //expect(claimant).to.have.property('_id').eq('ObjectId("5cdfb2f398ceedf8f2053080")');
+                 expect(claimant).to.have.property('client_id').eq('Factly');
+                 expect(claimant).to.have.property('description').eq('This is the description for Govt of India')
+                 expect(claimant).to.have.property('slug').eq('government-of-india');
+                 expect(claimant).to.have.property('name').eq('Government of India');
+                 expect(claimant).to.have.property('created_date').eq('2019-01-15T19:31:35.627Z');
+                 expect(claimant).to.have.property('last_updated_date').eq('2019-01-15T19:31:35.627Z');
+                 //claim
+                 expect(claimant).to.have.property('claim');
+                 const claim = claimant.claim;
+                 expect(claim.length).eq(0);
+               
             });
     });
 });
