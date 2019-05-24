@@ -17,7 +17,7 @@ class PostsModel extends MongoBase {
 
     // MANDATORY sub documents: status, format and degaUsers
     // OPTIONAL: All other sub docs are optional
-    getPosts(config, clientId,id, ids,slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
+    getPosts(config, clientId, id, ids, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
         const queryObj = this.getQueryObject(clientId, slug, id, ids);
         this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
@@ -41,7 +41,7 @@ class PostsModel extends MongoBase {
                     const tagWorkers = [];
                     if (post.tags && post.tags.length > 0) {
                         post.tags.forEach((tag) => {
-                            tagWorkers.push(Q(this.collection(database, tag.namespace).findOne({_id: tag.oid})));
+                            tagWorkers.push(Q(this.collection(database, tag.namespace).findOne({ _id: tag.oid })));
                         });
                     }
 
@@ -59,7 +59,7 @@ class PostsModel extends MongoBase {
                             }
                             post.categories.forEach((category) => {
                                 catWorkers.push(Q(this.collection(database, category.namespace)
-                                    .findOne({_id: category.oid})));
+                                    .findOne({ _id: category.oid })));
                             });
                             return Q.all(catWorkers);
                         }).then((categories) => {
@@ -76,7 +76,7 @@ class PostsModel extends MongoBase {
                             // query status doc
                             const collection = post.status.namespace;
                             const statusID = post.status.oid;
-                            return Q(this.collection(database, collection).findOne({_id: statusID}));
+                            return Q(this.collection(database, collection).findOne({ _id: statusID }));
                         }).then((status) => {
                             // filter all posts on Publish posts
                             if (status.name !== 'Publish') {
@@ -90,7 +90,7 @@ class PostsModel extends MongoBase {
                             // query format doc
                             const collection = post.format.namespace;
                             const formatID = post.format.oid;
-                            return Q(this.collection(database, collection).findOne({_id: formatID}));
+                            return Q(this.collection(database, collection).findOne({ _id: formatID }));
                         }).then((format) => {
                             post.format = format;
                             const authorWorkers = [];
@@ -99,7 +99,7 @@ class PostsModel extends MongoBase {
                             }
                             post.authors.forEach((author) => {
                                 authorWorkers.push(Q(this.collection(database, author.namespace)
-                                    .findOne({_id: author.oid})));
+                                    .findOne({ _id: author.oid })));
                             });
                             return Q.all(authorWorkers);
                         }).then((authors) => {
@@ -129,7 +129,7 @@ class PostsModel extends MongoBase {
     getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
         const pagingObj = {};
         pagingObj.query = queryObj;
-        pagingObj.limit = (limit) ? parseInt(limit): 20;
+        pagingObj.limit = (limit) ? parseInt(limit) : 20;
 
         if (sortBy) {
             pagingObj.paginatedField = sortBy;
@@ -149,7 +149,7 @@ class PostsModel extends MongoBase {
         return pagingObj;
     }
 
-    getQueryObject(clientId, slug, id ,ids) {
+    getQueryObject(clientId, slug, id, ids) {
         const queryObj = {};
         if (clientId) {
             queryObj.client_id = clientId;
@@ -160,11 +160,12 @@ class PostsModel extends MongoBase {
         }
 
         if (id) {
-            queryObj._id= new ObjectId(id);
+            queryObj._id = new ObjectId(id);
         }
-        if (ids){
-            queryObj._id = {$in:[]};
-            for(let id of ids){
+
+        if (ids) {
+            queryObj._id = { $in: [] }
+            for (let id of ids) {
                 queryObj._id.$in.push(new ObjectId(id));
             }
         }
