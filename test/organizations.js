@@ -57,16 +57,16 @@ describe('/api/v1/organizations', () => {
                 expect(organization).to.have.property('last_updated_date').eq('2018-12-23T16:57:37.465Z');
                 //degaUser
                 expect(organization).to.have.property('degaUsers');
-                const dega = organization.degaUsers;
-                expect(dega.length).eq(0);
+                const degaUsers = organization.degaUsers;
+                expect(degaUsers.length).eq(0);
                 //degaUser-degaUserDefault
                 expect(organization).to.have.property('degaUserDefault');
-                const Dega = organization.degaUserDefault;
-                expect(Dega.length).eq(0);
+                const degaUserDefault = organization.degaUserDefault;
+                expect(degaUserDefault.length).eq(0);
                  //degaUser-degaUserCurrent
                  expect(organization).to.have.property('degaUserCurrent');
-                 const DEGA = organization.degaUserCurrent;
-                 expect(DEGA.length).eq(0);
+                 const degaUserCurrent = organization.degaUserCurrent;
+                 expect(degaUserCurrent.length).eq(0);
             });
     });
 });
