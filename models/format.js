@@ -13,9 +13,9 @@ class FormatModel extends MongoBase {
         this.logger = logger;
     }
 
-    getFormat(config, clientId) {
-        const query = {};
-
+    getFormat(config, clientId, slug) {
+        // get query object
+        const query = this.getQueryObject(clientId, slug);
         if (clientId) {
             query.client_id = clientId;
         }
@@ -24,7 +24,19 @@ class FormatModel extends MongoBase {
             .then((results) => {
                 this.logger.info('Retrieved the results');
                 return results;
-            });
+         });
+    }
+
+    getQueryObject(clientId, slug) {
+        const queryObj = {};
+        if (clientId) {
+            queryObj.client_id = clientId;
+        }
+
+        if (slug) {
+            queryObj.slug = slug;
+        }
+        return queryObj;
     }
 }
 

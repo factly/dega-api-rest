@@ -2,7 +2,7 @@ const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
-var ObjectId = require('mongodb').ObjectID
+var ObjectId = require('mongodb').ObjectID;
 
 class PostsModel extends MongoBase {
     /**
@@ -166,7 +166,7 @@ class PostsModel extends MongoBase {
         if (ids) {
             queryObj._id = { $in: [] }
             for (let id of ids) {
-                queryObj._id.$in.push(new ObjectId(id))
+                queryObj._id.$in.push(new ObjectId(id));
             }
         }
         return queryObj;
