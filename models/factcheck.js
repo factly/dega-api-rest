@@ -1,7 +1,7 @@
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
-var ObjectId = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectID
 
 class FactcheckModel extends MongoBase {
     /**
@@ -14,7 +14,7 @@ class FactcheckModel extends MongoBase {
         this.logger = logger;
     }
 
-    getQueryObject(clientId, slug, id, ids) {
+    getQueryObject(clientId, slug, id) {
         const queryObj = {};
         if (clientId) {
             queryObj.client_id = clientId;
@@ -25,14 +25,15 @@ class FactcheckModel extends MongoBase {
         }
 
         if (id) {
-            queryObj._id = new ObjectId(id);
-        }
-
-        if (ids) {
-            queryObj._id = { $in: [] }
-            for (let id of ids) {
-                queryObj._id.$in.push(new ObjectId(id))
+            if(Array.isArray(id)){
+                queryObj._id = { $in: [] }
+                for (let element of id) {
+                    queryObj._id.$in.push(new ObjectId(element))
+                }
             }
+            else{
+                queryObj._id = new ObjectId(id);
+            }          
         }
         return queryObj;
     }

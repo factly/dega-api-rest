@@ -15,7 +15,6 @@ function getFactcheck(req, res, next) {
         conf,
         clientId,
         req.query.id,
-        req.query.ids,
         req.query.slug,
         req.query.tag,
         req.query.category,
