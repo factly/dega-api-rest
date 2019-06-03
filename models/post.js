@@ -2,11 +2,7 @@ const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
-<<<<<<< HEAD
 const ObjectId = require('mongodb').ObjectID
-=======
-var ObjectId = require('mongodb').ObjectID;
->>>>>>> f8bc117121cbec6e56602275ec56d7c509828efd
 
 class PostsModel extends MongoBase {
     /**
@@ -164,21 +160,11 @@ class PostsModel extends MongoBase {
         }
 
         if (id) {
-<<<<<<< HEAD
             if(Array.isArray(id)){
                 queryObj._id = { $in: [] }
                 for (let element of id) {
                     queryObj._id.$in.push(new ObjectId(element))
                 }
-=======
-            queryObj._id = new ObjectId(id);
-        }
-
-        if (ids) {
-            queryObj._id = { $in: [] }
-            for (let id of ids) {
-                queryObj._id.$in.push(new ObjectId(id));
->>>>>>> f8bc117121cbec6e56602275ec56d7c509828efd
             }
             else{
                 queryObj._id = new ObjectId(id);
