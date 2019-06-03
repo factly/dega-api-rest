@@ -43,8 +43,20 @@ describe('/api/v1/tags', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(4);
+                const tags = JSON.parse(res.text);
+                expect(tags.length).eq(4);
+                const tag = tags[0];
+                 // check for fields inside tags document
+                 expect(tag).to.have.property('_id').eq('5c38f4f5569ed47e00c70045');
+                 expect(tag).to.have.property('client_id').eq('Factly');
+                 expect(tag).to.have.property('slug').eq('Crude-Oil');
+                 expect(tag).to.have.property('name').eq('Crude Oil');
+                 expect(tag).to.have.property('created_date').eq('2019-01-11T19:56:37.736Z');
+                 expect(tag).to.have.property('last_updated_date').eq('2019-01-11T19:56:37.736Z');
+                 //post
+                 expect(tag).to.have.property('posts');
+                 const posts = tag.posts;
+                 expect(posts.length).eq(0);
 
             });
     });

@@ -43,8 +43,21 @@ describe('/api/v1/formats', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(4);
+                const formats = JSON.parse(res.text);
+                expect(formats.length).eq(4);
+                const format = formats[0];
+                 // check for fields inside formats document
+                 //expect(format).to.have.property('_id').eq('ObjectId("5ce249139753e795dc53c363")');
+                 //expect(format).to.have.property('is_default').eq('true');
+                 expect(format).to.have.property('client_id').eq('Factly');
+                 expect(format).to.have.property('slug').eq('audio');
+                 expect(format).to.have.property('name').eq('Audio');
+                 expect(format).to.have.property('created_date').eq('2018-12-31T19:40:02.385Z');
+                 expect(format).to.have.property('last_updated_date').eq('2018-12-31T19:40:02.385Z');
+                 //post
+                 expect(format).to.have.property('post');
+                 const post = format.post;
+                 expect(post.length).eq(0);
             });
     });
 });

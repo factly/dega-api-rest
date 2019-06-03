@@ -6,7 +6,10 @@ function getFormat(req, res, next) {
     utils.setLogTokens(logger, 'formats', 'getFormat', req.query.client, null);
     const model = new FormatModel(logger);
     const clientId = req.query.client_id;
-    return model.getFormat(req.app.kraken, clientId).then((result) => {
+    return model.getFormat(
+        req.app.kraken,
+        clientId,
+        req.query.slug).then((result) => {
         if (result) {
             res.status(200).json(result);
             return;
@@ -17,4 +20,5 @@ function getFormat(req, res, next) {
 
 module.exports = function routes(router) {
     router.get('/', getFormat);
+    router.get('/:slug', getFormat);
 };

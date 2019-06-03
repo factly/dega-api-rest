@@ -43,8 +43,30 @@ describe('/api/v1/organizations', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(1);
+                const organizations = JSON.parse(res.text);
+                expect(organizations.length).eq(1);
+                const organization = organizations[0];
+                // check for fields inside orhanization document
+                expect(organization).to.have.property('_id').eq('5c1fbe8141e7c425ed54c82b');
+                expect(organization).to.have.property('client_id').eq('Factly');
+                expect(organization).to.have.property('site_title').eq('Factly');
+                expect(organization).to.have.property('slug').eq('factly');
+                expect(organization).to.have.property('name').eq('Factly');
+                expect(organization).to.have.property('email').eq('hi@factly.in');
+                expect(organization).to.have.property('created_date').eq('2018-12-23T16:57:37.464Z');
+                expect(organization).to.have.property('last_updated_date').eq('2018-12-23T16:57:37.465Z');
+                //degaUser
+                expect(organization).to.have.property('degaUsers');
+                const degaUsers = organization.degaUsers;
+                expect(degaUsers.length).eq(0);
+                //degaUser-degaUserDefault
+                expect(organization).to.have.property('degaUserDefault');
+                const degaUserDefault = organization.degaUserDefault;
+                expect(degaUserDefault.length).eq(0);
+                 //degaUser-degaUserCurrent
+                 expect(organization).to.have.property('degaUserCurrent');
+                 const degaUserCurrent = organization.degaUserCurrent;
+                 expect(degaUserCurrent.length).eq(0);
             });
     });
 });
