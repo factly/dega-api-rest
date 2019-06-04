@@ -28,7 +28,7 @@ function getFactcheck(req, res, next) {
                 return orgModel.getOrganization(conf, clientId)
                     .then((org) => {
                         if (org && org.length === 1) {
-                            factcheck.cuurentOrganization = org[0];
+                            factcheck.currentOrganization = org[0];
                         }
                         return factcheck;
                     });
@@ -48,22 +48,22 @@ function getFactcheck(req, res, next) {
                         },
                         itemReviewed: {
                             '@type': 'CreativeWork',
-                            author: {}
+                            author: {
+                                '@type': 'Organization',
+                            }
                         },
                         claimReviewed: c.claim,
                         author: {
                             '@type': 'Organization',
-                            url: 'http://factcheck.factly.in/',
-                            image: 'http://gateway.factly.in/core/dega-content/factly-telugu/2019/4/factly-logo.png'
+
                         }
                     };
 
-                    if (factcheck.authors && factcheck.authors.length === 1) {
-                        currentSchema.author.name = factcheck.authors[0].display_name;
-                    }
-
-                    if (factcheck.cuurentOrganization) {
-                        currentSchema.url = factcheck.cuurentOrganization.site_address;
+                    if (factcheck.currentOrganization) {
+                        currentSchema.url = `${factcheck.currentOrganization.site_address}/factcheck/${factcheck.slug}`;
+                        currentSchema.author.url = factcheck.currentOrganization.site_address;
+                        currentSchema.author.image = factcheck.currentOrganization.logo_url;
+                        currentSchema.author.name = factcheck.currentOrganization.name;
                     }
 
                     // date
