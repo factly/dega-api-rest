@@ -6,7 +6,15 @@ function getCategory(req, res, next) {
     utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.query.client, null);
     const model = new CategoryModel(logger);
     const clientId = req.query.client;
-    return model.getCategory(req.app.kraken, clientId).then((result) => {
+    return model.getCategory(
+        req.app.kraken, 
+        clientId, 
+        req.query.sortBy,
+        req.query.sortAsc,
+        req.query.limit,
+        req.query.next,
+        req.query.previous
+    ).then((result) => {
         if (result) {
             res.status(200).json(result);
             return;
