@@ -1,5 +1,6 @@
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
+const MongoPaging = require('mongo-cursor-pagination');
 
 class ClaimantModel extends MongoBase {
     /**
@@ -12,18 +13,49 @@ class ClaimantModel extends MongoBase {
         this.logger = logger;
     }
 
-    getClaimant(config, clientId) {
+    getClaimant(config, clientId, sortBy, sortAsc, limit, next, previous) {
         const query = {};
 
         if (clientId) {
             query.client_id = clientId;
         }
-
-        return Q(this.collection(config.get('databaseConfig:databases:factcheck')).find(query).toArray())
-            .then((results) => {
+        const pagingObj = this.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+        const database = config.get('databaseConfig:databases:factcheck');
+        return Q(MongoPaging.find(this.collection(database),pagingObj))
+            .then((result) => {
                 this.logger.info('Retrieved the results');
-                return results;
+                result["data"] = result.results;
+                let response = {};
+                response["data"] = result.results;
+                response["paging"] = {};
+                response["paging"]["next"] = result.next;
+                response["paging"]["hasNext"] = result.hasNext;
+                response["paging"]["previous"] = result.previous;
+                response["paging"]["hasPrevious"] = result.hasPrevious;
+                return response
             });
+    }
+    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
+        const pagingObj = {};
+        pagingObj.query = queryObj;
+        pagingObj.limit = (limit) ? parseInt(limit) : 20;
+
+        if (sortBy) {
+            pagingObj.paginatedField = sortBy;
+        }
+
+        if (sortAsc) {
+            pagingObj.sortAscending = (sortAsc === 'true');
+        }
+
+        if (next) {
+            pagingObj.next = next;
+        }
+
+        if (previous) {
+            pagingObj.previous = previous;
+        }
+        return pagingObj;
     }
 }
 
