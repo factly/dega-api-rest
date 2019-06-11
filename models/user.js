@@ -1,5 +1,6 @@
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
+const MongoPaging = require('mongo-cursor-pagination');
 
 class UserModel extends MongoBase {
     /**
@@ -12,23 +13,26 @@ class UserModel extends MongoBase {
         this.logger = logger;
     }
 
-    getUser(config, clientId) {
+    getUser(config, clientId, sortBy, sortAsc, limit, next, previous) {
         const query = {};
 
         if (clientId) {
             query.client_id = clientId;
         }
-
+        const pagingObj = this.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
         // get database from env config
         const database = config.get('databaseConfig:databases:core');
-
+        let pagingNew = {};
         // get all users
-        return Q(this.collection(database).find(query).toArray())
-            .then((users) => {
+        return Q(MongoPaging.find(this.collection(database),pagingObj))
+            .then((result) => {
                 this.logger.info('Retrieved the results');
-
+                pagingNew.next = result.next;
+                pagingNew.hasNext = result.hasNext;
+                pagingNew.previous = result.previous;
+                pagingNew.hasPrevious = result.hasPrevious;
                 const workers = [];
-                users.forEach((user) => {
+                result.results.forEach((user) => {
                     const promise = Q();
 
                     if (user.role) {
@@ -78,7 +82,35 @@ class UserModel extends MongoBase {
                 });
                 // return users;
                 return Q.all(workers);
+            }).then(users => {
+                let result ={};
+                result["data"] = users
+                result["paging"] = pagingNew;
+                return result;
+  
             });
+    }
+    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
+        const pagingObj = {};
+        pagingObj.query = queryObj;
+        pagingObj.limit = (limit) ? parseInt(limit) : 20;
+
+        if (sortBy) {
+            pagingObj.paginatedField = sortBy;
+        }
+
+        if (sortAsc) {
+            pagingObj.sortAscending = (sortAsc === 'true');
+        }
+
+        if (next) {
+            pagingObj.next = next;
+        }
+
+        if (previous) {
+            pagingObj.previous = previous;
+        }
+        return pagingObj;
     }
 }
 
