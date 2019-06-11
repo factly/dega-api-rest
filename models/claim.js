@@ -1,3 +1,4 @@
+const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
@@ -13,18 +14,23 @@ class ClaimModel extends MongoBase {
         this.logger = logger;
     }
 
-    getClaim(config, clientId, ratingSlug, claimantSlug) {
+    getClaim(config, clientId, ratingSlug, claimantSlug, sortBy, sortAsc, limit, next, previous) {
         const query = {};
 
         if (clientId) {
             query.client_id = clientId;
         }
-
         const database = config.get('databaseConfig:databases:factcheck');
-        return Q(this.collection(database).find(query).toArray())
-            .then((claims) => {
+        const pagingObj = this.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+        let pagingNew = {};
+        return Q(MongoPaging.find(this.collection(database),pagingObj))
+            .then((result) => {
                 this.logger.info('Retrieved the results');
-                const claimsPromises = claims.map((claim) => {
+                pagingNew.next = result.next;
+                pagingNew.hasNext = result.hasNext;
+                pagingNew.previous = result.previous;
+                pagingNew.hasPrevious = result.hasPrevious;
+                const claimsPromises = result.results.map((claim) => {
                     // TODO: single promise fails to retrieve, fix it later
                     const workers = [];
                     if(claim.rating) {
@@ -62,7 +68,36 @@ class ClaimModel extends MongoBase {
                     });
                 });
                 return Q.all(claimsPromises);
-            }).then(claims => _.compact(claims));
+            }).then(claims =>{
+                let result ={};
+                result["data"] = _.compact(claims)
+                result["paging"] = pagingNew;
+                return result;
+                
+            });
+    }
+
+    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
+        const pagingObj = {};
+        pagingObj.query = queryObj;
+        pagingObj.limit = (limit) ? parseInt(limit) : 20;
+
+        if (sortBy) {
+            pagingObj.paginatedField = sortBy;
+        }
+
+        if (sortAsc) {
+            pagingObj.sortAscending = (sortAsc === 'true');
+        }
+
+        if (next) {
+            pagingObj.next = next;
+        }
+
+        if (previous) {
+            pagingObj.previous = previous;
+        }
+        return pagingObj;
     }
 }
 
