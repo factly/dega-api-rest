@@ -1,6 +1,6 @@
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-
+const MongoPaging = require('mongo-cursor-pagination');
 class RoleModel extends MongoBase {
     /**
      * Creates a new RoleModel.
@@ -12,7 +12,7 @@ class RoleModel extends MongoBase {
         this.logger = logger;
     }
 
-    getRole(config, clientId, slug) {
+    getRole(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
         const query = {};
 
         if (clientId) {
@@ -21,13 +21,44 @@ class RoleModel extends MongoBase {
         if (slug) {
             query.slug = slug;
         }
-
+        const pagingObj = this.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
         const database = config.get('databaseConfig:databases:core');
-        return Q(this.collection(database).find(query).toArray())
-            .then((results) => {
+        return Q(MongoPaging.find(this.collection(database),pagingObj))
+            .then((result) => {
+                console.log(result.results)
                 this.logger.info('Retrieved the results');
-                return results;
+                result["data"] = result.results;
+                let response = {};
+                response["data"] = result.results;
+                response["paging"] = {};
+                response["paging"]["next"] = result.next;
+                response["paging"]["hasNext"] = result.hasNext;
+                response["paging"]["previous"] = result.previous;
+                response["paging"]["hasPrevious"] = result.hasPrevious;
+                return response
             });
+    }
+    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
+        const pagingObj = {};
+        pagingObj.query = queryObj;
+        pagingObj.limit = (limit) ? parseInt(limit) : 20;
+
+        if (sortBy) {
+            pagingObj.paginatedField = sortBy;
+        }
+
+        if (sortAsc) {
+            pagingObj.sortAscending = (sortAsc === 'true');
+        }
+
+        if (next) {
+            pagingObj.next = next;
+        }
+
+        if (previous) {
+            pagingObj.previous = previous;
+        }
+        return pagingObj;
     }
 }
 
