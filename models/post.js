@@ -26,6 +26,7 @@ class PostsModel extends MongoBase {
         const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
 
         const database = config.get('databaseConfig:databases:core');
+        let pagingNew = {};
         return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
             .then((result) => {
                 this.logger.info('Converting degaUsers to authors');
@@ -34,7 +35,10 @@ class PostsModel extends MongoBase {
                     delete post.degaUsers;
                     return post;
                 });
-
+                pagingNew.next = result.next;
+                pagingNew.hasNext = result.hasNext;
+                pagingNew.previous = result.previous;
+                pagingNew.hasPrevious = result.hasPrevious;
                 this.logger.info('Expanding sub-documents');
                 return posts.map((post) => {
                     // query all orgs
@@ -123,7 +127,12 @@ class PostsModel extends MongoBase {
                 });
             }).then((arrayOfPromises) => {
                 return Q.all(arrayOfPromises);
-            }).then(posts => _.compact(posts));
+            }).then(posts => {
+                let result ={};
+                result["data"] = _.compact(posts);
+                result["paging"] = pagingNew;
+                return result;
+            });
     }
 
     getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {

@@ -11,6 +11,7 @@ function getFactcheck(req, res, next) {
     const orgModel = new OrganizationModel(logger);
     const clientId = req.query.client;
     const conf = req.app.kraken;
+    let paging = {}
     return model.getFactcheck(
         conf,
         clientId,
@@ -20,8 +21,15 @@ function getFactcheck(req, res, next) {
         req.query.category,
         req.query.claimant,
         req.query.user,
-        req.query.status)
-        .then((factchecks) => {
+        req.query.status,
+        req.query.sortBy,
+        req.query.sortAsc,
+        req.query.limit,
+        req.query.next,
+        req.query.previous)
+        .then((result) => {
+            paging = result.paging;
+            let factchecks = result.data;
             const factchecksWithOrg = (factchecks || []).map((factcheck) => {
                 const clientId = factcheck.client_id;
                 return orgModel.getOrganization(conf, clientId)
@@ -97,8 +105,11 @@ function getFactcheck(req, res, next) {
             return factchecksWithSchemas;
         })
         .then((factchecksWithSchemas) => {
+            let result = {};
+            result["data"] = factchecksWithSchemas;
+            result["paging"] = paging;
             if (factchecksWithSchemas) {
-                res.status(200).json(factchecksWithSchemas);
+                res.status(200).json(result);
                 return;
             }
             res.sendStatus(404);

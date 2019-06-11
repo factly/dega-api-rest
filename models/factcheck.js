@@ -1,3 +1,4 @@
+const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
@@ -41,21 +42,27 @@ class FactcheckModel extends MongoBase {
     // MANDATORY sub documents: claims, status and degaUsers
     // OPTIONAL: All other sub docs are optional
     // eslint-disable-next-line no-unused-vars
-    getFactcheck(config, clientId, id, ids, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug) {
+    getFactcheck(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug, sortBy, sortAsc, limit, next, previous) {
 
         // get query object
-        const queryObj = this.getQueryObject(clientId, slug, id, ids);
+        const queryObj = this.getQueryObject(clientId, slug, id);
         const database = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
-        return Q(this.collection(database).find(queryObj).toArray())
-            .then((results) => {
+        const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
+        let pagingNew = {};
+        return Q(MongoPaging.find(this.collection(database),pagingObj))
+            .then((result) => {
                 this.logger.info('Converting degaUsers to authors');
-                const facts = results.map((f) => {
+                console.log(result)
+                const facts = result.results.map((f) => {
                     f.authors = f.degaUsers;
                     delete f.degaUsers;
                     return f;
                 });
-
+                pagingNew.next = result.next;
+                pagingNew.hasNext = result.hasNext;
+                pagingNew.previous = result.previous;
+                pagingNew.hasPrevious = result.hasPrevious;
                 const workers = [];
                 this.logger.info('Expanding sub-documents');
                 facts.forEach((fact) => {
@@ -171,7 +178,36 @@ class FactcheckModel extends MongoBase {
                     workers.push(promiseChain);
                 });
                 return Q.all(workers);
-            }).then(factchecks => _.compact(factchecks));
+            }).then(factchecks => {
+                let result ={};
+                result["data"] = _.compact(factchecks)
+                result["paging"] = pagingNew;
+                return result;
+  
+            });
+    }
+
+    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
+        const pagingObj = {};
+        pagingObj.query = queryObj;
+        pagingObj.limit = (limit) ? parseInt(limit) : 20;
+
+        if (sortBy) {
+            pagingObj.paginatedField = sortBy;
+        }
+
+        if (sortAsc) {
+            pagingObj.sortAscending = (sortAsc === 'true');
+        }
+
+        if (next) {
+            pagingObj.next = next;
+        }
+
+        if (previous) {
+            pagingObj.previous = previous;
+        }
+        return pagingObj;
     }
 }
 
