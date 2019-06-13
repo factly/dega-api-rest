@@ -23,7 +23,7 @@ class ClaimModel extends MongoBase {
         const database = config.get('databaseConfig:databases:factcheck');
         const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
         let pagingNew = {};
-        return Q(MongoPaging.find(this.collection(database),pagingObj))
+        return Q(MongoPaging.find(this.collection(database), pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
                 pagingNew.next = result.next;
@@ -33,9 +33,9 @@ class ClaimModel extends MongoBase {
                 const claimsPromises = result.results.map((claim) => {
                     // TODO: single promise fails to retrieve, fix it later
                     const workers = [];
-                    if(claim.rating) {
+                    if (claim.rating) {
                         workers.push(
-                            Q(this.collection(database, claim.rating.namespace).findOne({_id: claim.rating.oid})));
+                            Q(this.collection(database, claim.rating.namespace).findOne({ _id: claim.rating.oid })));
                     }
                     return Q.all(workers).then((rating) => {
                         if (rating && rating.length > 0) {
@@ -46,12 +46,12 @@ class ClaimModel extends MongoBase {
                             throw Error('SkipClaim');
                         }
 
-                        if(!claim.claimant) {
+                        if (!claim.claimant) {
                             return Q();
                         }
 
                         const claimant = claim.claimant;
-                        return Q(this.collection(database, claimant.namespace).findOne({_id: claimant.oid}));
+                        return Q(this.collection(database, claimant.namespace).findOne({ _id: claimant.oid }));
                     }).then((claimant) => {
                         if (claimantSlug && !(claimant.slug === claimantSlug)) {
                             throw Error('SkipClaim');
@@ -68,12 +68,11 @@ class ClaimModel extends MongoBase {
                     });
                 });
                 return Q.all(claimsPromises);
-            }).then(claims =>{
-                let result ={};
+            }).then((claims) => {
+                let result = {};
                 result['data'] = _.compact(claims);
                 result['paging'] = pagingNew;
                 return result;
-                
             });
     }
 }

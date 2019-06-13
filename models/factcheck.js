@@ -177,12 +177,11 @@ class FactcheckModel extends MongoBase {
                     workers.push(promiseChain);
                 });
                 return Q.all(workers);
-            }).then(factchecks => {
+            }).then((factchecks) => {
                 let result ={};
-                result['data'] = _.compact(factchecks);
-                result['paging'] = pagingNew;
+                result.data = _.compact(factchecks);
+                result.paging = pagingNew;
                 return result;
-  
             });
     }
 }

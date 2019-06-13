@@ -127,10 +127,10 @@ class PostsModel extends MongoBase {
                 });
             }).then((arrayOfPromises) => {
                 return Q.all(arrayOfPromises);
-            }).then(posts => {
-                let result ={};
-                result['data'] = _.compact(posts);
-                result['paging'] = pagingNew;
+            }).then((posts) => {
+                let result = {};
+                result.data = _.compact(posts);
+                result.paging = pagingNew;
                 return result;
             });
     }
@@ -145,15 +145,15 @@ class PostsModel extends MongoBase {
         }
 
         if (id) {
-            if(Array.isArray(id)){
+            if (Array.isArray(id)) {
                 queryObj._id = { $in: [] };
                 for (let element of id) {
                     queryObj._id.$in.push(new ObjectId(element));
                 }
             }
-            else{
+            else {
                 queryObj._id = new ObjectId(id);
-            }          
+            }
         }
         return queryObj;
     }

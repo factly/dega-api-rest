@@ -21,17 +21,16 @@ class ClaimantModel extends MongoBase {
         }
         const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
         const database = config.get('databaseConfig:databases:factcheck');
-        return Q(MongoPaging.find(this.collection(database),pagingObj))
+        return Q(MongoPaging.find(this.collection(database), pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
-                result['data'] = result.results;
                 let response = {};
-                response['data'] = result.results;
-                response['paging'] = {};
-                response['paging']['next'] = result.next;
-                response['paging']['hasNext'] = result.hasNext;
-                response['paging']['previous'] = result.previous;
-                response['paging']['hasPrevious'] = result.hasPrevious;
+                response.data = result.results;
+                response.paging = {};
+                response.paging.next = result.next;
+                response.paging.hasNext = result.hasNext;
+                response.paging.previous = result.previous;
+                response.paging.hasPrevious = result.hasPrevious;
                 return response;
             });
     }

@@ -24,7 +24,7 @@ class UserModel extends MongoBase {
         const database = config.get('databaseConfig:databases:core');
         let pagingNew = {};
         // get all users
-        return Q(MongoPaging.find(this.collection(database),pagingObj))
+        return Q(MongoPaging.find(this.collection(database), pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
                 pagingNew.next = result.next;
@@ -38,7 +38,7 @@ class UserModel extends MongoBase {
                     if (user.role) {
                         const roleID = user.role.oid;
                         const collection = user.role.namespace;
-                        promise.then(() => Q(this.collection(database, collection).findOne({_id: roleID})));
+                        promise.then(() => Q(this.collection(database, collection).findOne({ _id: roleID })));
                     }
                     const promiseChain = promise
                         .then((role) => {
@@ -50,7 +50,7 @@ class UserModel extends MongoBase {
                             // query org current
                             const collection = user.organizationCurrent.namespace;
                             const orgID = user.organizationCurrent.oid;
-                            return Q(this.collection(database, collection).findOne({_id: orgID}));
+                            return Q(this.collection(database, collection).findOne({ _id: orgID }));
                         }).then((org) => {
                             user.organizationCurrent = org;
                             if (!user.organizationDefault) {
@@ -60,7 +60,7 @@ class UserModel extends MongoBase {
                             // query org default
                             const collection = user.organizationDefault.namespace;
                             const orgID = user.organizationDefault.oid;
-                            return Q(this.collection(database, collection).findOne({_id: orgID}));
+                            return Q(this.collection(database, collection).findOne({ _id: orgID }));
                         }).then((org) => {
                             user.organizationDefault = org;
                             if (!user.organizations) {
@@ -71,7 +71,7 @@ class UserModel extends MongoBase {
                             const orgs = user.organizations;
                             const workers = [];
                             orgs.forEach((org) => {
-                                workers.push(Q(this.collection(database, org.namespace).findOne({_id: org.oid})));
+                                workers.push(Q(this.collection(database, org.namespace).findOne({ _id: org.oid })));
                             });
                             return Q.all(workers);
                         }).then((orgs) => {
@@ -82,12 +82,11 @@ class UserModel extends MongoBase {
                 });
                 // return users;
                 return Q.all(workers);
-            }).then(users => {
-                let result ={};
-                result['data'] = users;
-                result['paging'] = pagingNew;
+            }).then((users) => {
+                let result = {};
+                result.data = users;
+                result.paging = pagingNew;
                 return result;
-  
             });
     }
 }
