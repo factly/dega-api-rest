@@ -70,8 +70,8 @@ class ClaimModel extends MongoBase {
                 return Q.all(claimsPromises);
             }).then(claims =>{
                 let result ={};
-                result["data"] = _.compact(claims)
-                result["paging"] = pagingNew;
+                result['data'] = _.compact(claims);
+                result['paging'] = pagingNew;
                 return result;
                 
             });

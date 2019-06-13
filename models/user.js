@@ -84,8 +84,8 @@ class UserModel extends MongoBase {
                 return Q.all(workers);
             }).then(users => {
                 let result ={};
-                result["data"] = users
-                result["paging"] = pagingNew;
+                result['data'] = users;
+                result['paging'] = pagingNew;
                 return result;
   
             });

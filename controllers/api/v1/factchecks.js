@@ -11,7 +11,7 @@ function getFactcheck(req, res, next) {
     const orgModel = new OrganizationModel(logger);
     const clientId = req.query.client;
     const conf = req.app.kraken;
-    let paging = {}
+    let paging = {};
     return model.getFactcheck(
         conf,
         clientId,
@@ -56,12 +56,12 @@ function getFactcheck(req, res, next) {
                         itemReviewed: {
                             '@type': 'CreativeWork',
                             author: {
-                                '@type': 'Organization',
+                                '@type': 'Organization'
                             }
                         },
                         claimReviewed: c.claim,
                         author: {
-                            '@type': 'Organization',
+                            '@type': 'Organization'
 
                         }
                     };
@@ -106,8 +106,8 @@ function getFactcheck(req, res, next) {
         })
         .then((factchecksWithSchemas) => {
             let result = {};
-            result["data"] = factchecksWithSchemas;
-            result["paging"] = paging;
+            result['data'] = factchecksWithSchemas;
+            result['paging'] = paging;
             if (factchecksWithSchemas) {
                 res.status(200).json(result);
                 return;

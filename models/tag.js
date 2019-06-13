@@ -24,15 +24,15 @@ class TagModel extends MongoBase {
         return Q(MongoPaging.find(this.collection(database),pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
-                result["data"] = result.results;
+                result['data'] = result.results;
                 let response = {};
-                response["data"] = result.results;
-                response["paging"] = {};
-                response["paging"]["next"] = result.next;
-                response["paging"]["hasNext"] = result.hasNext;
-                response["paging"]["previous"] = result.previous;
-                response["paging"]["hasPrevious"] = result.hasPrevious;
-                return response
+                response['data'] = result.results;
+                response['paging'] = {};
+                response['paging']['next'] = result.next;
+                response['paging']['hasNext'] = result.hasNext;
+                response['paging']['previous'] = result.previous;
+                response['paging']['hasPrevious'] = result.hasPrevious;
+                return response;
             });
     }
     getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {

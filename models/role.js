@@ -25,17 +25,16 @@ class RoleModel extends MongoBase {
         const database = config.get('databaseConfig:databases:core');
         return Q(MongoPaging.find(this.collection(database),pagingObj))
             .then((result) => {
-                console.log(result.results)
                 this.logger.info('Retrieved the results');
-                result["data"] = result.results;
+                result['data'] = result.results;
                 let response = {};
-                response["data"] = result.results;
-                response["paging"] = {};
-                response["paging"]["next"] = result.next;
-                response["paging"]["hasNext"] = result.hasNext;
-                response["paging"]["previous"] = result.previous;
-                response["paging"]["hasPrevious"] = result.hasPrevious;
-                return response
+                response['data'] = result.results;
+                response['paging'] = {};
+                response['paging']['next'] = result.next;
+                response['paging']['hasNext'] = result.hasNext;
+                response['paging']['previous'] = result.previous;
+                response['paging']['hasPrevious'] = result.hasPrevious;
+                return response;
             });
     }
     getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
