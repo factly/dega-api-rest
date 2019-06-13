@@ -2,7 +2,7 @@ const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
-
+const utils = require('../lib/utils');
 class ClaimModel extends MongoBase {
     /**
      * Creates a new ClaimModel.
@@ -21,7 +21,7 @@ class ClaimModel extends MongoBase {
             query.client_id = clientId;
         }
         const database = config.get('databaseConfig:databases:factcheck');
-        const pagingObj = this.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
         let pagingNew = {};
         return Q(MongoPaging.find(this.collection(database),pagingObj))
             .then((result) => {
@@ -75,29 +75,6 @@ class ClaimModel extends MongoBase {
                 return result;
                 
             });
-    }
-
-    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
-        const pagingObj = {};
-        pagingObj.query = queryObj;
-        pagingObj.limit = (limit) ? parseInt(limit) : 20;
-
-        if (sortBy) {
-            pagingObj.paginatedField = sortBy;
-        }
-
-        if (sortAsc) {
-            pagingObj.sortAscending = (sortAsc === 'true');
-        }
-
-        if (next) {
-            pagingObj.next = next;
-        }
-
-        if (previous) {
-            pagingObj.previous = previous;
-        }
-        return pagingObj;
     }
 }
 

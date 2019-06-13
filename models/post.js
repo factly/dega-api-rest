@@ -3,7 +3,7 @@ const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
 const ObjectId = require('mongodb').ObjectID;
-
+const utils = require('../lib/utils');
 class PostsModel extends MongoBase {
     /**
      * Creates a new PostsModel.
@@ -23,7 +23,7 @@ class PostsModel extends MongoBase {
         this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
 
         // get paging object
-        const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
+        const pagingObj = utils.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
 
         const database = config.get('databaseConfig:databases:core');
         let pagingNew = {};
@@ -134,30 +134,6 @@ class PostsModel extends MongoBase {
                 return result;
             });
     }
-
-    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
-        const pagingObj = {};
-        pagingObj.query = queryObj;
-        pagingObj.limit = (limit) ? parseInt(limit) : 20;
-
-        if (sortBy) {
-            pagingObj.paginatedField = sortBy;
-        }
-
-        if (sortAsc) {
-            pagingObj.sortAscending = (sortAsc === 'true');
-        }
-
-        if (next) {
-            pagingObj.next = next;
-        }
-
-        if (previous) {
-            pagingObj.previous = previous;
-        }
-        return pagingObj;
-    }
-
     getQueryObject(clientId, slug, id) {
         const queryObj = {};
         if (clientId) {

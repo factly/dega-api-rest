@@ -3,7 +3,7 @@ const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
 const ObjectId = require('mongodb').ObjectID;
-
+const utils = require('../lib/utils');
 class FactcheckModel extends MongoBase {
     /**
      * Creates a new FactcheckModel.
@@ -48,7 +48,7 @@ class FactcheckModel extends MongoBase {
         const queryObj = this.getQueryObject(clientId, slug, id);
         const database = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
-        const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
+        const pagingObj = utils.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
         let pagingNew = {};
         return Q(MongoPaging.find(this.collection(database),pagingObj))
             .then((result) => {
@@ -184,29 +184,6 @@ class FactcheckModel extends MongoBase {
                 return result;
   
             });
-    }
-
-    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
-        const pagingObj = {};
-        pagingObj.query = queryObj;
-        pagingObj.limit = (limit) ? parseInt(limit) : 20;
-
-        if (sortBy) {
-            pagingObj.paginatedField = sortBy;
-        }
-
-        if (sortAsc) {
-            pagingObj.sortAscending = (sortAsc === 'true');
-        }
-
-        if (next) {
-            pagingObj.next = next;
-        }
-
-        if (previous) {
-            pagingObj.previous = previous;
-        }
-        return pagingObj;
     }
 }
 
