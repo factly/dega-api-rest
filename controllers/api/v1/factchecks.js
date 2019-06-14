@@ -29,7 +29,7 @@ function getFactcheck(req, res, next) {
         req.query.previous)
         .then((result) => {
             paging = result.paging;
-            let factchecks = result.data;
+            const factchecks = result.data;
             const factchecksWithOrg = (factchecks || []).map((factcheck) => {
                 const clientId = factcheck.client_id;
                 return orgModel.getOrganization(conf, clientId)
@@ -105,9 +105,9 @@ function getFactcheck(req, res, next) {
             return factchecksWithSchemas;
         })
         .then((factchecksWithSchemas) => {
-            let result = {};
-            result['data'] = factchecksWithSchemas;
-            result['paging'] = paging;
+            const result = {};
+            result.data = factchecksWithSchemas;
+            result.paging = paging;
             if (factchecksWithSchemas) {
                 res.status(200).json(result);
                 return;
