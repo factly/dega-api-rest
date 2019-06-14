@@ -49,7 +49,7 @@ class FactcheckModel extends MongoBase {
         const database = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
         const pagingObj = utils.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
-        let pagingNew = {};
+        const pagingNew = {};
         return Q(MongoPaging.find(this.collection(database),pagingObj))
             .then((result) => {
                 this.logger.info('Converting degaUsers to authors');
@@ -178,7 +178,7 @@ class FactcheckModel extends MongoBase {
                 });
                 return Q.all(workers);
             }).then((factchecks) => {
-                let result ={};
+                const result ={};
                 result.data = _.compact(factchecks);
                 result.paging = pagingNew;
                 return result;

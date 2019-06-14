@@ -22,7 +22,7 @@ class UserModel extends MongoBase {
         const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
         // get database from env config
         const database = config.get('databaseConfig:databases:core');
-        let pagingNew = {};
+        const pagingNew = {};
         // get all users
         return Q(MongoPaging.find(this.collection(database), pagingObj))
             .then((result) => {
@@ -83,7 +83,7 @@ class UserModel extends MongoBase {
                 // return users;
                 return Q.all(workers);
             }).then((users) => {
-                let result = {};
+                const result = {};
                 result.data = users;
                 result.paging = pagingNew;
                 return result;

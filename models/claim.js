@@ -22,7 +22,7 @@ class ClaimModel extends MongoBase {
         }
         const database = config.get('databaseConfig:databases:factcheck');
         const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
-        let pagingNew = {};
+        const pagingNew = {};
         return Q(MongoPaging.find(this.collection(database), pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
@@ -69,9 +69,9 @@ class ClaimModel extends MongoBase {
                 });
                 return Q.all(claimsPromises);
             }).then((claims) => {
-                let result = {};
-                result['data'] = _.compact(claims);
-                result['paging'] = pagingNew;
+                const result = {};
+                result.data = _.compact(claims);
+                result.paging = pagingNew;
                 return result;
             });
     }

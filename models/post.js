@@ -26,7 +26,7 @@ class PostsModel extends MongoBase {
         const pagingObj = utils.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
 
         const database = config.get('databaseConfig:databases:core');
-        let pagingNew = {};
+        const pagingNew = {};
         return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
             .then((result) => {
                 this.logger.info('Converting degaUsers to authors');
@@ -128,7 +128,7 @@ class PostsModel extends MongoBase {
             }).then((arrayOfPromises) => {
                 return Q.all(arrayOfPromises);
             }).then((posts) => {
-                let result = {};
+                const result = {};
                 result.data = _.compact(posts);
                 result.paging = pagingNew;
                 return result;

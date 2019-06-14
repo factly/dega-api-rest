@@ -24,7 +24,7 @@ class TagModel extends MongoBase {
         return Q(MongoPaging.find(this.collection(database), pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
-                let response = {};
+                const response = {};
                 response.data = result.results;
                 response.paging = {};
                 response.paging.next = result.next;
