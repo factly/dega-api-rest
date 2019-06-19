@@ -1,7 +1,7 @@
-
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-
+const MongoPaging = require('mongo-cursor-pagination');
+const utils = require('../lib/utils');
 class TagModel extends MongoBase {
     /**
      * Creates a new TagModel.
@@ -13,17 +13,25 @@ class TagModel extends MongoBase {
         this.logger = logger;
     }
 
-    getTag(config, clientId) {
+    getTag(config, clientId, sortBy, sortAsc, limit, next, previous) {
         const query = {};
 
         if (clientId) {
             query.client_id = clientId;
         }
-
-        return Q(this.collection(config.get('databaseConfig:databases:core')).find(query).toArray())
-            .then((results) => {
+        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+        const database = config.get('databaseConfig:databases:core');
+        return Q(MongoPaging.find(this.collection(database), pagingObj))
+            .then((result) => {
                 this.logger.info('Retrieved the results');
-                return results;
+                const response = {};
+                response.data = result.results;
+                response.paging = {};
+                response.paging.next = result.next;
+                response.paging.hasNext = result.hasNext;
+                response.paging.previous = result.previous;
+                response.paging.hasPrevious = result.hasPrevious;
+                return response;
             });
     }
 }

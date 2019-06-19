@@ -2,8 +2,8 @@ const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
-var ObjectId = require('mongodb').ObjectID;
-
+const ObjectId = require('mongodb').ObjectID;
+const utils = require('../lib/utils');
 class PostsModel extends MongoBase {
     /**
      * Creates a new PostsModel.
@@ -17,15 +17,16 @@ class PostsModel extends MongoBase {
 
     // MANDATORY sub documents: status, format and degaUsers
     // OPTIONAL: All other sub docs are optional
-    getPosts(config, clientId, id, ids, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
+    getPosts(config, clientId, id, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
-        const queryObj = this.getQueryObject(clientId, slug, id, ids);
+        const queryObj = this.getQueryObject(clientId, slug, id);
         this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
 
         // get paging object
-        const pagingObj = this.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
+        const pagingObj = utils.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
 
         const database = config.get('databaseConfig:databases:core');
+        const pagingNew = {};
         return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
             .then((result) => {
                 this.logger.info('Converting degaUsers to authors');
@@ -34,7 +35,10 @@ class PostsModel extends MongoBase {
                     delete post.degaUsers;
                     return post;
                 });
-
+                pagingNew.next = result.next;
+                pagingNew.hasNext = result.hasNext;
+                pagingNew.previous = result.previous;
+                pagingNew.hasPrevious = result.hasPrevious;
                 this.logger.info('Expanding sub-documents');
                 return posts.map((post) => {
                     // query all orgs
@@ -123,33 +127,14 @@ class PostsModel extends MongoBase {
                 });
             }).then((arrayOfPromises) => {
                 return Q.all(arrayOfPromises);
-            }).then(posts => _.compact(posts));
+            }).then((posts) => {
+                const result = {};
+                result.data = _.compact(posts);
+                result.paging = pagingNew;
+                return result;
+            });
     }
-
-    getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous) {
-        const pagingObj = {};
-        pagingObj.query = queryObj;
-        pagingObj.limit = (limit) ? parseInt(limit) : 20;
-
-        if (sortBy) {
-            pagingObj.paginatedField = sortBy;
-        }
-
-        if (sortAsc) {
-            pagingObj.sortAscending = (sortAsc === 'true');
-        }
-
-        if (next) {
-            pagingObj.next = next;
-        }
-
-        if (previous) {
-            pagingObj.previous = previous;
-        }
-        return pagingObj;
-    }
-
-    getQueryObject(clientId, slug, id, ids) {
+    getQueryObject(clientId, slug, id) {
         const queryObj = {};
         if (clientId) {
             queryObj.client_id = clientId;
@@ -160,13 +145,14 @@ class PostsModel extends MongoBase {
         }
 
         if (id) {
-            queryObj._id = new ObjectId(id);
-        }
-
-        if (ids) {
-            queryObj._id = { $in: [] }
-            for (let id of ids) {
-                queryObj._id.$in.push(new ObjectId(id));
+            if (Array.isArray(id)) {
+                queryObj._id = { $in: [] };
+                for (let element of id) {
+                    queryObj._id.$in.push(new ObjectId(element));
+                }
+            }
+            else {
+                queryObj._id = new ObjectId(id);
             }
         }
         return queryObj;

@@ -9,7 +9,12 @@ function getFormat(req, res, next) {
     return model.getFormat(
         req.app.kraken,
         clientId,
-        req.query.slug).then((result) => {
+        req.query.slug,
+        req.query.sortBy,
+        req.query.sortAsc,
+        req.query.limit,
+        req.query.next,
+        req.query.previous).then((result) => {
         if (result) {
             res.status(200).json(result);
             return;

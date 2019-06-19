@@ -1,7 +1,8 @@
+const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const _ = require('lodash');
-
+const utils = require('../lib/utils');
 class ClaimModel extends MongoBase {
     /**
      * Creates a new ClaimModel.
@@ -13,23 +14,28 @@ class ClaimModel extends MongoBase {
         this.logger = logger;
     }
 
-    getClaim(config, clientId, ratingSlug, claimantSlug) {
+    getClaim(config, clientId, ratingSlug, claimantSlug, sortBy, sortAsc, limit, next, previous) {
         const query = {};
 
         if (clientId) {
             query.client_id = clientId;
         }
-
         const database = config.get('databaseConfig:databases:factcheck');
-        return Q(this.collection(database).find(query).toArray())
-            .then((claims) => {
+        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+        const pagingNew = {};
+        return Q(MongoPaging.find(this.collection(database), pagingObj))
+            .then((result) => {
                 this.logger.info('Retrieved the results');
-                const claimsPromises = claims.map((claim) => {
+                pagingNew.next = result.next;
+                pagingNew.hasNext = result.hasNext;
+                pagingNew.previous = result.previous;
+                pagingNew.hasPrevious = result.hasPrevious;
+                const claimsPromises = result.results.map((claim) => {
                     // TODO: single promise fails to retrieve, fix it later
                     const workers = [];
-                    if(claim.rating) {
+                    if (claim.rating) {
                         workers.push(
-                            Q(this.collection(database, claim.rating.namespace).findOne({_id: claim.rating.oid})));
+                            Q(this.collection(database, claim.rating.namespace).findOne({ _id: claim.rating.oid })));
                     }
                     return Q.all(workers).then((rating) => {
                         if (rating && rating.length > 0) {
@@ -40,12 +46,12 @@ class ClaimModel extends MongoBase {
                             throw Error('SkipClaim');
                         }
 
-                        if(!claim.claimant) {
+                        if (!claim.claimant) {
                             return Q();
                         }
 
                         const claimant = claim.claimant;
-                        return Q(this.collection(database, claimant.namespace).findOne({_id: claimant.oid}));
+                        return Q(this.collection(database, claimant.namespace).findOne({ _id: claimant.oid }));
                     }).then((claimant) => {
                         if (claimantSlug && !(claimant.slug === claimantSlug)) {
                             throw Error('SkipClaim');
@@ -62,7 +68,12 @@ class ClaimModel extends MongoBase {
                     });
                 });
                 return Q.all(claimsPromises);
-            }).then(claims => _.compact(claims));
+            }).then((claims) => {
+                const result = {};
+                result.data = _.compact(claims);
+                result.paging = pagingNew;
+                return result;
+            });
     }
 }
 

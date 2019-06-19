@@ -6,7 +6,15 @@ function getUser(req, res, next) {
     utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
     const model = new UserModel(logger);
     const clientId = req.query.client;
-    return model.getUser(req.app.kraken, clientId).then((result) => {
+    return model.getUser(
+        req.app.kraken, 
+        clientId, 
+        req.query.sortBy,
+        req.query.sortAsc,
+        req.query.limit,
+        req.query.next,
+        req.query.previous
+    ).then((result) => {
         if (result) {
             res.status(200).json(result);
         } else {

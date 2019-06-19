@@ -63,10 +63,10 @@ describe('/api/v1/organizations', () => {
                 expect(organization).to.have.property('degaUserDefault');
                 const degaUserDefault = organization.degaUserDefault;
                 expect(degaUserDefault.length).eq(0);
-                 //degaUser-degaUserCurrent
-                 expect(organization).to.have.property('degaUserCurrent');
-                 const degaUserCurrent = organization.degaUserCurrent;
-                 expect(degaUserCurrent.length).eq(0);
+                //degaUser-degaUserCurrent
+                expect(organization).to.have.property('degaUserCurrent');
+                const degaUserCurrent = organization.degaUserCurrent;
+                expect(degaUserCurrent.length).eq(0);
             });
     });
 });
