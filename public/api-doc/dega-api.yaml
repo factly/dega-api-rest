@@ -95,6 +95,7 @@ paths:
                 response:
                   value:
                     - {
+                      data: {
                         _id: '5c71d32bfd3c00900fae209c',
                         title: 'test 02232019',
                         client_id: 'Factly',
@@ -304,7 +305,14 @@ paths:
                             }
                           }
                         ]
+                      },
+                      paging: {
+                        hasNext: false,
+                        hasPrevious: false,
+                        next: "eyIkb2lkIjoiNWMzY2M1MjM1NjllZDQ5NWY1NGY0MWRiIn0",
+                        previous: "eyIkb2lkIjoiNWNmNjljZDdiMDcwYTI2NWE0ZTU1MTQ2In0",
                       }
+                    }
         404:
           description: No data found
 
