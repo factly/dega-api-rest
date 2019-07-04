@@ -142,7 +142,7 @@ describe('/api/v1/factchecks', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const factchecks = JSON.parse(res.text);
+                const factchecks = JSON.parse(res.text).data;
                 expect(factchecks.length).eq(2);
             });
     });

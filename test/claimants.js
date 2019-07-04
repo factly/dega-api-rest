@@ -67,7 +67,7 @@ describe('/api/v1/claimants', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const claimants = JSON.parse(res.text);
+                const claimants = JSON.parse(res.text).data;
                 expect(claimants.length).eq(3);
             });
         });

@@ -73,18 +73,39 @@ describe('/api/v1/roles', () => {
                 expect(superAdminRole).to.have.property('name');
                 expect(superAdminRole).to.have.property('name').eq('Super Admin');
                 const role = roles[0];
-                 // check for fields inside roles document
-                 //expect(role).to.have.property('_id').eq('ObjectId("5ce2626339954523f9e638a9")');
-                 //expect(role).to.have.property('is_default').eq('true');
-                 expect(role).to.have.property('client_id').eq('default');
-                 expect(role).to.have.property('slug').eq('super-admin');
-                 expect(role).to.have.property('name').eq('Super Admin');
-                 expect(role).to.have.property('created_date').eq('2018-12-10T07:00:00.000Z');
-                 expect(role).to.have.property('last_updated_date').eq('2018-12-10T07:00:00.000Z');
-                 //degaUser
-                 expect(role).to.have.property('degaUser');
-                 const dega = role.degaUser;
-                 expect(dega.length).eq(0);
+                // check for fields inside roles document
+                //expect(role).to.have.property('_id').eq('ObjectId("5ce2626339954523f9e638a9")');
+                //expect(role).to.have.property('is_default').eq('true');
+                expect(role).to.have.property('client_id').eq('default');
+                expect(role).to.have.property('slug').eq('super-admin');
+                expect(role).to.have.property('name').eq('Super Admin');
+                expect(role).to.have.property('created_date').eq('2018-12-10T07:00:00.000Z');
+                expect(role).to.have.property('last_updated_date').eq('2018-12-10T07:00:00.000Z');
+                //degaUser
+                expect(role).to.have.property('degaUser');
+                const dega = role.degaUser;
+                expect(dega.length).eq(0);
             });
     });
+    it('Should get role by slug', () => {
+        return request(mock)
+            .get('/api/v1/roles?slug=false')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const roles = JSON.parse(res.text);
+                expect(roles.length).eq(0);
+            });
+        });
+     it('Should get role by slug', () => {
+        return request(mock)
+            .get('/api/v1/roles?client_id=default')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const roles = JSON.parse(res.text).data;
+                expect(roles.length).eq(6);
+             });
+        });
 });
+
