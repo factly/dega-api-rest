@@ -78,8 +78,32 @@ describe('/api/v1/posts', () => {
                  // status
                 expect(post).to.have.property('status');
                 expect(post.status).to.have.property('slug').eq('Publish');
+                 // formats
+                 expect(post).to.have.property('format');
+                 expect(post.format).to.have.property('slug').eq('status');
                
                 
             });
     });
-});
+    it('Should get all posts', () => {
+        return request(mock)
+            .get('/api/v1/posts?slug=why-are-discounted-sms-rates-not-valid-on-certain-days')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const posts = JSON.parse(res.text);
+                expect(posts.length).eq(1);
+            });
+        });
+    it('Should get all posts', () => {
+        return request(mock)
+            .get('/api/v1/posts?clientId=Factly')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const posts = JSON.parse(res.text).data;
+                expect(posts.length).eq(1);
+            
+            });
+        });
+   });
