@@ -10,5 +10,6 @@
     "degaUsers": [],
     "degaUserDefault": [],
     "degaUserCurrent": [],
-    "_class": "com.factly.dega.domain.Organization"
+    "_class": "com.factly.dega.domain.Organization",
+    "site_address":"https://factly.in"
 }]
