@@ -20,7 +20,7 @@ function getFactcheck(req, res, next) {
         req.query.tag,
         req.query.category,
         req.query.claimant,
-        req.query.user,
+        req.query.author,
         req.query.status,
         req.query.sortBy,
         req.query.sortAsc,
