@@ -42,7 +42,7 @@ class FactcheckModel extends MongoBase {
     // MANDATORY sub documents: claims, status and degaUsers
     // OPTIONAL: All other sub docs are optional
     // eslint-disable-next-line no-unused-vars
-    getFactcheck(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, userSlug, statusSlug, sortBy, sortAsc, limit, next, previous) {
+    getFactcheck(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug, statusSlug, sortBy, sortAsc, limit, next, previous) {
 
         // get query object
         const queryObj = this.getQueryObject(clientId, slug, id);
@@ -158,8 +158,8 @@ class FactcheckModel extends MongoBase {
                                 throw Error('SkipFactCheck users not linked to this factcheck');
                             }
                             const authorSlugs = authors.map(u => (u) ? u.slug : '');
-                            const isAuthorFound = authorSlugs.includes(userSlug);
-                            if (userSlug && !isAuthorFound) {
+                            const isAuthorFound = authorSlugs.includes(authorSlug);
+                            if (authorSlug && !isAuthorFound) {
                                 throw Error('SkipFactCheck user slug not found');
                             }
                             fact.authors = authors;
