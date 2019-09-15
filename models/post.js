@@ -4,6 +4,248 @@ const Q = require('q');
 const _ = require('lodash');
 const ObjectId = require('mongodb').ObjectID;
 const utils = require('../lib/utils');
+
+const addFields = {
+    $addFields: {
+        status: { $arrayElemAt: [{ $objectToArray: '$status' }, 1] },
+        format: { $arrayElemAt: [{ $objectToArray: '$format' }, 1] },
+        media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] },
+        tags: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$tags',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        },
+        categories: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$categories',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        },
+        degaUsers: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$degaUsers',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        }
+    }
+};
+
+const statusLookup = {
+    $lookup: {
+        from: 'status',
+        localField: 'status',
+        foreignField: '_id',
+        as: 'status'
+    }
+};
+
+const formatLookup = {
+    $lookup: {
+        from: 'format',
+        localField: 'format',
+        foreignField: '_id',
+        as: 'format'
+    }
+};
+
+const mediaLookup = {
+    $lookup: {
+        from: 'media',
+        let: { media: '$media' }, // this option provides the value from the outside data into the lookup's pipline. This variable is referenced in the inner pipline with $$
+        pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$media'] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    type: 1,
+                    url: 1,
+                    fileSize: '$file_size',
+                    dimensions: 1,
+                    title: 1,
+                    caption: 1,
+                    altText: '$alt_text',
+                    description: 1,
+                    uploadedBy: '$uploaded_by',
+                    publishedDate: '$published_date',
+                    lastUpdatedDate: '$lastUpdatedDate',
+                    slug: 1,
+                    clientId: '$client_id',
+                    createdDate: '$created_date',
+                    relativeURL: '$relative_url',
+                    sourceURL: '$source_url'
+                }
+            },
+        ],
+        as: 'media'
+    }
+};
+
+const tagLookup = {
+    $lookup: {
+        from: 'tag',
+        let: { tags: '$tags' },
+        pipeline: [
+            { $match: { $expr: { $in: ['$_id', { $ifNull: ['$$tags', []] }] } } },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    slug: 1,
+                    description: 1,
+                    clientId: '$client_id',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
+                }
+            },
+        ],
+        as: 'tags'
+    }
+};
+
+const categoryLookup = {
+    $lookup: {
+        from: 'category',
+        let: { categories: '$categories' },
+        pipeline: [
+            {
+                $match: {
+                    $expr: { $in: ['$_id', { $ifNull: ['$$categories', []] }] }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    description: 1,
+                    slug: 1,
+                    parent: 1,
+                    clientId: '$client_id',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
+                }
+            },
+        ],
+        as: 'categories'
+    }
+};
+
+const degaUserLookup = {
+    $lookup: {
+        from: 'dega_user',
+        let: { degaUsers: '$degaUsers' },
+        pipeline: [
+            {
+                $match: { $expr: { $in: ['$_id', { $ifNull: ['$$degaUsers', []] }] } }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    firstName: '$first_name',
+                    lastName: '$last_name',
+                    displayName: '$display_Name',
+                    website: 1,
+                    facebookURL: { $ifNull: ['$facebookURL', null] }, // These fields don't exist on the record's, let's make sure they are projected into the result even so. This can be replaced with the proper values when they are available
+                    twitterURL: { $ifNull: ['$twitterURL', null] },
+                    instagramURL: { $ifNull: ['$instagramURL', null] },
+                    linkedinURL: { $ifNull: ['$linkedinURL', null] },
+                    githubURL: { $ifNull: ['$githubURL', null] },
+                    profilePicture: { $ifNull: ['$profile_picture', null] },
+                    description: 1,
+                    slug: 1,
+                    enabled: 1,
+                    emailVerified: '$email_verified',
+                    email: 1,
+                    createdDate: '$created_date',
+                    media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] }
+                }
+            },
+            { $addFields: { media: '$media.v' } },
+            {
+                $lookup: {
+                    from: 'media',
+                    let: { media: '$media' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$media'] } } },
+                        {
+                            $project: {
+                                _id: 1,
+                                name: 1,
+                                type: 1,
+                                url: 1,
+                                fileSize: '$file_size',
+                                dimensions: 1,
+                                title: 1,
+                                caption: 1,
+                                altText: '$alt_text',
+                                description: 1,
+                                uploadedBy: '$uploaded_by',
+                                publishedDate: '$published_date',
+                                lastUpdatedDate: '$lastUpdatedDate',
+                                slug: 1,
+                                clientId: '$client_id',
+                                createdDate: '$created_date',
+                                relativeURL: '$relative_url',
+                                sourceURL: '$source_url'
+                            }
+                        },
+                    ],
+                    as: 'media'
+                }
+            },
+            { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+        ],
+        as: 'degaUsers'
+    }
+};
+
+const postsProject = {
+    $project: {
+        _id: 1,
+        title: 1,
+        clientId: '$client_id',
+        content: 1,
+        excerpt: 1,
+        publishedDate: '$published_date',
+        lastUpdatedDate: '$last_updated_date',
+        featured: 1,
+        sticky: 1,
+        updates: 1,
+        slug: 1,
+        password: 1,
+        subTitle: '$sub_title',
+        createdDate: '$created_date',
+        tags: 1,
+        categories: 1,
+        status: 1,
+        format: 1,
+        degaUsers: 1,
+        media: 1,
+    }
+};
+
 class PostsModel extends MongoBase {
     /**
      * Creates a new PostsModel.
@@ -19,125 +261,76 @@ class PostsModel extends MongoBase {
     // OPTIONAL: All other sub docs are optional
     getPosts(config, clientId, id, slug, categorySlug, tagSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
         // get query object
-        const queryObj = this.getQueryObject(clientId, slug, id);
+        const queryObj = this.getQueryObject(clientId, slug, categorySlug, tagSlug, authorSlug, id);
+        const match = { $match: queryObj };
+
+        const aggregations = [
+            addFields,
+            {
+                $addFields: { status: '$status.v', format: '$format.v', media: '$media.v' }
+            },
+            statusLookup,
+            { $unwind: '$status' },
+            formatLookup,
+            { $unwind: '$format' },
+            //   Another type of lookup where we provide it it's own aggregate pipline to mutate and filter the returned results
+            mediaLookup,
+            // Media is nullable, let's not filter out records that don't have the media option
+            { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+            tagLookup,
+            categoryLookup,
+            degaUserLookup,
+            postsProject,
+            match,
+        ];
+
         this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
 
         // get paging object
-        const pagingObj = utils.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
-
+        const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
         const database = config.get('databaseConfig:databases:core');
         const pagingNew = {};
-        return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
-            .then((result) => {
+        // return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
+        return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
+            .then((aggResult) => {
+                const results = aggResult.results;
                 this.logger.info('Converting degaUsers to authors');
-                const posts = result.results.map((post) => {
-                    post.authors = post.degaUsers;
-                    delete post.degaUsers;
-                    return post;
-                });
-                pagingNew.next = result.next;
-                pagingNew.hasNext = result.hasNext;
-                pagingNew.previous = result.previous;
-                pagingNew.hasPrevious = result.hasPrevious;
-                this.logger.info('Expanding sub-documents');
-                return posts.map((post) => {
-                    // query all orgs
-                    const tagWorkers = [];
-                    if (post.tags && post.tags.length > 0) {
-                        post.tags.forEach((tag) => {
-                            tagWorkers.push(Q(this.collection(database, tag.namespace).findOne({ _id: tag.oid })));
-                        });
-                    }
-
-                    return Q.all(tagWorkers)
-                        .then((tags) => {
-                            const tagSlugs = tags.map(tag => tag.slug);
-                            const isTagFound = tagSlugs.includes(tagSlug);
-                            if (tagSlug && !isTagFound) {
-                                throw Error('SkipPost tag slug not found');
-                            }
-                            post.tags = tags;
-                            const catWorkers = [];
-                            if (!post.categories) {
-                                return Q();
-                            }
-                            post.categories.forEach((category) => {
-                                catWorkers.push(Q(this.collection(database, category.namespace)
-                                    .findOne({ _id: category.oid })));
-                            });
-                            return Q.all(catWorkers);
-                        }).then((categories) => {
-                            const categorySlugs = categories.map(category => category.slug);
-                            const isCategoryFound = categorySlugs.includes(categorySlug);
-                            if (categorySlug && !isCategoryFound) {
-                                throw Error('SkipPost category slug not found');
-                            }
-
-                            post.categories = categories;
-                            if (!post.status) {
-                                return Q();
-                            }
-                            // query status doc
-                            const collection = post.status.namespace;
-                            const statusID = post.status.oid;
-                            return Q(this.collection(database, collection).findOne({ _id: statusID }));
-                        }).then((status) => {
-                            // filter all posts on Publish posts
-                            if (status.name !== 'Publish') {
-                                throw Error('SkipPost not published');
-                            }
-
-                            post.status = status;
-                            if (!post.format) {
-                                return Q();
-                            }
-                            // query format doc
-                            const collection = post.format.namespace;
-                            const formatID = post.format.oid;
-                            return Q(this.collection(database, collection).findOne({ _id: formatID }));
-                        }).then((format) => {
-                            post.format = format;
-                            const authorWorkers = [];
-                            if (!post.authors) {
-                                return Q();
-                            }
-                            post.authors.forEach((author) => {
-                                authorWorkers.push(Q(this.collection(database, author.namespace)
-                                    .findOne({ _id: author.oid })));
-                            });
-                            return Q.all(authorWorkers);
-                        }).then((authors) => {
-                            const authorSlugs = authors.map(author => author.slug);
-                            const isAuthorFound = authorSlugs.includes(authorSlug);
-                            if (authorSlug && !isAuthorFound) {
-                                throw Error('SkipPost author slug not found');
-                            }
-
-                            post.authors = authors;
-                            return post;
-                        }).catch((err) => {
-                            if (err && err.message.startsWith('SkipPost')) {
-                                const msg = err.message.split('SkipPost')[1];
-                                this.logger.debug(`Ignoring post ${post._id} -${msg}`);
-                                return null;
-                            }
-                            this.logger.error(`Errored on post ${post._id}`);
-                            throw err;
-                        });
-                });
-            }).then((arrayOfPromises) => {
-                return Q.all(arrayOfPromises);
-            }).then((posts) => {
-                const result = {};
-                result.data = _.compact(posts);
-                result.paging = pagingNew;
-                return result;
+                const posts = {};
+                pagingNew.next = aggResult.next;
+                pagingNew.hasNext = aggResult.hasNext;
+                pagingNew.previous = aggResult.previous;
+                pagingNew.hasPrevious = aggResult.hasPrevious;
+                posts.data = results;
+                posts.paging = pagingNew;
+                return posts;
             });
     }
-    getQueryObject(clientId, slug, id) {
-        const queryObj = {};
+    getQueryObject(clientId, slug, categorySlug, tagSlug, authorSlug, id) {
+        // always filter publish only posts
+        const queryObj = {
+            'status.name': 'Publish'
+        };
+
         if (clientId) {
-            queryObj.client_id = clientId;
+            queryObj.clientId = clientId;
+        }
+
+        if (authorSlug) {
+            queryObj.degaUsers = {
+                $elemMatch: {slug: authorSlug}
+            };
+        }
+
+        if (categorySlug) {
+            queryObj.categories = {
+                $elemMatch: {slug: categorySlug}
+            };
+        }
+
+        if (tagSlug) {
+            queryObj.tags = {
+                $elemMatch: {slug: tagSlug}
+            };
         }
 
         if (slug) {
