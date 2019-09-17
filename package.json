@@ -1,6 +1,6 @@
 {
     "name": "dega-api",
-    "version": "0.6.1",
+    "version": "0.7.0",
     "description": "Public API to access dega",
     "author": "Factly Media &amp; Research LLC",
     "main": "index.js",
@@ -11,6 +11,7 @@
         "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
         "prod": "NODE_ENV=production node server.js",
         "dev": "NODE_ENV=development MONGODB_URI=mongodb://localhost:27017 nodemon server.js",
+        "dev-docker": "NODE_ENV=development nodemon server.js",
         "all": "npm run build && npm run test"
     },
     "dependencies": {

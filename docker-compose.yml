@@ -21,6 +21,6 @@ services:
             - MONGODB_URI=mongodb://mongodb:27017
         ports:
             - "8000:8000"
-        command: "npm run dev"
+        command: "npm run dev-docker"
         depends_on:
           - mongodb
