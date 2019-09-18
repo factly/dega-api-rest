@@ -12,7 +12,7 @@ function getPosts(req, res, next) {
         req.query.slug,
         req.query.category,
         req.query.tag,
-        req.query.author,
+        req.query.user,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,

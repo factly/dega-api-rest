@@ -55,8 +55,23 @@ const addFields = {
 const statusLookup = {
     $lookup: {
         from: 'status',
-        localField: 'status',
-        foreignField: '_id',
+        let: { status: "$status"},
+        pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$status"] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
+            {
+              $project: {
+                id: '$_id',
+                _id: 0,
+                class: '$_class',
+                name: 1,
+                slug: 1,
+                clientId: "$client_id",
+                isDefault: "$is_default",
+                createdDate: "$created_date",
+                lastUpdatedDate: "$last_updated_date"
+              }
+            }
+        ],
         as: 'status'
     }
 };
@@ -64,8 +79,23 @@ const statusLookup = {
 const formatLookup = {
     $lookup: {
         from: 'format',
-        localField: 'format',
-        foreignField: '_id',
+        let: { format: "$format"},
+        pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$format"] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    name: 1,
+                    slug: 1,
+                    clientId: "$client_id",
+                    isDefault: "$is_default",
+                    createdDate: "$created_date",
+                    lastUpdatedDate: "$last_updated_date"
+                }
+            }
+        ],
         as: 'format'
     }
 };
@@ -78,7 +108,9 @@ const mediaLookup = {
             { $match: { $expr: { $eq: ['$_id', '$$media'] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
             {
                 $project: {
-                    _id: 1,
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
                     name: 1,
                     type: 1,
                     url: 1,
@@ -90,7 +122,7 @@ const mediaLookup = {
                     description: 1,
                     uploadedBy: '$uploaded_by',
                     publishedDate: '$published_date',
-                    lastUpdatedDate: '$lastUpdatedDate',
+                    lastUpdatedDate: '$last_updated_date',
                     slug: 1,
                     clientId: '$client_id',
                     createdDate: '$created_date',
@@ -111,7 +143,9 @@ const tagLookup = {
             { $match: { $expr: { $in: ['$_id', { $ifNull: ['$$tags', []] }] } } },
             {
                 $project: {
-                    _id: 1,
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
                     name: 1,
                     slug: 1,
                     description: 1,
@@ -137,7 +171,9 @@ const categoryLookup = {
             },
             {
                 $project: {
-                    _id: 1,
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
                     name: 1,
                     description: 1,
                     slug: 1,
@@ -162,7 +198,9 @@ const degaUserLookup = {
             },
             {
                 $project: {
-                    _id: 1,
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
                     firstName: '$first_name',
                     lastName: '$last_name',
                     displayName: '$display_Name',
@@ -191,7 +229,9 @@ const degaUserLookup = {
                         { $match: { $expr: { $eq: ['$_id', '$$media'] } } },
                         {
                             $project: {
-                                _id: 1,
+                                id: '$_id',
+                                _id: 0,
+                                class: '$_class',
                                 name: 1,
                                 type: 1,
                                 url: 1,
@@ -203,7 +243,7 @@ const degaUserLookup = {
                                 description: 1,
                                 uploadedBy: '$uploaded_by',
                                 publishedDate: '$published_date',
-                                lastUpdatedDate: '$lastUpdatedDate',
+                                lastUpdatedDate: '$last_updated_date',
                                 slug: 1,
                                 clientId: '$client_id',
                                 createdDate: '$created_date',
@@ -223,7 +263,9 @@ const degaUserLookup = {
 
 const postsProject = {
     $project: {
-        _id: 1,
+        id: "$_id",
+        _id : 0, 
+        class: "$_class",
         title: 1,
         clientId: '$client_id',
         content: 1,
@@ -234,14 +276,13 @@ const postsProject = {
         sticky: 1,
         updates: 1,
         slug: 1,
-        password: 1,
         subTitle: '$sub_title',
         createdDate: '$created_date',
         tags: 1,
         categories: 1,
         status: 1,
         format: 1,
-        degaUsers: 1,
+        users: '$degaUsers',
         media: 1,
     }
 };
@@ -294,7 +335,7 @@ class PostsModel extends MongoBase {
         return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
             .then((aggResult) => {
                 const results = aggResult.results;
-                this.logger.info('Converting degaUsers to authors');
+                this.logger.info('Retrieved the posts');
                 const posts = {};
                 pagingNew.next = aggResult.next;
                 pagingNew.hasNext = aggResult.hasNext;
@@ -316,20 +357,27 @@ class PostsModel extends MongoBase {
         }
 
         if (authorSlug) {
+            let authorSlugQuery = Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug
+        
             queryObj.degaUsers = {
-                $elemMatch: {slug: authorSlug}
+                $elemMatch: {slug: authorSlugQuery}
             };
+            console.log(queryObj)
         }
 
         if (categorySlug) {
+            let categorySlugQuery = Array.isArray(categorySlug) ? { $in : categorySlug } : categorySlug
+        
             queryObj.categories = {
-                $elemMatch: {slug: categorySlug}
+                $elemMatch: {slug: categorySlugQuery}
             };
         }
 
         if (tagSlug) {
-            queryObj.tags = {
-                $elemMatch: {slug: tagSlug}
+            let tagSlugQuery = Array.isArray(tagSlug) ? { $in : tagSlug } : tagSlug
+        
+            queryObj.categories = {
+                $elemMatch: {slug: tagSlugQuery}
             };
         }
 
