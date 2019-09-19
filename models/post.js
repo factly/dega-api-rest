@@ -55,22 +55,22 @@ const addFields = {
 const statusLookup = {
     $lookup: {
         from: 'status',
-        let: { status: "$status"},
+        let: { status: '$status'},
         pipeline: [
-            { $match: { $expr: { $eq: ["$_id", "$$status"] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
+            { $match: { $expr: { $eq: ['$_id', '$$status'] } } },
             {
-              $project: {
-                id: '$_id',
-                _id: 0,
-                class: '$_class',
-                name: 1,
-                slug: 1,
-                clientId: "$client_id",
-                isDefault: "$is_default",
-                createdDate: "$created_date",
-                lastUpdatedDate: "$last_updated_date"
-              }
-            }
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class:'$_class',
+                    name: 1,
+                    slug: 1,
+                    clientId: "$client_id",
+                    isDefault: "$is_default",
+                    createdDate: "$created_date",
+                    lastUpdatedDate: "$last_updated_date"
+                }
+            },
         ],
         as: 'status'
     }
@@ -79,14 +79,14 @@ const statusLookup = {
 const formatLookup = {
     $lookup: {
         from: 'format',
-        let: { format: "$format"},
+        let: { format: '$format'},
         pipeline: [
-            { $match: { $expr: { $eq: ["$_id", "$$format"] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
+            { $match: { $expr: { $eq: ["$_id", "$$format"] } } },
             {
                 $project: {
                     id: '$_id',
                     _id: 0,
-                    class: '$_class',
+                    class:'$_class',
                     name: 1,
                     slug: 1,
                     clientId: "$client_id",
@@ -94,7 +94,7 @@ const formatLookup = {
                     createdDate: "$created_date",
                     lastUpdatedDate: "$last_updated_date"
                 }
-            }
+            },
         ],
         as: 'format'
     }
@@ -135,55 +135,34 @@ const mediaLookup = {
     }
 };
 
+const tagAggregation = utils.tagPipeline;
+//build match object using tag GUID and attach  it to pipeline
+const tagMatch = {
+    $match: { $expr: { $in: ['$_id', { $ifNull: ['$$tags', []] }] } }
+};
+tagAggregation.push(tagMatch);
 const tagLookup = {
     $lookup: {
         from: 'tag',
         let: { tags: '$tags' },
-        pipeline: [
-            { $match: { $expr: { $in: ['$_id', { $ifNull: ['$$tags', []] }] } } },
-            {
-                $project: {
-                    id: '$_id',
-                    _id: 0,
-                    class: '$_class',
-                    name: 1,
-                    slug: 1,
-                    description: 1,
-                    clientId: '$client_id',
-                    createdDate: '$created_date',
-                    lastUpdatedDate: '$last_updated_date'
-                }
-            },
-        ],
+        pipeline: tagAggregation,
         as: 'tags'
     }
 };
 
+const categoryAggregation = utils.categoryPipeline;
+// build match object using category GUID and attach it to pipeline
+const categoryMatch = {
+    $match: {
+        $expr: { $in: ['$_id', { $ifNull: ['$$categories', []] }] }
+    }
+};
+categoryAggregation.push(categoryMatch);
 const categoryLookup = {
     $lookup: {
         from: 'category',
         let: { categories: '$categories' },
-        pipeline: [
-            {
-                $match: {
-                    $expr: { $in: ['$_id', { $ifNull: ['$$categories', []] }] }
-                }
-            },
-            {
-                $project: {
-                    id: '$_id',
-                    _id: 0,
-                    class: '$_class',
-                    name: 1,
-                    description: 1,
-                    slug: 1,
-                    parent: 1,
-                    clientId: '$client_id',
-                    createdDate: '$created_date',
-                    lastUpdatedDate: '$last_updated_date'
-                }
-            },
-        ],
+        pipeline: categoryAggregation,
         as: 'categories'
     }
 };
@@ -257,14 +236,14 @@ const degaUserLookup = {
             },
             { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
         ],
-        as: 'degaUsers'
+        as: 'users'
     }
 };
 
 const postsProject = {
     $project: {
         id: "$_id",
-        _id : 0, 
+        _id : 0,
         class: "$_class",
         title: 1,
         clientId: '$client_id',
@@ -282,8 +261,8 @@ const postsProject = {
         categories: 1,
         status: 1,
         format: 1,
-        users: '$degaUsers',
-        media: 1,
+        users: 1,
+        media: 1
     }
 };
 
@@ -314,7 +293,7 @@ class PostsModel extends MongoBase {
             { $unwind: '$status' },
             formatLookup,
             { $unwind: '$format' },
-            //   Another type of lookup where we provide it it's own aggregate pipline to mutate and filter the returned results
+            // Another type of lookup where we provide it it's own aggregate pipline to mutate and filter the returned results
             mediaLookup,
             // Media is nullable, let's not filter out records that don't have the media option
             { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
