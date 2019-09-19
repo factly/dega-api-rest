@@ -5,10 +5,9 @@ function getClaimant(req, res, next) {
     const logger = req.logger;
     utils.setLogTokens(logger, 'claimants', 'getClaimant', req.query.client, null);
     const model = new ClaimantModel(logger);
-    const clientId = req.query.client;
     return model.getClaimant(
         req.app.kraken,
-        clientId,
+        req.query.client,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,

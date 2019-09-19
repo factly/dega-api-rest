@@ -5,10 +5,9 @@ function getFormat(req, res, next) {
     const logger = req.logger;
     utils.setLogTokens(logger, 'formats', 'getFormat', req.query.client, null);
     const model = new FormatModel(logger);
-    const clientId = req.query.client_id;
     return model.getFormat(
         req.app.kraken,
-        clientId,
+        req.query.client_id,
         req.query.slug,
         req.query.sortBy,
         req.query.sortAsc,
