@@ -16,13 +16,33 @@ class CategoryModel extends MongoBase {
 
     getCategory(config, clientId, sortBy, sortAsc, limit, next, previous) {
         const query = {};
-
         if (clientId) {
-            query.client_id = clientId;
+            query.clientId = clientId;
         }
-        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+
+        const match = { $match: query };
+
+        const aggregations = [
+            {
+                $project : {
+                    id: "$_id",
+                    _id: 0,
+                    class: "$_class",
+                    name: 1,
+                    description: 1,
+                    slug: 1,
+                    parent: 1,
+                    clientId: '$client_id',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
+                }
+            },
+            match
+        ];
+
+        const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
         const database = config.get('databaseConfig:databases:core');
-        return Q(MongoPaging.find(this.collection(database), pagingObj))
+        return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
                 const response = {};
