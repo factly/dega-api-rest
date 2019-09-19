@@ -109,7 +109,7 @@ class ClaimModel extends MongoBase {
                 $addFields: { rating: "$rating.v", claimant: "$claimant.v" }
             },
             ratingLookup,
-            { $unwind: { path: "$claimant", preserveNullAndEmptyArrays: true } },
+            { $unwind: { path: "$rating", preserveNullAndEmptyArrays: true } },
             claimantLookup,
             { $unwind: { path: "$claimant", preserveNullAndEmptyArrays: true } },
             project,
