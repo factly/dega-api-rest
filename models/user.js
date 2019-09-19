@@ -5,20 +5,20 @@ const utils = require('../lib/utils');
 
 const addFields = {
     $addFields: {
-        media: { $arrayElemAt: [{ $objectToArray: "$media" }, 1] },
-        roleMappings: {
+      media: { $arrayElemAt: [{ $objectToArray: "$media" }, 1] },
+      roleMappings: {
+        $map: {
+          input: {
             $map: {
-                input: {
-                    $map: {
-                    input: "$roleMappings",
-                    in: {
-                        $arrayElemAt: [{ $objectToArray: "$$this" }, 1]
-                    }
-                    }
-                },
-                in: "$$this.v"
+              input: "$roleMappings",
+              in: {
+                $arrayElemAt: [{ $objectToArray: "$$this" }, 1]
+              }
             }
+          },
+          in: "$$this.v"
         }
+      }
     }
 }
 
@@ -122,8 +122,10 @@ class UserModel extends MongoBase {
 
         const aggregations = [
             addFields,
-            { 
-                $addFields: { mediaLogo: "$media.v" }
+            {
+                $addFields: {
+                    media: "$media.v"
+                }
             },
             mediaLookup,
             { $unwind: { path: "$media", preserveNullAndEmptyArrays: true } },
