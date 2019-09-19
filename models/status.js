@@ -15,23 +15,35 @@ class StatusModel extends MongoBase {
 
     getStatus(config, clientId, sortBy, sortAsc, limit, next, previous) {
         const query = {};
-
         if (clientId) {
-            query.client_id = clientId;
+            query.clientId = clientId;
         }
-        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+
+        const match = { $match: query };
+
+        const aggregations = [
+            {
+                $project : {
+                    id: "$_id",
+                    _id: 0,
+                    class: "$_class",
+                    name: 1,
+                    slug: 1,
+                    isDefault: '$is_default',
+                    clientId: '$client_id',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
+                }
+            },
+            match
+        ];
+
         const database = config.get('databaseConfig:databases:core');
-        return Q(MongoPaging.find(this.collection(database), pagingObj))
-            .then((result) => {
+        return Q(this.collection(database)
+            .aggregate(aggregations).toArray())
+            .then((results) => {
                 this.logger.info('Retrieved the results');
-                const response = {};
-                response.data = result.results;
-                response.paging = {};
-                response.paging.next = result.next;
-                response.paging.hasNext = result.hasNext;
-                response.paging.previous = result.previous;
-                response.paging.hasPrevious = result.hasPrevious;
-                return response;
+                return results;
             });
     }
 }
