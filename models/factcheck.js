@@ -266,6 +266,7 @@ class FactcheckModel extends MongoBase {
 
         // get query object
         const queryObj = this.getQueryObject(config, clientId, id, slug, tagSlug, categorySlug);
+        console.log(queryObj)
         const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
         
@@ -564,6 +565,7 @@ class FactcheckModel extends MongoBase {
                 }    
             })
             .then( query => {
+                console.log(query)
                 return query
             })
         
