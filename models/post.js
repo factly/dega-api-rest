@@ -338,10 +338,9 @@ class PostsModel extends MongoBase {
         if (authorSlug) {
             let authorSlugQuery = Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug
         
-            queryObj.degaUsers = {
+            queryObj.users = {
                 $elemMatch: {slug: authorSlugQuery}
             };
-            console.log(queryObj)
         }
 
         if (categorySlug) {
@@ -355,24 +354,26 @@ class PostsModel extends MongoBase {
         if (tagSlug) {
             let tagSlugQuery = Array.isArray(tagSlug) ? { $in : tagSlug } : tagSlug
         
-            queryObj.categories = {
+            queryObj.tags = {
                 $elemMatch: {slug: tagSlugQuery}
             };
         }
 
         if (slug) {
-            queryObj.slug = slug;
+            let slugQuery = Array.isArray(slug) ? { $in : slug } : slug
+        
+            queryObj.slug = slugQuery
         }
 
         if (id) {
-            if (Array.isArray(id)) {
-                queryObj._id = { $in: [] };
+            if(Array.isArray(id)){
+                queryObj.id = { $in: [] };
                 for (let element of id) {
-                    queryObj._id.$in.push(new ObjectId(element));
+                    queryObj.id.$in.push(new ObjectId(element));
                 }
             }
-            else {
-                queryObj._id = new ObjectId(id);
+            else{
+                queryObj.id = new ObjectId(id);
             }
         }
         return queryObj;
