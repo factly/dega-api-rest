@@ -13,11 +13,25 @@ const addFields = {
                     $map: {
                         input: "$claims",
                         in: {
-                        $arrayElemAt: [{ $objectToArray: "$$this" }, 1]
+                            $arrayElemAt: [{ $objectToArray: "$$this" }, 1]
                         }
                     }
                 },
                 in: "$$this.v"
+            }
+        },
+        status: { $arrayElemAt: [{ $objectToArray: '$status' }, 1] },
+        categories: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$categories',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
             }
         }
     }
@@ -31,8 +45,9 @@ const claimsLookup = {
             { $match: { $expr: { $in: ["$_id", { $ifNull: ["$$claims", []] }] } } },
             {
                 $project: {
-                    _id: 1,
-                    _class:1,
+                    id: "$_id",
+                    _id: 0,
+                    class: "$_class",
                     claim: 1,
                     slug: 1,
                     clientId: "$client_id",
@@ -59,8 +74,9 @@ const claimsLookup = {
                         { $match: { $expr: { $eq: ["$_id", "$$rating"] } } },
                         {
                             $project: {
-                                _id: 1,
-                                _class:1,
+                                id: "$_id",
+                                _id: 0,
+                                class: "$_class",
                                 name: 1,
                                 numericValue: "$numeric_value",
                                 isDefault: "$is_default",
@@ -75,6 +91,8 @@ const claimsLookup = {
                     ],
                     as: "rating"
                 },
+            },
+            {
                 $lookup: {
                     from: "claimant",
                     let: { claimant: "$claimant" },
@@ -82,8 +100,9 @@ const claimsLookup = {
                         { $match: { $expr: { $eq: ["$_id", "$$claimant"] } } },
                         {
                             $project: {
-                                _id: 1,
-                                _class:1,
+                                id: "$_id",
+                                _id: 0,
+                                class: "$_class",
                                 name: 1,
                                 numericValue: "$numeric_value",
                                 isDefault: "$is_default",
@@ -107,8 +126,9 @@ const claimsLookup = {
 
 const factcheckLookup = {
     $project: {
-        _id: 1,
-        _class:1,
+        id: "$_id",
+        _id: 0,
+        class: "$_class",
         title: 1,
         clientId: "$client_id",
         content: 1,
@@ -245,7 +265,7 @@ class FactcheckModel extends MongoBase {
     getFactcheck(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug, statusSlug, sortBy, sortAsc, limit, next, previous) {
 
         // get query object
-        const queryObj = this.getQueryObject(clientId, slug, id);
+        const queryObj = this.getQueryObject(config, clientId, id, slug, tagSlug, categorySlug);
         const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
         
@@ -253,6 +273,9 @@ class FactcheckModel extends MongoBase {
 
         const aggregations = [
             addFields,
+            {
+                $addFields: { status: '$status.v' }
+            },
             claimsLookup,
             factcheckLookup,
             match
@@ -292,7 +315,7 @@ class FactcheckModel extends MongoBase {
                 mediaAggregation.push(match);
                 
                 //Retrieving all media in mediaIds
-                return Q(this.collection(config.get('databaseConfig:databases:core'), 'media')
+                return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaAggregation).toArray())
                     .then((media) => {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
@@ -316,7 +339,7 @@ class FactcheckModel extends MongoBase {
                 
                 statusAggregation.push(match);
                 
-                return Q(this.collection(config.get('databaseConfig:databases:core'), 'status')
+                return Q(this.collection(coreDatabase, 'status')
                     .aggregate(statusAggregation).toArray())
                     .then((statuses) => {
                         const statusesObject = statuses.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {})
@@ -331,7 +354,7 @@ class FactcheckModel extends MongoBase {
                 //Collecting all category ID from all the factchecks into 1-D array
                 for(let factcheck of factchecks){
                     if(factcheck.categories && factcheck.categories.length > 0)
-                        categoryIds = categoryIds.concat(factcheck.categories.map(category => category.oid))
+                        categoryIds = categoryIds.concat(factcheck.categories)
                 }
 
                 //If none of factchecks has category then directly return factchecks 
@@ -361,7 +384,7 @@ class FactcheckModel extends MongoBase {
                     match
                 ];
 
-                return Q(this.collection(config.get('databaseConfig:databases:core'), 'category')
+                return Q(this.collection(coreDatabase, 'category')
                     .aggregate(aggregations).toArray())
                     .then( categories => {
                         //if nothing return from query then return factchecks
@@ -372,7 +395,7 @@ class FactcheckModel extends MongoBase {
                         const categoriesObject = categories.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {})
                         
                         //Traveling through all the factchecks categories array and replacing DBref category with full category object  
-                        return factchecks.map( factcheck => factcheck.categories && factcheck.categories.length > 0 ?  { ...factcheck, categories: factcheck.categories.map(category => categoriesObject[category.oid] ? categoriesObject[category.oid] : undefined ) } : factcheck )
+                        return factchecks.map( factcheck => factcheck.categories && factcheck.categories.length > 0 ?  { ...factcheck, categories: factcheck.categories.map(category => categoriesObject[category] ? categoriesObject[category] : undefined ) } : factcheck )
                     });
             })
             .then( factchecks => {
@@ -409,7 +432,7 @@ class FactcheckModel extends MongoBase {
                     match
                 ];
 
-                return Q(this.collection(config.get('databaseConfig:databases:core'), 'tag')
+                return Q(this.collection(coreDatabase, 'tag')
                     .aggregate(aggregations).toArray())
                     .then( tags => {
                         if(tags.length < 1) return factchecks
@@ -450,7 +473,7 @@ class FactcheckModel extends MongoBase {
                     match
                 ];
 
-                return Q(this.collection(config.get('databaseConfig:databases:core'), 'dega_user')
+                return Q(this.collection(coreDatabase, 'dega_user')
                     .aggregate(aggregations).toArray())
                     .then( users => {
                         if(users.length < 0) return factchecks
@@ -468,28 +491,155 @@ class FactcheckModel extends MongoBase {
             })
     }
 
+    getQueryObject(config, clientId, id, slug, tagSlug, categorySlug) {
+        const coreDatabase = config.get('databaseConfig:databases:core');
+        const query = {};
 
-    getQueryObject(clientId, slug, id) {
-        const queryObj = {};
-        if (clientId) {
-            queryObj.client_id = clientId;
-        }
+        return Q(this.collection(coreDatabase, 'status')
+            .aggregate([
+                {
+                    $match: {
+                        name: 'Publish'
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1  
+                    }
+                }
+            ]).toArray())
+            .then(status => {
+                query.status = new ObjectId(status[0]._id)
+                return query
+            })
+            .then( query => {
+                if (clientId) {
+                    query.clientId = clientId;
+                }
+                return query
+            })
+            .then( query => {
+                if (id) {
+                    if(Array.isArray(id)){
+                        query.id = { $in: [] };
+                        for (let element of id) {
+                            query.id.$in.push(new ObjectId(element));
+                        }
+                    }
+                    else{
+                        query.id = new ObjectId(id);
+                    }          
+                }
+                return query
+            })
+            .then( query => {
+                if (slug) 
+                    query.slug = Array.isArray(slug) ? { $in : slug } : slug
+                
+                return query
+            })
+            .then( query => {
+                if (categorySlug) {
+                    return Q(this.collection(coreDatabase, 'category')
+                        .aggregate([
+                            {
+                                $match: {
+                                    slug: Array.isArray(categorySlug) ? { $in : categorySlug } : categorySlug
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1  
+                                }
+                            }
+                        ]).toArray())
+                        .then(categories => {
+                            let categoryIds = []
+                            categoryIds = categories.map(category => new ObjectId(category._id))
 
-        if (slug) {
-            queryObj.slug = slug;
+                            query.categories = { $in : categoryIds } 
+
+                            return query
+                        })
+                }    
+            })
+            .then( query => {
+                return query
+            })
+        
+
+        /*if (clientId) {
+            queryObj.clientId = clientId;
         }
 
         if (id) {
             if(Array.isArray(id)){
-                queryObj._id = { $in: [] };
+                queryObj.id = { $in: [] };
                 for (let element of id) {
-                    queryObj._id.$in.push(new ObjectId(element));
+                    queryObj.id.$in.push(new ObjectId(element));
                 }
             }
             else{
-                queryObj._id = new ObjectId(id);
+                queryObj.id = new ObjectId(id);
             }          
         }
+
+        if (slug) {
+            let slugQuery = Array.isArray(slug) ? { $in : slug } : slug
+        
+            queryObj.slug = slugQuery
+        }
+
+        if (tagSlug) {
+            Q(this.collection(coreDatabase, 'tag')
+                .aggregate([
+                    {
+                        $match: {
+                            slug: Array.isArray(tagSlug) ? { $in : tagSlug } : slug
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 1  
+                        }
+                    }
+                ]))
+                .then(tags => {
+
+                    let tagIds = []
+                    tagIds = tags.map(tag => tag._id)
+                    if(tagIds.length > 0) 
+                        queryObj.tags = {
+                            $elemMatch: {slug: tagIds.length > 1 ? tagIds : tagIds[0]}
+                        };
+                })
+        }
+
+        if (categorySlug) {
+            Q(this.collection(coreDatabase, 'category')
+                .aggregate([
+                    {
+                        $match: {
+                            slug: Array.isArray(categorySlug) ? { $in : categorySlug } : categorySlug
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 1  
+                        }
+                    }
+                ]).toArray())
+                .then(categories => {
+                    let categoryIds = []
+                    categoryIds = categories.map(category => category._id)
+                    if(categoryIds.length > 0) 
+                        queryObj.categories = {
+                            $elemMatch: { 
+                                $id: categoryIds.length > 1 ? { $in : categoryIds } : categoryIds[0] 
+                            }
+                        };
+                })
+        }*/
 
         //TODO: Get all the ids of of different filter(tag, user, category, ...) by running DB query then apply filter over here 
         return queryObj;
