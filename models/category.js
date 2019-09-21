@@ -25,9 +25,9 @@ class CategoryModel extends MongoBase {
         const aggregations = [
             {
                 $project : {
-                    id: "$_id",
+                    id: '$_id',
                     _id: 0,
-                    class: "$_class",
+                    class: '$_class',
                     name: 1,
                     description: 1,
                     slug: 1,
@@ -37,7 +37,7 @@ class CategoryModel extends MongoBase {
                     lastUpdatedDate: '$last_updated_date'
                 }
             },
-            match
+            match,
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);

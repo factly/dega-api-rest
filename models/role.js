@@ -22,20 +22,20 @@ class RoleModel extends MongoBase {
         const aggregations = [
             {
                 $project : {
-                    id: "$_id",
+                    id: '$_id',
                     _id: 0,
-                    class: "$_class",
+                    class: '$_class',
                     name: 1,
-                    isDefault: "$is_default",
+                    isDefault: '$is_default',
                     slug: 1,
-                    clientId: "$client_id",
-                    keyclockId: "$keycloak_id",
-                    keyclockName: "$keycloak_name",
-                    createdDate: "$created_date",
-                    lastUpdatedDate: "$last_updated_date"
+                    clientId: '$client_id',
+                    keyclockId: '$keycloak_id',
+                    keyclockName: '$keycloak_name',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
                 }
             },
-            match
+            match,
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);

@@ -1,7 +1,5 @@
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-const MongoPaging = require('mongo-cursor-pagination');
-const utils = require('../lib/utils');
 class FormatModel extends MongoBase {
     /**
      * Creates a new FormatModel.
@@ -13,7 +11,7 @@ class FormatModel extends MongoBase {
         this.logger = logger;
     }
 
-    getFormat(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
+    getFormat(config, clientId, slug) {
         // get query object
         const query = this.getQueryObject(clientId, slug);
 
@@ -22,9 +20,9 @@ class FormatModel extends MongoBase {
         const aggregations = [
             {
                 $project : {
-                    id: "$_id",
+                    id: '$_id',
                     _id: 0,
-                    class: "$_class",
+                    class: '$_class',
                     name: 1,
                     slug: 1,
                     isDefault: '$is_default',
@@ -33,7 +31,7 @@ class FormatModel extends MongoBase {
                     lastUpdatedDate: '$last_updated_date'
                 }
             },
-            match
+            match,
         ];
         
         const database = config.get('databaseConfig:databases:core');

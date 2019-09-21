@@ -1,7 +1,6 @@
 const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-const _ = require('lodash');
 const ObjectId = require('mongodb').ObjectID;
 const utils = require('../lib/utils');
 
@@ -65,10 +64,10 @@ const statusLookup = {
                     class:'$_class',
                     name: 1,
                     slug: 1,
-                    clientId: "$client_id",
-                    isDefault: "$is_default",
-                    createdDate: "$created_date",
-                    lastUpdatedDate: "$last_updated_date"
+                    clientId: '$client_id',
+                    isDefault: '$is_default',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
                 }
             },
         ],
@@ -81,7 +80,7 @@ const formatLookup = {
         from: 'format',
         let: { format: '$format'},
         pipeline: [
-            { $match: { $expr: { $eq: ["$_id", "$$format"] } } },
+            { $match: { $expr: { $eq: ['$_id', '$$format'] } } },
             {
                 $project: {
                     id: '$_id',
@@ -89,10 +88,10 @@ const formatLookup = {
                     class:'$_class',
                     name: 1,
                     slug: 1,
-                    clientId: "$client_id",
-                    isDefault: "$is_default",
-                    createdDate: "$created_date",
-                    lastUpdatedDate: "$last_updated_date"
+                    clientId: '$client_id',
+                    isDefault: '$is_default',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
                 }
             },
         ],
@@ -242,9 +241,9 @@ const degaUserLookup = {
 
 const postsProject = {
     $project: {
-        id: "$_id",
+        id: '$_id',
         _id : 0,
-        class: "$_class",
+        class: '$_class',
         title: 1,
         clientId: '$client_id',
         content: 1,
@@ -336,7 +335,7 @@ class PostsModel extends MongoBase {
         }
 
         if (authorSlug) {
-            let authorSlugQuery = Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug
+            let authorSlugQuery = Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug;
         
             queryObj.users = {
                 $elemMatch: {slug: authorSlugQuery}
@@ -344,7 +343,7 @@ class PostsModel extends MongoBase {
         }
 
         if (categorySlug) {
-            let categorySlugQuery = Array.isArray(categorySlug) ? { $in : categorySlug } : categorySlug
+            let categorySlugQuery = Array.isArray(categorySlug) ? { $in : categorySlug } : categorySlug;
         
             queryObj.categories = {
                 $elemMatch: {slug: categorySlugQuery}
@@ -352,7 +351,7 @@ class PostsModel extends MongoBase {
         }
 
         if (tagSlug) {
-            let tagSlugQuery = Array.isArray(tagSlug) ? { $in : tagSlug } : tagSlug
+            let tagSlugQuery = Array.isArray(tagSlug) ? { $in : tagSlug } : tagSlug;
         
             queryObj.tags = {
                 $elemMatch: {slug: tagSlugQuery}
@@ -360,9 +359,9 @@ class PostsModel extends MongoBase {
         }
 
         if (slug) {
-            let slugQuery = Array.isArray(slug) ? { $in : slug } : slug
+            let slugQuery = Array.isArray(slug) ? { $in : slug } : slug;
         
-            queryObj.slug = slugQuery
+            queryObj.slug = slugQuery;
         }
 
         if (id) {

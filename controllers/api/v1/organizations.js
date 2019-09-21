@@ -6,14 +6,14 @@ function getOrganization(req, res, next) {
     utils.setLogTokens(logger, 'organizations', 'getOrganization', req.query.client, null);
     const model = new OrganizationModel(logger);
     return model.getOrganization(
-            req.app.kraken, 
-            req.query.client
-        ).then((result) => {
-            if (result) {
-                res.status(200).json(result);
-                return;
-            }
-            res.sendStatus(404);
+        req.app.kraken, 
+        req.query.client
+    ).then((result) => {
+        if (result) {
+            res.status(200).json(result);
+            return;
+        }
+        res.sendStatus(404);
     }).catch(next);
 }
 
