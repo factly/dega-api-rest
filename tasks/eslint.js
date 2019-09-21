@@ -8,7 +8,8 @@ module.exports = function eslint(grunt) {
     return {
         options: {
             configFile: '.eslintrc',
-            rulePaths: ['node_modules/eslint/lib/rules']
+            rulePaths: ['node_modules/eslint/lib/rules'],
+            fix: true
         },
         target: ['index.js',
             'server.js',
