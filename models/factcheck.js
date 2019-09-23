@@ -118,6 +118,7 @@ const claimsLookup = {
                     as: "rating"
                 },
             },
+            { $unwind: { path: "$rating", preserveNullAndEmptyArrays: true } },
             {
                 $lookup: {
                     from: "claimant",
