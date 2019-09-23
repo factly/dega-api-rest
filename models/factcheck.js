@@ -297,7 +297,6 @@ class FactcheckModel extends MongoBase {
         // get query object
         return this.getQueryObject(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug, statusSlug)
             .then((queryObj) => {
-                console.log(queryObj)
 
                 const match = { $match: queryObj };
 
@@ -352,7 +351,7 @@ class FactcheckModel extends MongoBase {
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {})
 
                         //Traveling through all the factchecks and replacing DBref media with full media object
-                        return factchecks.map( factcheck => factcheck.media ? { factcheck, media: mediaObject[factcheck.media.oid]} : factcheck )
+                        return factchecks.map( factcheck => factcheck.media ? { ...factcheck, media: mediaObject[factcheck.media.oid]} : factcheck )
                     });
             })
             .then( factchecks => {
@@ -434,7 +433,7 @@ class FactcheckModel extends MongoBase {
 
                 for(let factcheck of factchecks){
                     if(factcheck.tags && factcheck.tags.length > 0)
-                        tagIds = tagIds.concat(factcheck.tags.map(tag => tag.oid))
+                        tagIds = tagIds.concat(factcheck.tags)
                 }
 
                 if(tagIds.length === 0) return factchecks
@@ -469,7 +468,7 @@ class FactcheckModel extends MongoBase {
 
                         const tagsObject = tags.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {})
 
-                        return factchecks.map( factcheck => factcheck.tags && factcheck.tags.length > 0 ?  { ...factcheck, tags: factcheck.tags.map(tag => tagsObject[tag.oid]) } : factcheck )
+                        return factchecks.map( factcheck => factcheck.tags && factcheck.tags.length > 0 ?  { ...factcheck, tags: factcheck.tags.map(tag => tagsObject[tag] ? tagsObject[tag] : undefined ) } : factcheck )
                     });
             })
             .then( factchecks => {
@@ -478,7 +477,7 @@ class FactcheckModel extends MongoBase {
 
                 for(let factcheck of factchecks){
                     if(factcheck.users && factcheck.users.length > 0)
-                        userIds = userIds.concat(factcheck.users.map(tag => tag.oid))
+                        userIds = userIds.concat(factcheck.users)
                 }
 
                 if(userIds.length === 0) return factchecks
@@ -510,7 +509,7 @@ class FactcheckModel extends MongoBase {
 
                         const usersObject = users.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {})
 
-                        return factchecks.map( factcheck => factcheck.users && factcheck.users.length > 0 ?  { ...factcheck, users: factcheck.users.map(user => usersObject[user.oid]) } : factcheck )
+                        return factchecks.map( factcheck => factcheck.users && factcheck.users.length > 0 ?  { ...factcheck, users: factcheck.users.map(user => usersObject[user] ? usersObject[user] : undefined ) } : factcheck )
                     });
             })
             .then( factchecks => {
@@ -650,7 +649,6 @@ class FactcheckModel extends MongoBase {
                 return query
             })
             .then( query => {
-                console.log(query)
                 return query
             });
     }
