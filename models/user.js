@@ -112,14 +112,7 @@ class UserModel extends MongoBase {
     }
 
     getUser(config, clientId, sortBy, sortAsc, limit, next, previous) {
-        const query = {};
-
-        if (clientId) {
-            query.client_id = clientId;
-        }
-
-        const match = { $match: query };
-
+    
         const aggregations = [
             addFields,
             {
@@ -131,7 +124,6 @@ class UserModel extends MongoBase {
             { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
             roleMappingLookup,
             userProject,
-            match,
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
@@ -151,6 +143,42 @@ class UserModel extends MongoBase {
                 users.data = results; 
                 users.paging = pagingNew;
                 return users;
+            });
+    }
+
+    getUserBySlug(config, clientId, slug) {
+        const aggregations = [
+            addFields,
+            {
+                $addFields: {
+                    media: '$media.v'
+                }
+            },
+            mediaLookup,
+            { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+            roleMappingLookup,
+            userProject,
+            {
+                $match: {
+                    slug: slug
+                }
+            },
+        ];
+
+        // get database from env config
+        const database = config.get('databaseConfig:databases:core');
+     
+        // get all users
+        return Q(this.collection(database)
+            .aggregate(aggregations).toArray())
+            .then((result) => {
+                this.logger.info('Retrieved the results');
+                if(result && result.length === 1) 
+                    return {
+                        data: result[0]
+                    };
+
+                return
             });
     }
 }
