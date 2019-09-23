@@ -181,7 +181,7 @@ const degaUserLookup = {
                     class: '$_class',
                     firstName: '$first_name',
                     lastName: '$last_name',
-                    displayName: '$display_Name',
+                    displayName: '$display_name',
                     website: 1,
                     facebookURL: { $ifNull: ['$facebookURL', null] }, // These fields don't exist on the record's, let's make sure they are projected into the result even so. This can be replaced with the proper values when they are available
                     twitterURL: { $ifNull: ['$twitterURL', null] },
