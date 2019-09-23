@@ -3,7 +3,7 @@ const utils = require('../../../lib/utils');
 
 function getCategory(req, res, next) {
     const logger = req.logger;
-    utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.query.client, null);
+    utils.setLogTokens(logger, 'categories', 'getCategory', req.query.client, null);
     const model = new CategoryModel(logger);
     return model.getCategory(
         req.app.kraken, 
@@ -22,6 +22,24 @@ function getCategory(req, res, next) {
     }).catch(next);
 }
 
+function getCategoryBySlug(req, res, next) {
+    const logger = req.logger;
+    utils.setLogTokens(logger, 'categories', 'getCategoryBySlug', req.query.client, null);
+    const model = new CategoryModel(logger);
+    return model.getCategoryBySlug(
+        req.app.kraken, 
+        req.query.client, 
+        req.params.slug,
+    ).then((result) => {
+        if (result) {
+            res.status(200).json(result);
+            return;
+        }
+        res.sendStatus(404);
+    }).catch(next);
+}
+
 module.exports = function routes(router) {
     router.get('/', getCategory);
+    router.get('/:slug', getCategoryBySlug)
 };
