@@ -157,7 +157,7 @@ const orgProject = {
         class: '$_class',
         name: 1,
         phone: 1,
-        siteTitle: '$sub_title',
+        siteTitle: '$site_title',
         tagLine: '$tag_line',
         description: 1,
         baiduVerificationCode: '$baidu_verification_code',
@@ -204,7 +204,7 @@ class OrganizationModel extends MongoBase {
         const query = {};
 
         if (clientId) {
-            query.client_id = clientId;
+            query.slug = clientId;
         }
 
         const match = { $match: query };
