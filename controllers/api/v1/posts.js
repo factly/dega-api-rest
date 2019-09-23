@@ -9,7 +9,7 @@ function getPosts(req, res, next) {
         req.app.kraken,
         req.query.client,
         req.query.id,
-        req.query.slug,
+        req.params.slug ? req.params.slug : req.query.slug,
         req.query.category,
         req.query.tag,
         req.query.user,

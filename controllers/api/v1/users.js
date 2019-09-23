@@ -5,10 +5,9 @@ function getUser(req, res, next) {
     const logger = req.logger;
     utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
     const model = new UserModel(logger);
-    const clientId = req.query.client;
     return model.getUser(
         req.app.kraken, 
-        clientId, 
+        req.query.client, 
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,

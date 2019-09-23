@@ -5,10 +5,9 @@ function getTag(req, res, next) {
     const logger = req.logger;
     utils.setLogTokens(logger, 'tags', 'getTag', req.query.client, null);
     const model = new TagModel(logger);
-    const clientId = req.query.client;
     return model.getTag(
         req.app.kraken, 
-        clientId, 
+        req.query.client, 
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,

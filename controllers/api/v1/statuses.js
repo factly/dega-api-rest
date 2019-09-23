@@ -5,15 +5,9 @@ function getStatus(req, res, next) {
     const logger = req.logger;
     utils.setLogTokens(logger, 'statuses', 'getStatus', req.query.client, null);
     const model = new StatusModel(logger);
-    const clientId = req.query.client;
     return model.getStatus(
         req.app.kraken, 
-        clientId, 
-        req.query.sortBy,
-        req.query.sortAsc,
-        req.query.limit,
-        req.query.next,
-        req.query.previous
+        req.query.client,
     ).then((result) => {
         if (result) {
             res.status(200).json(result);

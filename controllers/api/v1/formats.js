@@ -7,13 +7,8 @@ function getFormat(req, res, next) {
     const model = new FormatModel(logger);
     return model.getFormat(
         req.app.kraken,
-        req.query.client_id,
-        req.query.slug,
-        req.query.sortBy,
-        req.query.sortAsc,
-        req.query.limit,
-        req.query.next,
-        req.query.previous).then((result) => {
+        req.query.client,
+        req.query.slug).then((result) => {
         if (result) {
             res.status(200).json(result);
             return;

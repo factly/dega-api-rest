@@ -1,7 +1,6 @@
 
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-const MongoPaging = require('mongo-cursor-pagination');
 const utils = require('../lib/utils');
 
 class RatingModel extends MongoBase {
@@ -15,7 +14,7 @@ class RatingModel extends MongoBase {
         this.logger = logger;
     }
 
-    getRating(config, clientId, sortBy, sortAsc, limit, next, previous) {
+    getRating(config, clientId) {
         const query = {};
 
         if (clientId) {
@@ -69,7 +68,9 @@ class RatingModel extends MongoBase {
             })
             .then((results) => {
                 this.logger.info('Retrieved the results');
-                return results;
+                return {
+                    data: results
+                };
             });
     }
 }

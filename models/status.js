@@ -41,7 +41,9 @@ class StatusModel extends MongoBase {
             .aggregate(aggregations).toArray())
             .then((results) => {
                 this.logger.info('Retrieved the results');
-                return results;
+                return {
+                    data: results
+                };
             });
     }
 }
