@@ -2,7 +2,7 @@ const TagModel = require('../../../models/tag');
 const utils = require('../../../lib/utils');
 
 function getTag(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'tags', 'getTag', req.query.client, null);
     const model = new TagModel(logger);
     return model.getTag(
@@ -23,7 +23,7 @@ function getTag(req, res, next) {
 }
 
 function getTagBySlug(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'tags', 'getTagBySlug', req.query.client, null);
     const model = new TagModel(logger);
     return model.getTagBySlug(

@@ -2,7 +2,7 @@ const PostsModel = require('../../../models/post');
 const utils = require('../../../lib/utils');
 
 function getPosts(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'posts', 'getPosts', req.query.client, null);
     const model = new PostsModel(logger);
     return model.getPosts(

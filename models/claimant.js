@@ -60,7 +60,6 @@ class ClaimantModel extends MongoBase {
                     .aggregate(mediaAggregation).toArray())
                     .then((media) => {
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {})
-                        
                         const claimantsWithMedia =  claimants.results.map( rating => rating.media ? { ...rating, media: mediaObject[rating.media.oid]} : rating )
                         return { ...claimants, results: claimantsWithMedia }
                     });

@@ -123,7 +123,7 @@ class ClaimModel extends MongoBase {
 
         return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
             .then((aggResult) => {
-                const results = aggResult.results;
+                const {results} = aggResult;
                 this.logger.info('Retrieved the claims');
                 const claims = {};
                 pagingNew.next = aggResult.next;

@@ -16,7 +16,7 @@ const categoryProject = {
         createdDate: '$created_date',
         lastUpdatedDate: '$last_updated_date'
     }
-}
+};
 
 class CategoryModel extends MongoBase {
     /**
@@ -40,7 +40,7 @@ class CategoryModel extends MongoBase {
 
         const aggregations = [
             match,
-            categoryProject
+            categoryProject,
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
@@ -86,7 +86,7 @@ class CategoryModel extends MongoBase {
                         data: result[0]
                     };
 
-                return
+                return;
             });
     }
 }

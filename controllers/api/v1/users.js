@@ -2,12 +2,13 @@ const UserModel = require('../../../models/user');
 const utils = require('../../../lib/utils');
 
 function getUser(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
     const model = new UserModel(logger);
     return model.getUser(
         req.app.kraken, 
-        req.query.client, 
+        req.query.client,
+        req.query.role, 
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
@@ -23,7 +24,7 @@ function getUser(req, res, next) {
 }
 
 function getUserBySlug(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
     const model = new UserModel(logger);
     return model.getUserBySlug(

@@ -68,9 +68,52 @@ const roleMappingLookup = {
                     id: '$_id',
                     _id: 0,
                     class: '$_class',
-                    name: 1
+                    name: 1,
+                    role: { $arrayElemAt: [{ $objectToArray: '$role' }, 1] },
+                    organization: { $arrayElemAt: [{ $objectToArray: '$organization' }, 1] }
                 }
             },
+            { $addFields: { role: '$role.v', organization: '$organization.v' } },
+            {
+                $lookup: {
+                    from: 'role',
+                    let: { role: '$role' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$role'] } } },
+                        {
+                            $project: {
+                                id: '$_id',
+                                _id: 0,
+                                class: '$_class',
+                                name: 1,
+                                slug: 1
+                            }
+                        },
+                    ],
+                    as: 'role'
+                }
+            },
+            { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: 'organization',
+                    let: { organization: '$organization' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$organization'] } } },
+                        {
+                            $project: {
+                                id: '$_id',
+                                _id: 0,
+                                class: '$_class',
+                                name: 1,
+                                slug: 1
+                            }
+                        },
+                    ],
+                    as: 'organization'
+                }
+            },
+            { $unwind: { path: '$organization', preserveNullAndEmptyArrays: true } },
         ],
         as: 'roleMappings'
     }
@@ -111,8 +154,8 @@ class UserModel extends MongoBase {
         this.logger = logger;
     }
 
-    getUser(config, clientId, sortBy, sortAsc, limit, next, previous) {
-    
+    getUser(config, clientId, roleSlug, sortBy, sortAsc, limit, next, previous) {
+
         const aggregations = [
             addFields,
             {
@@ -133,7 +176,7 @@ class UserModel extends MongoBase {
         // get all users
         return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
             .then((aggResult) => {
-                const results = aggResult.results;
+                const {results} = aggResult;
                 this.logger.info('Retrieved the results');
                 let users = {};
                 pagingNew.next = aggResult.next;
@@ -178,7 +221,7 @@ class UserModel extends MongoBase {
                         data: result[0]
                     };
 
-                return
+                return;
             });
     }
 }

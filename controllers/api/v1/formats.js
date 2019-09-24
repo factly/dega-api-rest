@@ -2,7 +2,7 @@ const FormatModel = require('../../../models/format');
 const utils = require('../../../lib/utils');
 
 function getFormat(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'formats', 'getFormat', req.query.client, null);
     const model = new FormatModel(logger);
     return model.getFormat(

@@ -11,16 +11,3 @@ services:
             - "27017:27017"
         volumes:
             - ~/volumes/dega/mongodb/:/data/db/
-    dega-api:
-        build:
-            dockerfile: Dockerfile
-            context: .
-        container_name: dega-api
-        restart: always
-        environment:
-            - MONGODB_URI=mongodb://mongodb:27017
-        ports:
-            - "8000:8000"
-        command: "npm run dev-docker"
-        depends_on:
-          - mongodb

@@ -312,7 +312,7 @@ class PostsModel extends MongoBase {
         // return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
         return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
             .then((aggResult) => {
-                const results = aggResult.results;
+                const {results} = aggResult;
                 this.logger.info('Retrieved the posts');
                 const posts = {};
                 pagingNew.next = aggResult.next;

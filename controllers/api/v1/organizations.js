@@ -2,7 +2,7 @@ const OrganizationModel = require('../../../models/organization');
 const utils = require('../../../lib/utils');
 
 function getOrganization(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'organizations', 'getOrganization', req.query.client, null);
     const model = new OrganizationModel(logger);
     return model.getOrganization(

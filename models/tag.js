@@ -15,7 +15,7 @@ const tagProject = {
         createdDate: '$created_date',
         lastUpdatedDate: '$last_updated_date'
     }
-}
+};
 
 class TagModel extends MongoBase {
     /**
@@ -38,7 +38,7 @@ class TagModel extends MongoBase {
 
         const aggregations = [
             match,
-            tagProject
+            tagProject,
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
@@ -84,7 +84,7 @@ class TagModel extends MongoBase {
                         data: result[0]
                     };
 
-                return
+                return;
             });
     }
 }
