@@ -21,7 +21,6 @@ function getFactcheck(req, res, next) {
         req.query.category,
         req.query.claimant,
         req.query.user,
-        req.query.status,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
