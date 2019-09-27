@@ -2,6 +2,147 @@ const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const MongoPaging = require('mongo-cursor-pagination');
 const utils = require('../lib/utils');
+
+const addFields = {
+    $addFields: {
+        media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] },
+        roleMappings: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$roleMappings',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        }
+    }
+};
+
+const mediaLookup = {
+    $lookup: {
+        from: 'media',
+        let: { media: '$media' }, // this option provides the value from the outside data into the lookup's pipline. This variable is referenced in the inner pipline with $$
+        pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$media'] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    name: 1,
+                    type: 1,
+                    url: 1,
+                    fileSize: '$file_size',
+                    dimensions: 1,
+                    title: 1,
+                    caption: 1,
+                    altText: '$alt_text',
+                    description: 1,
+                    uploadedBy: '$uploaded_by',
+                    publishedDate: '$published_date',
+                    lastUpdatedDate: '$last_updated_date',
+                    slug: 1,
+                    clientId: '$client_id',
+                    createdDate: '$created_date',
+                    relativeURL: '$relative_url',
+                    sourceURL: '$source_url'
+                }
+            },
+        ],
+        as: 'media'
+    }
+};
+
+const roleMappingLookup = {
+    $lookup: {
+        from: 'role_mapping',
+        let: { roleMappings: '$roleMappings' },
+        pipeline: [
+            { $match: { $expr: { $in: ['$_id', { $ifNull: ['$$roleMappings', []] }] } } },
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    name: 1,
+                    role: { $arrayElemAt: [{ $objectToArray: '$role' }, 1] },
+                    organization: { $arrayElemAt: [{ $objectToArray: '$organization' }, 1] }
+                }
+            },
+            { $addFields: { role: '$role.v', organization: '$organization.v' } },
+            {
+                $lookup: {
+                    from: 'role',
+                    let: { role: '$role' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$role'] } } },
+                        {
+                            $project: {
+                                id: '$_id',
+                                _id: 0,
+                                class: '$_class',
+                                name: 1,
+                                slug: 1
+                            }
+                        },
+                    ],
+                    as: 'role'
+                }
+            },
+            { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: 'organization',
+                    let: { organization: '$organization' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$organization'] } } },
+                        {
+                            $project: {
+                                id: '$_id',
+                                _id: 0,
+                                class: '$_class',
+                                name: 1,
+                                slug: 1
+                            }
+                        },
+                    ],
+                    as: 'organization'
+                }
+            },
+            { $unwind: { path: '$organization', preserveNullAndEmptyArrays: true } },
+        ],
+        as: 'roleMappings'
+    }
+};
+
+const userProject = {
+    $project: {
+        id: '$_id',
+        _id: 0,
+        class: '$_class',
+        firstName: '$first_name',
+        lastName: '$last_name',
+        displayName: '$display_name',
+        website: 1,
+        facebookURL: '$facebook_url',
+        twitterURL: '$twitter_url',
+        instagramURL: '$instagram_url',
+        linkedinURL: '$linkedin_url',
+        githubURL: '$github_url',
+        profilePicture: '$profile_picture',
+        description: 1,
+        slug: 1,
+        email: 1,
+        createdDate: '$created_date',
+        media: 1,
+        roleMappings: 1
+    }
+};
+
 class UserModel extends MongoBase {
     /**
      * Creates a new UserModel.
@@ -13,80 +154,74 @@ class UserModel extends MongoBase {
         this.logger = logger;
     }
 
-    getUser(config, clientId, sortBy, sortAsc, limit, next, previous) {
-        const query = {};
+    getUser(config, clientId, roleSlug, sortBy, sortAsc, limit, next, previous) {
 
-        if (clientId) {
-            query.client_id = clientId;
-        }
-        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+        const aggregations = [
+            addFields,
+            {
+                $addFields: {
+                    media: '$media.v'
+                }
+            },
+            mediaLookup,
+            { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+            roleMappingLookup,
+            userProject,
+        ];
+
+        const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
         // get database from env config
         const database = config.get('databaseConfig:databases:core');
         const pagingNew = {};
         // get all users
-        return Q(MongoPaging.find(this.collection(database), pagingObj))
+        return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
+            .then((aggResult) => {
+                const {results} = aggResult;
+                this.logger.info('Retrieved the results');
+                let users = {};
+                pagingNew.next = aggResult.next;
+                pagingNew.hasNext = aggResult.hasNext;
+                pagingNew.previous = aggResult.previous;
+                pagingNew.hasPrevious = aggResult.hasPrevious;
+                users.data = results; 
+                users.paging = pagingNew;
+                return users;
+            });
+    }
+
+    getUserBySlug(config, clientId, slug) {
+        const aggregations = [
+            addFields,
+            {
+                $addFields: {
+                    media: '$media.v'
+                }
+            },
+            mediaLookup,
+            { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+            roleMappingLookup,
+            userProject,
+            {
+                $match: {
+                    slug: slug
+                }
+            },
+        ];
+
+        // get database from env config
+        const database = config.get('databaseConfig:databases:core');
+     
+        // get all users
+        return Q(this.collection(database)
+            .aggregate(aggregations).toArray())
             .then((result) => {
                 this.logger.info('Retrieved the results');
-                pagingNew.next = result.next;
-                pagingNew.hasNext = result.hasNext;
-                pagingNew.previous = result.previous;
-                pagingNew.hasPrevious = result.hasPrevious;
-                const workers = [];
-                result.results.forEach((user) => {
-                    const promise = Q();
+                if(result && result.length === 1) 
+                    return {
+                        data: result[0]
+                    };
 
-                    if (user.role) {
-                        const roleID = user.role.oid;
-                        const collection = user.role.namespace;
-                        promise.then(() => Q(this.collection(database, collection).findOne({ _id: roleID })));
-                    }
-                    const promiseChain = promise
-                        .then((role) => {
-                            user.role = role;
-                            if (!user.organizationCurrent) {
-                                return Q();
-                            }
-
-                            // query org current
-                            const collection = user.organizationCurrent.namespace;
-                            const orgID = user.organizationCurrent.oid;
-                            return Q(this.collection(database, collection).findOne({ _id: orgID }));
-                        }).then((org) => {
-                            user.organizationCurrent = org;
-                            if (!user.organizationDefault) {
-                                return Q();
-                            }
-
-                            // query org default
-                            const collection = user.organizationDefault.namespace;
-                            const orgID = user.organizationDefault.oid;
-                            return Q(this.collection(database, collection).findOne({ _id: orgID }));
-                        }).then((org) => {
-                            user.organizationDefault = org;
-                            if (!user.organizations) {
-                                return Q();
-                            }
-
-                            // query all orgs
-                            const orgs = user.organizations;
-                            const workers = [];
-                            orgs.forEach((org) => {
-                                workers.push(Q(this.collection(database, org.namespace).findOne({ _id: org.oid })));
-                            });
-                            return Q.all(workers);
-                        }).then((orgs) => {
-                            user.organizations = orgs;
-                            return user;
-                        });
-                    workers.push(promiseChain);
-                });
-                // return users;
-                return Q.all(workers);
-            }).then((users) => {
-                const result = {};
-                result.data = users;
-                result.paging = pagingNew;
-                return result;
+                return;
             });
     }
 }

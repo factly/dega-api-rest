@@ -14,17 +14,33 @@ class RoleModel extends MongoBase {
     }
 
     getRole(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
-        const query = {};
+        
+        const query = this.getQueryObject(clientId, slug);
 
-        if (clientId) {
-            query.client_id = clientId;
-        }
-        if (slug) {
-            query.slug = slug;
-        }
-        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
+        const match = { $match: query };
+
+        const aggregations = [
+            {
+                $project : {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    name: 1,
+                    isDefault: '$is_default',
+                    slug: 1,
+                    clientId: '$client_id',
+                    keyclockId: '$keycloak_id',
+                    keyclockName: '$keycloak_name',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
+                }
+            },
+            match,
+        ];
+
+        const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
         const database = config.get('databaseConfig:databases:core');
-        return Q(MongoPaging.find(this.collection(database), pagingObj))
+        return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
             .then((result) => {
                 this.logger.info('Retrieved the results');
                 const response = {};
@@ -36,6 +52,17 @@ class RoleModel extends MongoBase {
                 response.paging.hasPrevious = result.hasPrevious;
                 return response;
             });
+    }
+    getQueryObject(clientId, slug) {
+        const queryObj = {};
+        if (clientId) {
+            queryObj.clientId = clientId;
+        }
+
+        if (slug) {
+            queryObj.slug = slug;
+        }
+        return queryObj;
     }
 }
 

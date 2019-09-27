@@ -1,9 +1,282 @@
 const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-const _ = require('lodash');
 const ObjectId = require('mongodb').ObjectID;
 const utils = require('../lib/utils');
+
+const addFields = {
+    $addFields: {
+        claims: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$claims',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        },
+        status: { $arrayElemAt: [{ $objectToArray: '$status' }, 1] },
+        categories: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$categories',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        },
+        tags: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$tags',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        },
+        degaUsers: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$degaUsers',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        }
+    }
+};
+
+const claimsLookup = {
+    $lookup: {
+        from: 'claim',
+        let: { claims: '$claims' },
+        pipeline: [
+            { $match: { $expr: { $in: ['$_id', { $ifNull: ['$$claims', []] }] } } },
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    claim: 1,
+                    slug: 1,
+                    clientId: '$client_id',
+                    title: 1,
+                    description: 1,
+                    claimDate: '$claim_date',
+                    claimSource: '$claim_source',
+                    checkedDate: '$checked_date',
+                    reviewSources: '$review_sources',
+                    review: '$review',
+                    reviewTagLine: '$review_tag_line',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date',
+                    rating: { $arrayElemAt: [{ $objectToArray: '$rating' }, 1] },
+                    claimant: { $arrayElemAt: [{ $objectToArray: '$claimant' }, 1] }
+                }
+            },
+            { $addFields: { rating: '$rating.v', claimant: '$claimant.v' } },
+            {
+                $lookup: {
+                    from: 'rating',
+                    let: { rating: '$rating' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$rating'] } } },
+                        {
+                            $project: {
+                                id: '$_id',
+                                _id: 0,
+                                class: '$_class',
+                                name: 1,
+                                numericValue: '$numeric_value',
+                                isDefault: '$is_default',
+                                slug: 1,
+                                clientId: '$client_id',
+                                description: 1,
+                                media: 1,
+                                createdDate: '$created_date',
+                                lastUpdatedDate: '$last_updated_date'
+                            }
+                        },
+                    ],
+                    as: 'rating'
+                }
+            },
+            { $unwind: { path: '$rating', preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: 'claimant',
+                    let: { claimant: '$claimant' },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$claimant'] } } },
+                        {
+                            $project: {
+                                id: '$_id',
+                                _id: 0,
+                                class: '$_class',
+                                name: 1,
+                                numericValue: '$numeric_value',
+                                isDefault: '$is_default',
+                                slug: 1,
+                                clientId: '$client_id',
+                                description: 1,
+                                media: 1,
+                                createdDate: '$created_date',
+                                lastUpdatedDate: '$last_updated_date'
+                            }
+                        },
+                    ],
+                    as: 'claimant'
+                }
+            },
+            { $unwind: { path: '$claimant', preserveNullAndEmptyArrays: true } },
+        ],
+        as: 'claims'
+    }
+};
+
+const factcheckLookup = {
+    $project: {
+        id: '$_id',
+        _id: 0,
+        class: '$_class',
+        title: 1,
+        clientId: '$client_id',
+        content: 1,
+        excerpt: 1,
+        introduction: 1,
+        summary: 1,
+        publishedDate: '$published_date',
+        featured: 1,
+        sticky: 1,
+        updates: 1,
+        slug: 1,
+        subTitle: '$sub_title',
+        createdDate: '$created_date',
+        lastUpdatedDate: '$last_updated_date',
+        claims: 1,
+        tags: 1,
+        categories: 1,
+        status: 1,
+        format: 1,
+        users: '$degaUsers',
+        media: 1
+    }
+};
+
+
+const userAddFields = {
+    $addFields: {
+        media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] },
+        roleMappings: {
+            $map: {
+                input: {
+                    $map: {
+                        input: '$roleMappings',
+                        in: {
+                            $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                        }
+                    }
+                },
+                in: '$$this.v'
+            }
+        }
+    }
+};
+
+const userMediaLookup = {
+    $lookup: {
+        from: 'media',
+        let: { media: '$media' }, // this option provides the value from the outside data into the lookup's pipline. This variable is referenced in the inner pipline with $$
+        pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$media'] } } }, // in order to access the variable provided in the let, we need to use a $expr, it will not pass the variable through otherwise
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    name: 1,
+                    type: 1,
+                    url: 1,
+                    fileSize: '$file_size',
+                    dimensions: 1,
+                    title: 1,
+                    caption: 1,
+                    altText: '$alt_text',
+                    description: 1,
+                    uploadedBy: '$uploaded_by',
+                    publishedDate: '$published_date',
+                    lastUpdatedDate: '$last_updated_date',
+                    slug: 1,
+                    clientId: '$client_id',
+                    createdDate: '$created_date',
+                    relativeURL: '$relative_url',
+                    sourceURL: '$source_url'
+                }
+            },
+        ],
+        as: 'media'
+    }
+};
+
+const userRoleMappingLookup = {
+    $lookup: {
+        from: 'role_mapping',
+        let: { roleMappings: '$roleMappings' },
+        pipeline: [
+            { $match: { $expr: { $in: ['$_id', { $ifNull: ['$$roleMappings', []] }] } } },
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    name: 1
+                }
+            },
+        ],
+        as: 'roleMappings'
+    }
+};
+
+const userProject = {
+    $project: {
+        id: '$_id',
+        _id: 0,
+        class: '$_class',
+        firstName: '$first_name',
+        lastName: '$last_name',
+        displayName: '$display_name',
+        website: 1,
+        facebookURL: '$facebook_url',
+        twitterURL: '$twitter_url',
+        instagramURL: '$instagram_url',
+        linkedinURL: '$linkedin_url',
+        githubURL: '$github_url',
+        profilePicture: '$profile_picture',
+        description: 1,
+        slug: 1,
+        email: 1,
+        createdDate: '$created_date',
+        media: 1,
+        roleMappings: 1
+    }
+};
+
 class FactcheckModel extends MongoBase {
     /**
      * Creates a new FactcheckModel.
@@ -15,173 +288,368 @@ class FactcheckModel extends MongoBase {
         this.logger = logger;
     }
 
-    getQueryObject(clientId, slug, id) {
-        const queryObj = {};
-        if (clientId) {
-            queryObj.client_id = clientId;
-        }
+    getFactcheck(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
 
-        if (slug) {
-            queryObj.slug = slug;
-        }
+        let pagingNew = {};
 
-        if (id) {
-            if(Array.isArray(id)){
-                queryObj._id = { $in: [] };
-                for (let element of id) {
-                    queryObj._id.$in.push(new ObjectId(element));
+        const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
+        const coreDatabase = config.get('databaseConfig:databases:core');
+        // get query object
+        return this.getQueryObject(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug)
+            .then((queryObj) => {
+
+                const match = { $match: queryObj };
+
+                const aggregations = [
+                    addFields,
+                    {
+                        $addFields: { status: '$status.v' }
+                    },
+                    claimsLookup,
+                    factcheckLookup,
+                    match,
+                ];
+
+                this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
+
+                // get paging object
+                const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
+
+                return Q(MongoPaging.aggregate(this.collection(factcheckDatabase), pagingObj));
+            })
+            .then((aggResult) => {
+                this.logger.info('Retrieved the factchecks');
+                pagingNew.next = aggResult.next;
+                pagingNew.hasNext = aggResult.hasNext;
+                pagingNew.previous = aggResult.previous;
+                pagingNew.hasPrevious = aggResult.hasPrevious;
+
+                return aggResult.results;
+            })
+            .then( factchecks => {
+                const mediaAggregation = utils.mediaPipeline;
+                let mediaIds = [];
+                //Collecting media ID from all factchecks
+                mediaIds = factchecks.filter(factcheck => factcheck.media).map( factcheck => factcheck.media.oid );
+
+                //If none of factchecks has media then directly return factchecks
+                if(mediaIds.length === 0) return factchecks;
+
+                const match = {
+                    $match: {
+                        id : { $in : mediaIds }
+                    }
+                };
+
+                mediaAggregation.push(match);
+
+                //Retrieving all media in mediaIds
+                return Q(this.collection(coreDatabase, 'media')
+                    .aggregate(mediaAggregation).toArray())
+                    .then((media) => {
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
+                        const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        //Traveling through all the factchecks and replacing DBref media with full media object
+                        return factchecks.map( factcheck => factcheck.media ? { ...factcheck, media: mediaObject[factcheck.media.oid]} : factcheck );
+                    });
+            })
+            .then( factchecks => {
+                //following same logic as media
+                const statusAggregation = utils.statusPipeline;
+
+                let statusIds = factchecks.filter(factcheck => factcheck.status).map( factcheck => factcheck.status.oid );
+
+                const match = {
+                    $match: {
+                        id : { $in : statusIds }
+                    }
+                };
+
+                statusAggregation.push(match);
+
+                return Q(this.collection(coreDatabase, 'status')
+                    .aggregate(statusAggregation).toArray())
+                    .then((statuses) => {
+                        const statusesObject = statuses.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        return factchecks.map( factcheck => factcheck.status ? { ...factcheck, status: statusesObject[factcheck.status.oid]} : factcheck );
+                    });
+            })
+            .then( factchecks => {
+
+                let categoryIds = [];
+
+                //Collecting all category ID from all the factchecks into 1-D array
+                for(let factcheck of factchecks){
+                    if(factcheck.categories && factcheck.categories.length > 0)
+                        categoryIds = categoryIds.concat(factcheck.categories);
                 }
-            }
-            else{
-                queryObj._id = new ObjectId(id);
-            }          
-        }
-        return queryObj;
+
+                //If none of factchecks has category then directly return factchecks
+                if(categoryIds.length === 0) return factchecks;
+
+                const match = {
+                    $match: {
+                        id : { $in : categoryIds }
+                    }
+                };
+
+                const aggregations = [
+                    {
+                        $project: {
+                            id: '$_id',
+                            _id: 0,
+                            class: '$_class',
+                            name: 1,
+                            description: 1,
+                            slug: 1,
+                            parent: 1,
+                            clientId: '$client_id',
+                            createdDate: '$created_date',
+                            lastUpdatedDate: '$last_updated_date'
+                        }
+                    },
+                    match,
+                ];
+
+                return Q(this.collection(coreDatabase, 'category')
+                    .aggregate(aggregations).toArray())
+                    .then( categories => {
+                        //if nothing return from query then return factchecks
+                        //case:- when all IDs in categoryIds are not available
+                        if(categories.length < 1) return factchecks;
+
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
+                        const categoriesObject = categories.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        //Traveling through all the factchecks categories array and replacing DBref category with full category object
+                        return factchecks.map( factcheck => factcheck.categories && factcheck.categories.length > 0 ?  { ...factcheck, categories: factcheck.categories.map(category => categoriesObject[category] ? categoriesObject[category] : undefined ) } : factcheck );
+                    });
+            })
+            .then( factchecks => {
+
+                let tagIds = [];
+
+                for(let factcheck of factchecks){
+                    if(factcheck.tags && factcheck.tags.length > 0)
+                        tagIds = tagIds.concat(factcheck.tags);
+                }
+
+                if(tagIds.length === 0) return factchecks;
+
+                const match = {
+                    $match: {
+                        id : { $in : tagIds }
+                    }
+                };
+
+                const aggregations = [
+                    {
+                        $project: {
+                            id: '$_id',
+                            _id: 0,
+                            class: '$_class',
+                            name: 1,
+                            slug: 1,
+                            description: 1,
+                            clientId: '$client_id',
+                            createdDate: '$created_date',
+                            lastUpdatedDate: '$last_updated_date'
+                        }
+                    },
+                    match,
+                ];
+
+                return Q(this.collection(coreDatabase, 'tag')
+                    .aggregate(aggregations).toArray())
+                    .then( tags => {
+                        if(tags.length < 1) return factchecks;
+
+                        const tagsObject = tags.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        return factchecks.map( factcheck => factcheck.tags && factcheck.tags.length > 0 ?  { ...factcheck, tags: factcheck.tags.map(tag => tagsObject[tag] ? tagsObject[tag] : undefined ) } : factcheck );
+                    });
+            })
+            .then( factchecks => {
+
+                let userIds = [];
+
+                for(let factcheck of factchecks){
+                    if(factcheck.users && factcheck.users.length > 0)
+                        userIds = userIds.concat(factcheck.users);
+                }
+
+                if(userIds.length === 0) return factchecks;
+
+                const match = {
+                    $match: {
+                        id : { $in : userIds }
+                    }
+                };
+
+                const aggregations = [
+                    userAddFields,
+                    {
+                        $addFields: {
+                            media: '$media.v'
+                        }
+                    },
+                    userMediaLookup,
+                    { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+                    userRoleMappingLookup,
+                    userProject,
+                    match,
+                ];
+
+                return Q(this.collection(coreDatabase, 'dega_user')
+                    .aggregate(aggregations).toArray())
+                    .then( users => {
+                        if(users.length < 0) return factchecks;
+
+                        const usersObject = users.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        return factchecks.map( factcheck => factcheck.users && factcheck.users.length > 0 ?  { ...factcheck, users: factcheck.users.map(user => usersObject[user] ? usersObject[user] : undefined ) } : factcheck );
+                    });
+            })
+            .then( factchecks => {
+                return {
+                    data : factchecks,
+                    paging: pagingNew
+                };
+            });
     }
 
-    // MANDATORY sub documents: claims, status and degaUsers
-    // OPTIONAL: All other sub docs are optional
-    // eslint-disable-next-line no-unused-vars
-    getFactcheck(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug, statusSlug, sortBy, sortAsc, limit, next, previous) {
-
-        // get query object
-        const queryObj = this.getQueryObject(clientId, slug, id);
-        const database = config.get('databaseConfig:databases:factcheck');
+    getQueryObject(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug) {
         const coreDatabase = config.get('databaseConfig:databases:core');
-        const pagingObj = utils.getPagingObject(queryObj, sortBy, sortAsc, limit, next, previous);
-        const pagingNew = {};
-        return Q(MongoPaging.find(this.collection(database),pagingObj))
-            .then((result) => {
-                this.logger.info('Converting degaUsers to authors');
-                const facts = result.results.map((f) => {
-                    f.authors = f.degaUsers;
-                    delete f.degaUsers;
-                    return f;
-                });
-                pagingNew.next = result.next;
-                pagingNew.hasNext = result.hasNext;
-                pagingNew.previous = result.previous;
-                pagingNew.hasPrevious = result.hasPrevious;
-                const workers = [];
-                this.logger.info('Expanding sub-documents');
-                facts.forEach((fact) => {
-                    const claimsWorkers = [];
-                    (fact.claims || []).forEach((claim) => {
-                        claimsWorkers.push(Q(this.collection(database, claim.namespace).findOne({ _id: claim.oid })));
-                    });
-                    const promiseChain = Q.all(claimsWorkers)
-                        .then((claims) => {
-                            if (!claims || claims.length === 0) {
-                                throw Error('SkipFactCheck claims not found');
-                            }
-                            const claimPromises = claims.map((claim) => {
-                                // TODO: single promise fails to retrieve, fix it later
-                                const workers = [];
-                                if (claim.rating) {
-                                    workers.push(Q(this.collection(database, claim.rating.namespace)
-                                        .findOne({ _id: claim.rating.oid })));
+        const query = {};
+
+        return Q(this.collection(coreDatabase, 'status')
+            .aggregate([
+                {
+                    $match: {
+                        name: 'Publish'
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1
+                    }
+                },
+            ]).toArray())
+            .then(status => {
+                query.status = new ObjectId(status[0]._id);
+                return query;
+            })
+            .then( query => {
+                if (clientId) {
+                    query.clientId = clientId;
+                }
+                return query;
+            })
+            .then( query => {
+                if (id) {
+                    if(Array.isArray(id)){
+                        query.id = { $in: [] };
+                        for (let element of id) {
+                            query.id.$in.push(new ObjectId(element));
+                        }
+                    }
+                    else{
+                        query.id = new ObjectId(id);
+                    }
+                }
+                return query;
+            })
+            .then( query => {
+                if (slug)
+                    query.slug = Array.isArray(slug) ? { $in : slug } : slug;
+
+                return query;
+            })
+            .then( query => {
+                if (categorySlug) {
+                    return Q(this.collection(coreDatabase, 'category')
+                        .aggregate([
+                            {
+                                $match: {
+                                    slug: Array.isArray(categorySlug) ? { $in : categorySlug } : categorySlug
                                 }
-                                return Q.all(workers).then((rating) => {
-                                    if (rating && rating.length > 0) {
-                                        claim.rating = rating[0];
-                                    }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                        ]).toArray())
+                        .then(categories => {
+                            let categoryIds = [];
+                            categoryIds = categories.map(category => new ObjectId(category._id));
 
-                                    if (!claim.claimant) {
-                                        return Q();
-                                    }
+                            query.categories = { $in : categoryIds };
 
-                                    const claimant = claim.claimant;
-                                    return Q(this.collection(database, claimant.namespace)
-                                        .findOne({ _id: claimant.oid }));
-                                }).then((claimant) => {
-                                    claim.claimant = claimant;
-                                    return claim;
-                                });
-                            });
-
-                            return Q.all(claimPromises);
-                        }).then((claims) => {
-                            const claimantSlugs = ((claims || []).filter(c => c.claimant) || [])
-                                .map(c => (c.claimant) ? c.claimant.slug : '');
-                            const isClaimantFound = claimantSlugs.includes(claimantSlug);
-                            if (claimantSlug && !isClaimantFound) {
-                                throw Error('SkipFactCheck claim slug not found');
-                            }
-                            fact.claims = claims;
-
-                            // get all tags
-                            const tagPromises = (fact.tags || []).map((t) =>
-                                Q(this.collection(coreDatabase, t.namespace).findOne({ _id: t.oid })));
-                            return Q.all(tagPromises);
-                        }).
-                        then((tags) => {
-                            const tagSlugs = (tags || []).map(t => (t) ? t.slug : '');
-                            const isTagFound = tagSlugs.includes(tagSlug);
-                            if (tagSlug && !isTagFound) {
-                                throw Error('SkipFactCheck tag slug not found');
-                            }
-                            fact.tags = tags;
-
-                            // get all categories
-                            const categoriesPromises = (fact.categories || []).map((c) =>
-                                Q(this.collection(coreDatabase, c.namespace).findOne({ _id: c.oid })));
-                            return Q.all(categoriesPromises);
-                        }).
-                        then((categories) => {
-                            const categorySlugs = categories.map(c => (c) ? c.slug : '');
-                            const isCategoryFound = categorySlugs.includes(categorySlug);
-                            if (categorySlug && !isCategoryFound) {
-                                throw Error('SkipFactCheck category slug not found');
-                            }
-                            fact.categories = categories;
-
-                            // get all dega users
-                            if (fact.status) {
-                                const status = fact.status;
-                                return Q(this.collection(coreDatabase, status.namespace).findOne({ _id: status.oid }));
-                            }
-                            return Q();
-                        }).
-                        then((status) => {
-                            if (!status || status.name !== 'Publish') {
-                                throw Error('SkipFactCheck not published');
-                            }
-                            fact.status = status;
-
-                            // get all dega users
-                            const degaUserPromises = (fact.authors || []).map((u) =>
-                                Q(this.collection(coreDatabase, u.namespace).findOne({ _id: u.oid })));
-                            return Q.all(degaUserPromises);
-                        }).
-                        then((authors) => {
-                            if (!authors || authors.length === 0) {
-                                throw Error('SkipFactCheck users not linked to this factcheck');
-                            }
-                            const authorSlugs = authors.map(u => (u) ? u.slug : '');
-                            const isAuthorFound = authorSlugs.includes(authorSlug);
-                            if (authorSlug && !isAuthorFound) {
-                                throw Error('SkipFactCheck user slug not found');
-                            }
-                            fact.authors = authors;
-                            return fact;
-                        }).
-                        catch((err) => {
-                            if (err && err.message.startsWith('SkipFactCheck')) {
-                                const msg = err.message.split('SkipFactCheck')[1];
-                                this.logger.debug(`Ignoring factcheck ${fact._id} -${msg}`);
-                                return null;
-                            }
-                            this.logger.error(`Errored on factcheck ${fact._id}`);
-                            throw err;
+                            return query;
                         });
-                    workers.push(promiseChain);
-                });
-                return Q.all(workers);
-            }).then((factchecks) => {
-                const result ={};
-                result.data = _.compact(factchecks);
-                result.paging = pagingNew;
-                return result;
+                }
+
+                return query;
+            })
+            .then( query => {
+                if (tagSlug) {
+                    return Q(this.collection(coreDatabase, 'tag')
+                        .aggregate([
+                            {
+                                $match: {
+                                    slug: Array.isArray(tagSlug) ? { $in : tagSlug } : tagSlug
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                        ]).toArray())
+                        .then(tags => {
+                            let tagIds = [];
+                            tagIds = tags.map(tag => new ObjectId(tag._id));
+
+                            query.tags = { $in : tagIds };
+
+                            return query;
+                        });
+                }
+
+                return query;
+            })
+            .then( query => {
+                if (authorSlug) {
+                    return Q(this.collection(coreDatabase, 'dega_user')
+                        .aggregate([
+                            {
+                                $match: {
+                                    slug: Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug
+                                }
+                            },
+                            {
+                                $project: {
+                                    _id: 1
+                                }
+                            },
+                        ]).toArray())
+                        .then(users => {
+                            let userIds = [];
+                            userIds = users.map(user => new ObjectId(user._id));
+
+                            query.users = { $in : userIds };
+
+                            return query;
+                        });
+                }
+
+                return query;
+            })
+            .then( query => {
+                return query;
             });
     }
 }

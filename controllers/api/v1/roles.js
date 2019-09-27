@@ -2,7 +2,7 @@ const RoleModel = require('../../../models/role');
 const utils = require('../../../lib/utils');
 
 function getRole(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'roles', 'getRole', req.query.client, null);
     const model = new RoleModel(logger);
     return model.getRole(req.app.kraken,

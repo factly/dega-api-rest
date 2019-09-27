@@ -8,7 +8,7 @@ const OrganizationModel = require('../../../models/organization');
 
 const Q = require('q');
 function getSitemap(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'sitemap', 'getSitemap', req.query.client, null);
     const clientId = req.query.client;
     // TODO: Make the entities dynamic

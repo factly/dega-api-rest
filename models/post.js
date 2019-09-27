@@ -1,7 +1,6 @@
 const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-const _ = require('lodash');
 const ObjectId = require('mongodb').ObjectID;
 const utils = require('../lib/utils');
 
@@ -65,10 +64,10 @@ const statusLookup = {
                     class:'$_class',
                     name: 1,
                     slug: 1,
-                    clientId: "$client_id",
-                    isDefault: "$is_default",
-                    createdDate: "$created_date",
-                    lastUpdatedDate: "$last_updated_date"
+                    clientId: '$client_id',
+                    isDefault: '$is_default',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
                 }
             },
         ],
@@ -81,7 +80,7 @@ const formatLookup = {
         from: 'format',
         let: { format: '$format'},
         pipeline: [
-            { $match: { $expr: { $eq: ["$_id", "$$format"] } } },
+            { $match: { $expr: { $eq: ['$_id', '$$format'] } } },
             {
                 $project: {
                     id: '$_id',
@@ -89,10 +88,10 @@ const formatLookup = {
                     class:'$_class',
                     name: 1,
                     slug: 1,
-                    clientId: "$client_id",
-                    isDefault: "$is_default",
-                    createdDate: "$created_date",
-                    lastUpdatedDate: "$last_updated_date"
+                    clientId: '$client_id',
+                    isDefault: '$is_default',
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
                 }
             },
         ],
@@ -182,7 +181,7 @@ const degaUserLookup = {
                     class: '$_class',
                     firstName: '$first_name',
                     lastName: '$last_name',
-                    displayName: '$display_Name',
+                    displayName: '$display_name',
                     website: 1,
                     facebookURL: { $ifNull: ['$facebookURL', null] }, // These fields don't exist on the record's, let's make sure they are projected into the result even so. This can be replaced with the proper values when they are available
                     twitterURL: { $ifNull: ['$twitterURL', null] },
@@ -242,9 +241,9 @@ const degaUserLookup = {
 
 const postsProject = {
     $project: {
-        id: "$_id",
+        id: '$_id',
         _id : 0,
-        class: "$_class",
+        class: '$_class',
         title: 1,
         clientId: '$client_id',
         content: 1,
@@ -255,7 +254,6 @@ const postsProject = {
         sticky: 1,
         updates: 1,
         slug: 1,
-        password: 1,
         subTitle: '$sub_title',
         createdDate: '$created_date',
         tags: 1,
@@ -314,8 +312,8 @@ class PostsModel extends MongoBase {
         // return Q(MongoPaging.find(this.collection(config.get('databaseConfig:databases:core')), pagingObj))
         return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
             .then((aggResult) => {
-                const results = aggResult.results;
-                this.logger.info('Converting degaUsers to authors');
+                const {results} = aggResult;
+                this.logger.info('Retrieved the posts');
                 const posts = {};
                 pagingNew.next = aggResult.next;
                 pagingNew.hasNext = aggResult.hasNext;
@@ -337,36 +335,44 @@ class PostsModel extends MongoBase {
         }
 
         if (authorSlug) {
-            queryObj.degaUsers = {
-                $elemMatch: {slug: authorSlug}
+            let authorSlugQuery = Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug;
+        
+            queryObj.users = {
+                $elemMatch: {slug: authorSlugQuery}
             };
         }
 
         if (categorySlug) {
+            let categorySlugQuery = Array.isArray(categorySlug) ? { $in : categorySlug } : categorySlug;
+        
             queryObj.categories = {
-                $elemMatch: {slug: categorySlug}
+                $elemMatch: {slug: categorySlugQuery}
             };
         }
 
         if (tagSlug) {
+            let tagSlugQuery = Array.isArray(tagSlug) ? { $in : tagSlug } : tagSlug;
+        
             queryObj.tags = {
-                $elemMatch: {slug: tagSlug}
+                $elemMatch: {slug: tagSlugQuery}
             };
         }
 
         if (slug) {
-            queryObj.slug = slug;
+            let slugQuery = Array.isArray(slug) ? { $in : slug } : slug;
+        
+            queryObj.slug = slugQuery;
         }
 
         if (id) {
-            if (Array.isArray(id)) {
-                queryObj._id = { $in: [] };
+            if(Array.isArray(id)){
+                queryObj.id = { $in: [] };
                 for (let element of id) {
-                    queryObj._id.$in.push(new ObjectId(element));
+                    queryObj.id.$in.push(new ObjectId(element));
                 }
             }
-            else {
-                queryObj._id = new ObjectId(id);
+            else{
+                queryObj.id = new ObjectId(id);
             }
         }
         return queryObj;
