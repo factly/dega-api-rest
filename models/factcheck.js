@@ -108,11 +108,12 @@ const claimsLookup = {
                                 slug: 1,
                                 clientId: '$client_id',
                                 description: 1,
-                                media: 1,
+                                media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] },
                                 createdDate: '$created_date',
                                 lastUpdatedDate: '$last_updated_date'
                             }
                         },
+                        { $addFields: { media: '$media.v' } },
                     ],
                     as: 'rating'
                 }
@@ -135,11 +136,12 @@ const claimsLookup = {
                                 slug: 1,
                                 clientId: '$client_id',
                                 description: 1,
-                                media: 1,
+                                media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] },
                                 createdDate: '$created_date',
                                 lastUpdatedDate: '$last_updated_date'
                             }
                         },
+                        { $addFields: { media: '$media.v' } },
                     ],
                     as: 'claimant'
                 }
@@ -374,6 +376,140 @@ class FactcheckModel extends MongoBase {
                         const statusesObject = statuses.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
                         return factchecks.map( factcheck => factcheck.status ? { ...factcheck, status: statusesObject[factcheck.status.oid]} : factcheck );
+                    });
+            })
+            .then ( factchecks => {
+                
+                let ratingMediaIds = [];
+                for(let factcheck of factchecks){
+                    if(factcheck.claims){
+                        for(let claim of factcheck.claims){
+                            ratingMediaIds = ratingMediaIds.concat(claim.rating.media)
+                        }
+                    }
+                }
+
+                if(ratingMediaIds.length === 0) return factchecks;
+
+
+                const mediaRatingAggregation = [
+                    {
+                        $project: {
+                            id: '$_id',
+                            _id: 0,
+                            class:'$_class',
+                            name: 1,
+                            type: 1,
+                            url: 1,
+                            fileSize: '$file_size',
+                            dimensions: 1,
+                            title: 1,
+                            caption: 1,
+                            altText: '$alt_text',
+                            description: 1,
+                            uploadedBy: '$uploaded_by',
+                            publishedDate: '$published_date',
+                            lastUpdatedDate: '$last_updated_date',
+                            slug: 1,
+                            clientId: '$client_id',
+                            createdDate: '$created_date',
+                            relativeURL: '$relative_url',
+                            sourceURL: '$source_url'
+                        }
+                    },
+                    {                    
+                        $match: {
+                            id : { $in : ratingMediaIds }
+                        }
+                    }
+                ];
+
+                //Retrieving all media in mediaIds
+                return Q(this.collection(coreDatabase, 'media')
+                    .aggregate(mediaRatingAggregation).toArray())
+                    .then((media) => {
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
+                        const ratingMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        console.log(ratingMediaObject)
+                        //Traveling through all the factchecks and replacing DBref media with full media object
+                        
+                        for(let i = 0; i < factchecks.length; i++){
+                            if(factchecks[i].claims){
+                                for(let j = 0; j < factchecks[i].claims.length; j++){
+                                    factchecks[i].claims[j].rating.media = ratingMediaObject[factchecks[i].claims[j].rating.media]
+                                }
+                            }
+                        }
+                        
+                        return factchecks
+                    });
+            })
+            .then ( factchecks => {
+                
+                let claimntsMediaIds = [];
+                for(let factcheck of factchecks){
+                    if(factcheck.claims){
+                        for(let claim of factcheck.claims){
+                            claimntsMediaIds = claimntsMediaIds.concat(claim.claimant.media)
+                        }
+                    }
+                }
+
+                if(claimntsMediaIds.length === 0) return factchecks;
+
+
+                const mediaClaimantAggregation = [
+                    {
+                        $project: {
+                            id: '$_id',
+                            _id: 0,
+                            class:'$_class',
+                            name: 1,
+                            type: 1,
+                            url: 1,
+                            fileSize: '$file_size',
+                            dimensions: 1,
+                            title: 1,
+                            caption: 1,
+                            altText: '$alt_text',
+                            description: 1,
+                            uploadedBy: '$uploaded_by',
+                            publishedDate: '$published_date',
+                            lastUpdatedDate: '$last_updated_date',
+                            slug: 1,
+                            clientId: '$client_id',
+                            createdDate: '$created_date',
+                            relativeURL: '$relative_url',
+                            sourceURL: '$source_url'
+                        }
+                    },
+                    {                    
+                        $match: {
+                            id : { $in : claimntsMediaIds }
+                        }
+                    }
+                ];
+
+                //Retrieving all media in mediaIds
+                return Q(this.collection(coreDatabase, 'media')
+                    .aggregate(mediaClaimantAggregation).toArray())
+                    .then((media) => {
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
+                        const claimantMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        console.log(claimantMediaObject)
+                        //Traveling through all the factchecks and replacing DBref media with full media object
+                        
+                        for(let i = 0; i < factchecks.length; i++){
+                            if(factchecks[i].claims){
+                                for(let j = 0; j < factchecks[i].claims.length; j++){
+                                    factchecks[i].claims[j].claimant.media = claimantMediaObject[factchecks[i].claims[j].claimant.media]
+                                }
+                            }
+                        }
+                        
+                        return factchecks
                     });
             })
             .then( factchecks => {
