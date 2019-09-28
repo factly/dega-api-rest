@@ -60,47 +60,22 @@ class CategoryModel extends MongoBase {
             });
     }
 
-    getCategoryBySlug(config, clientId, slug){
-        const query = {
-            slug: slug
-        };
-
-        if (clientId) {
-            query.client_id = clientId;
-        }
-
-        const match = { $match: query };
-
-        const aggregations = [
-            match,
-            categoryProject,
-        ];
-
-        const database = config.get('databaseConfig:databases:core');
-        return Q(this.collection(database)
-            .aggregate(aggregations).toArray())
-            .then((result) => {
-                this.logger.info('Retrieved the results');
-
-                if(result && result.length === 1)
-                    return {
-                        data: result[0]
-                    };
-
-                return;
-            });
-    }
-
-    getCategoryById(config, clientId, id){
+    getCategoryByParam(config, clientId, param, paramType){
         const query = {};
 
-        if (id) {
-            query._id = new ObjectId(id);
+        if (paramType==='id' && param) {
+            query._id = new ObjectId(param);
+        }
+
+        if (paramType==='slug' && param) {
+            query.slug= param;
         }
 
         if (clientId) {
             query.client_id = clientId;
         }
+
+        console.log(query);
 
         const match = { $match: query };
         const aggregations = [

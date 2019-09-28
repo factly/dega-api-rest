@@ -26,10 +26,11 @@ function getCategoryBySlug(req, res, next) {
     const {logger} = req;
     utils.setLogTokens(logger, 'categories', 'getCategoryBySlug', req.query.client, null);
     const model = new CategoryModel(logger);
-    return model.getCategoryBySlug(
+    return model.getCategoryByParam(
         req.app.kraken,
         req.query.client,
-        req.params.slug
+        req.params.slug,
+        'slug'
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
@@ -43,10 +44,11 @@ function getCategoryById(req, res, next) {
     const {logger} = req;
     utils.setLogTokens(logger, 'categories', 'getCategoryById', req.query.client, null);
     const model = new CategoryModel(logger);
-    return model.getCategoryById(
+    return model.getCategoryByParam(
         req.app.kraken,
         req.query.client,
-        req.params.id
+        req.params.id,
+        'id'
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
