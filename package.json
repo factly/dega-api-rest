@@ -15,7 +15,8 @@
         "all": "npm run build && npm run test"
     },
     "dependencies": {
-        "chance": "^1.0.18",
+        "@godaddy/terminus": "^4.2.0",
+        "chance": "^1.1.0",
         "confit": "^2.3.0",
         "construx": "^1.0.1",
         "construx-copier": "^1.0.0",
@@ -23,17 +24,17 @@
         "deref": "^0.7.6",
         "express": "^4.16.4",
         "kraken-js": "^2.2.0",
-        "lodash": "^4.17.11",
+        "lodash": "^4.17.15",
         "logger": "^0.0.1",
         "mongo-cursor-pagination": "^7.1.0",
-        "mongodb": "^3.1.13",
+        "mongodb": "^3.3.2",
         "on-finished": "^2.3.0",
         "q": "^1.5.1",
         "winston": "^3.2.1",
-        "winston-daily-rotate-file": "^3.8.0"
+        "winston-daily-rotate-file": "^3.10.0"
     },
     "devDependencies": {
-        "body-parser": "^1.18.3",
+        "body-parser": "^1.19.0",
         "chai": "^4.2.0",
         "eslint": "^6.4.0",
         "eslint-plugin-import": "^2.18.2",
@@ -44,7 +45,7 @@
         "grunt-contrib-clean": "^2.0.0",
         "grunt-copy-to": "^0.0.12",
         "grunt-env": "^0.4.4",
-        "grunt-eslint": "^21.0.0",
+        "grunt-eslint": "^21.1.0",
         "grunt-express-server": "^0.5.4",
         "grunt-mocha-cli": "^4.0.0",
         "grunt-mocha-istanbul": "^5.0.2",
@@ -52,10 +53,10 @@
         "grunt-shell": "^3.0.1",
         "grunt-zip": "^0.18.2",
         "istanbul": "^0.4.5",
-        "jest": "^24.5.0",
-        "jest-extended": "^0.11.1",
+        "jest": "^24.9.0",
+        "jest-extended": "^0.11.2",
         "mocha": "^5.2.0",
-        "nodemon": "^1.18.10",
+        "nodemon": "^1.19.2",
         "supertest": "^3.4.2"
     }
 }

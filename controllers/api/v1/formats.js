@@ -2,19 +2,13 @@ const FormatModel = require('../../../models/format');
 const utils = require('../../../lib/utils');
 
 function getFormat(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'formats', 'getFormat', req.query.client, null);
     const model = new FormatModel(logger);
-    const clientId = req.query.client_id;
     return model.getFormat(
         req.app.kraken,
-        clientId,
-        req.query.slug,
-        req.query.sortBy,
-        req.query.sortAsc,
-        req.query.limit,
-        req.query.next,
-        req.query.previous).then((result) => {
+        req.query.client,
+        req.query.slug).then((result) => {
         if (result) {
             res.status(200).json(result);
             return;

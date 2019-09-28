@@ -2,17 +2,17 @@ const PostsModel = require('../../../models/post');
 const utils = require('../../../lib/utils');
 
 function getPosts(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'posts', 'getPosts', req.query.client, null);
     const model = new PostsModel(logger);
     return model.getPosts(
         req.app.kraken,
         req.query.client,
         req.query.id,
-        req.query.slug,
+        req.params.slug ? req.params.slug : req.query.slug,
         req.query.category,
         req.query.tag,
-        req.query.author,
+        req.query.user,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,

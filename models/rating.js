@@ -1,7 +1,6 @@
 
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
-const MongoPaging = require('mongo-cursor-pagination');
 const utils = require('../lib/utils');
 
 class RatingModel extends MongoBase {
@@ -15,56 +14,63 @@ class RatingModel extends MongoBase {
         this.logger = logger;
     }
 
-    getRating(config, clientId, sortBy, sortAsc, limit, next, previous) {
+    getRating(config, clientId) {
         const query = {};
 
         if (clientId) {
-            query.client_id = clientId;
+            query.clientId = clientId;
         }
-        const response = {};
-        const pagingObj = utils.getPagingObject(query, sortBy, sortAsc, limit, next, previous);
-        const database = config.get('databaseConfig:databases:factcheck');
-        const coreDatabase = config.get('databaseConfig:databases:core');
-        return Q(MongoPaging.find(this.collection(database), pagingObj))
-            .then((result) => {
-                this.logger.info('Retrieved the results');
-                // response.data = result.results;
-                response.paging = {};
-                response.paging.next = result.next;
-                response.paging.hasNext = result.hasNext;
-                response.paging.previous = result.previous;
-                response.paging.hasPrevious = result.hasPrevious;
 
-                const promiseArr = result.results.map((rating) => {
-                    if (rating && rating.media) {
-                        const mediaAggregation = utils.mediaPipeline;
-                        // build match object using media GUID and attach it to pipeline
-                        const match = {
-                            $match: {
-                                id : rating.media.oid
-                            }
-                        };
-                        mediaAggregation.push(match);
-                        const pagingObj = utils.getPagingObject(mediaAggregation,
-                            null, null, null, null, null, true);
-                        return Q(MongoPaging.aggregate(this.collection(coreDatabase, rating.media.namespace), pagingObj))
-                            .then((media) => {
-                                // aggregation result will always be array
-                                if(media.results && media.results.length === 1){
-                                    rating.media = media.results[0];
-                                }
-                                // rating.media = media;
-                                return rating;
-                            });
-                    }
-                    return Q(rating);
-                });
+        const match = { $match: query };
 
-                return Q.all(promiseArr);
-            })
+        const aggregations = [
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    class: '$_class',
+                    name: 1,
+                    numericValue: '$numeric_value',
+                    isDefault: '$is_default',
+                    slug: 1,
+                    clientId: '$client_id',
+                    description: 1,
+                    media: 1,
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date'
+                }
+            },
+            match,
+        ];
+
+        return Q(this.collection(config.get('databaseConfig:databases:factcheck'))
+            .aggregate(aggregations).toArray())
             .then((ratings) => {
-                response.data = ratings;
-                return response;
+                const mediaAggregation = utils.mediaPipeline;
+
+                let mediaIds = ratings.filter(rating => rating.media).map( rating => rating.media.oid );
+                
+                const match = {
+                    $match: {
+                        id : { $in : mediaIds }
+                    }
+                };
+                
+                mediaAggregation.push(match);
+                
+                return Q(this.collection(config.get('databaseConfig:databases:core'), 'media')
+                    .aggregate(mediaAggregation).toArray())
+                    .then((media) => {
+                        const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+                        
+                        return ratings.map( rating => rating.media ? { ...rating, media: mediaObject[rating.media.oid]} : rating );
+                    });
+            })
+            .then((results) => {
+                this.logger.info('Retrieved the results');
+                return {
+                    data: results
+                };
             });
     }
 }

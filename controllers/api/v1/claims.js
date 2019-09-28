@@ -2,7 +2,7 @@ const ClaimModel = require('../../../models/claim');
 const utils = require('../../../lib/utils');
 
 function getClaim(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'claims', 'getClaim', req.query.client, null);
     const model = new ClaimModel(logger);
     return model.getClaim(
