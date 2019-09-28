@@ -5,7 +5,7 @@ const schemaTemplate = require('../../../static/schema/factcheck');
 const Q = require('q');
 
 function getFactcheck(req, res, next) {
-    const logger = req.logger;
+    const {logger} = req;
     utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.query.client, null);
     const model = new FactcheckModel(logger);
     const orgModel = new OrganizationModel(logger);
@@ -20,8 +20,7 @@ function getFactcheck(req, res, next) {
         req.query.tag,
         req.query.category,
         req.query.claimant,
-        req.query.author,
-        req.query.status,
+        req.query.user,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
