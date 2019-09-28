@@ -6,8 +6,8 @@ function getCategory(req, res, next) {
     utils.setLogTokens(logger, 'categories', 'getCategory', req.query.client, null);
     const model = new CategoryModel(logger);
     return model.getCategory(
-        req.app.kraken, 
-        req.query.client, 
+        req.app.kraken,
+        req.query.client,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
@@ -27,9 +27,26 @@ function getCategoryBySlug(req, res, next) {
     utils.setLogTokens(logger, 'categories', 'getCategoryBySlug', req.query.client, null);
     const model = new CategoryModel(logger);
     return model.getCategoryBySlug(
-        req.app.kraken, 
-        req.query.client, 
+        req.app.kraken,
+        req.query.client,
         req.params.slug
+    ).then((result) => {
+        if (result) {
+            res.status(200).json(result);
+            return;
+        }
+        res.sendStatus(404);
+    }).catch(next);
+}
+
+function getCategoryById(req, res, next) {
+    const {logger} = req;
+    utils.setLogTokens(logger, 'categories', 'getCategoryById', req.query.client, null);
+    const model = new CategoryModel(logger);
+    return model.getCategoryById(
+        req.app.kraken,
+        req.query.client,
+        req.params.id
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
@@ -41,5 +58,6 @@ function getCategoryBySlug(req, res, next) {
 
 module.exports = function routes(router) {
     router.get('/', getCategory);
-    router.get('/:slug', getCategoryBySlug);
+    router.get('/:id', getCategoryById);
+    router.get('/slug/:slug', getCategoryBySlug);
 };

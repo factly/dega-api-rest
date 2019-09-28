@@ -2,6 +2,7 @@ const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const MongoPaging = require('mongo-cursor-pagination');
 const utils = require('../lib/utils');
+const ObjectId = require('mongodb').ObjectID;
 
 const categoryProject = {
     $project : {
@@ -31,7 +32,7 @@ class CategoryModel extends MongoBase {
 
     getCategory(config, clientId, sortBy, sortAsc, limit, next, previous) {
         const query = {};
-        
+
         if (clientId) {
             query.client_id = clientId;
         }
@@ -63,7 +64,7 @@ class CategoryModel extends MongoBase {
         const query = {
             slug: slug
         };
-        
+
         if (clientId) {
             query.client_id = clientId;
         }
@@ -80,8 +81,39 @@ class CategoryModel extends MongoBase {
             .aggregate(aggregations).toArray())
             .then((result) => {
                 this.logger.info('Retrieved the results');
-                
-                if(result && result.length === 1) 
+
+                if(result && result.length === 1)
+                    return {
+                        data: result[0]
+                    };
+
+                return;
+            });
+    }
+
+    getCategoryById(config, clientId, id){
+        const query = {};
+
+        if (id) {
+            query._id = new ObjectId(id);
+        }
+
+        if (clientId) {
+            query.client_id = clientId;
+        }
+
+        const match = { $match: query };
+        const aggregations = [
+            match,
+            categoryProject,
+        ];
+
+        const database = config.get('databaseConfig:databases:core');
+        return Q(this.collection(database)
+            .aggregate(aggregations).toArray())
+            .then((result) => {
+                this.logger.info('Retrieved the results');
+                if(result && result.length === 1)
                     return {
                         data: result[0]
                     };
