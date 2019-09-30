@@ -431,18 +431,8 @@ class FactcheckModel extends MongoBase {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const ratingMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
-                        console.log(ratingMediaObject)
-                        //Traveling through all the factchecks and replacing DBref media with full media object
-                        
-                        for(let i = 0; i < factchecks.length; i++){
-                            if(factchecks[i].claims){
-                                for(let j = 0; j < factchecks[i].claims.length; j++){
-                                    factchecks[i].claims[j].rating.media = ratingMediaObject[factchecks[i].claims[j].rating.media]
-                                }
-                            }
-                        }
-                        
-                        return factchecks
+                        //Traveling through all the factchecks and replacing DBref media with full media object                        
+                        return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.rating ? { ...claim, rating: {...claim.rating, media: ratingMediaObject[claim.rating.media]}} : claim) } : factcheck )
                     });
             })
             .then ( factchecks => {
@@ -498,18 +488,8 @@ class FactcheckModel extends MongoBase {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const claimantMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
-                        console.log(claimantMediaObject)
                         //Traveling through all the factchecks and replacing DBref media with full media object
-                        
-                        for(let i = 0; i < factchecks.length; i++){
-                            if(factchecks[i].claims){
-                                for(let j = 0; j < factchecks[i].claims.length; j++){
-                                    factchecks[i].claims[j].claimant.media = claimantMediaObject[factchecks[i].claims[j].claimant.media]
-                                }
-                            }
-                        }
-                        
-                        return factchecks
+                        return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.claimant ? { ...claim, claimant: {...claim.claimant, media: claimantMediaObject[claim.claimant.media]}} : claim) } : factcheck )
                     });
             })
             .then( factchecks => {
