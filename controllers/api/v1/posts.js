@@ -9,7 +9,7 @@ function getPosts(req, res, next) {
         req.app.kraken,
         req.query.client,
         req.query.id,
-        req.params.slug ? req.params.slug : req.query.slug,
+        req.query.slug,
         req.query.category,
         req.query.tag,
         req.query.user,
@@ -29,7 +29,24 @@ function getPosts(req, res, next) {
         .catch(next);
 }
 
+function getPostByKey(req, res, next) {
+    const {logger} = req;
+    utils.setLogTokens(logger, 'posts', 'getPostByKey', req.query.client, null);
+    const model = new PostsModel(logger);
+    return model.getPostByKey(
+        req.app.kraken,
+        req.query.client,
+        req.params.key,
+    ).then((result) => {
+        if (result) {
+            res.status(200).json(result);
+            return;
+        }
+        res.sendStatus(404);
+    }).catch(next);
+}
+
 module.exports = function routes(router) {
     router.get('/', getPosts);
-    router.get('/:slug', getPosts);
+    router.get('/:key', getPostByKey);
 };

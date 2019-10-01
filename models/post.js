@@ -377,6 +377,55 @@ class PostsModel extends MongoBase {
         }
         return queryObj;
     }
+    getPostByKey(config, clientId, key) {
+        const query = {
+            'status.name': 'Publish'
+        }
+
+        if(ObjectId.isValid(key)){
+            query.id = new ObjectId(key);
+        } else {
+            query.slug= key;
+        }
+        
+        if (clientId) {
+            query.client_id = clientId;
+        }
+
+        const aggregations = [
+            addFields,
+            {
+                $addFields: { status: '$status.v', format: '$format.v', media: '$media.v' }
+            },
+            statusLookup,
+            { $unwind: '$status' },
+            formatLookup,
+            { $unwind: '$format' },
+            // Another type of lookup where we provide it it's own aggregate pipline to mutate and filter the returned results
+            mediaLookup,
+            // Media is nullable, let's not filter out records that don't have the media option
+            { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+            tagLookup,
+            categoryLookup,
+            degaUserLookup,
+            postsProject,
+            {
+                $match: query
+            }
+        ];
+
+        this.logger.info(`Query Object ${JSON.stringify(query)}`);
+        // get paging object
+        const database = config.get('databaseConfig:databases:core');
+        return Q(this.collection(database, 'post')
+            .aggregate(aggregations).toArray())
+            .then((result) => {
+                if(result.length !== 1) return
+                this.logger.info('Retrieved the results');
+                
+                return { data: result[0] };
+            });
+    }
 }
 
 module.exports = PostsModel;
