@@ -22,33 +22,14 @@ function getCategory(req, res, next) {
     }).catch(next);
 }
 
-function getCategoryBySlug(req, res, next) {
+function getCategoryByParam(req, res, next) {
     const {logger} = req;
     utils.setLogTokens(logger, 'categories', 'getCategoryBySlug', req.query.client, null);
     const model = new CategoryModel(logger);
     return model.getCategoryByParam(
         req.app.kraken,
         req.query.client,
-        req.params.slug,
-        'slug'
-    ).then((result) => {
-        if (result) {
-            res.status(200).json(result);
-            return;
-        }
-        res.sendStatus(404);
-    }).catch(next);
-}
-
-function getCategoryById(req, res, next) {
-    const {logger} = req;
-    utils.setLogTokens(logger, 'categories', 'getCategoryById', req.query.client, null);
-    const model = new CategoryModel(logger);
-    return model.getCategoryByParam(
-        req.app.kraken,
-        req.query.client,
-        req.params.id,
-        'id'
+        req.params.key
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
@@ -60,6 +41,5 @@ function getCategoryById(req, res, next) {
 
 module.exports = function routes(router) {
     router.get('/', getCategory);
-    router.get('/:id', getCategoryById);
-    router.get('/slug/:slug', getCategoryBySlug);
+    router.get('/:key', getCategoryByParam);
 };
