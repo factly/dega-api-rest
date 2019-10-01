@@ -22,14 +22,14 @@ function getTag(req, res, next) {
     }).catch(next);
 }
 
-function getTagBySlug(req, res, next) {
+function getTagByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'tags', 'getTagBySlug', req.query.client, null);
+    utils.setLogTokens(logger, 'tags', 'getTagByKey', req.query.client, null);
     const model = new TagModel(logger);
-    return model.getTagBySlug(
+    return model.getTagByKey(
         req.app.kraken, 
         req.query.client, 
-        req.params.slug
+        req.params.key
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
@@ -41,5 +41,5 @@ function getTagBySlug(req, res, next) {
 
 module.exports = function routes(router) {
     router.get('/', getTag);
-    router.get('/:slug', getTagBySlug);
+    router.get('/:key', getTagByKey);
 };

@@ -2,6 +2,7 @@ const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const MongoPaging = require('mongo-cursor-pagination');
 const utils = require('../lib/utils');
+const ObjectId = require('mongodb').ObjectID;
 
 const tagProject = {
     $project : {
@@ -57,10 +58,14 @@ class TagModel extends MongoBase {
             });
     }
 
-    getTagBySlug(config, clientId, slug){
-        const query = {
-            slug: slug
-        };
+    getTagByKey(config, clientId, key){
+        const query = {};
+
+        if(ObjectId.isValid(key)){
+            query._id = new ObjectId(key);
+        } else {
+            query.slug= key;
+        }
         
         if (clientId) {
             query.client_id = clientId;
@@ -77,14 +82,10 @@ class TagModel extends MongoBase {
         return Q(this.collection(database)
             .aggregate(aggregations).toArray())
             .then((result) => {
+                if(result.length !== 1) return
                 this.logger.info('Retrieved the results');
                 
-                if(result && result.length === 1) 
-                    return {
-                        data: result[0]
-                    };
-
-                return;
+                return { data: result[0] };
             });
     }
 }
