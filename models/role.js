@@ -2,6 +2,24 @@ const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const MongoPaging = require('mongo-cursor-pagination');
 const utils = require('../lib/utils');
+const ObjectId = require('mongodb').ObjectID;
+
+const roleProject = {
+    $project : {
+        id: '$_id',
+        _id: 0,
+        class: '$_class',
+        name: 1,
+        isDefault: '$is_default',
+        slug: 1,
+        clientId: '$client_id',
+        keyclockId: '$keycloak_id',
+        keyclockName: '$keycloak_name',
+        createdDate: '$created_date',
+        lastUpdatedDate: '$last_updated_date'
+    }
+}
+
 class RoleModel extends MongoBase {
     /**
      * Creates a new RoleModel.
@@ -15,27 +33,21 @@ class RoleModel extends MongoBase {
 
     getRole(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
         
-        const query = this.getQueryObject(clientId, slug);
+        const query = {}
+
+        if (clientId) {
+            query.client_id = clientId;
+        }
+
+        if (slug) {
+            query.slug = slug;
+        }
 
         const match = { $match: query };
 
         const aggregations = [
-            {
-                $project : {
-                    id: '$_id',
-                    _id: 0,
-                    class: '$_class',
-                    name: 1,
-                    isDefault: '$is_default',
-                    slug: 1,
-                    clientId: '$client_id',
-                    keyclockId: '$keycloak_id',
-                    keyclockName: '$keycloak_name',
-                    createdDate: '$created_date',
-                    lastUpdatedDate: '$last_updated_date'
-                }
-            },
             match,
+            roleProject
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
@@ -53,16 +65,37 @@ class RoleModel extends MongoBase {
                 return response;
             });
     }
-    getQueryObject(clientId, slug) {
-        const queryObj = {};
+    getRoleByKey(config, clientId, key) {
+        const query = {};
+
         if (clientId) {
-            queryObj.clientId = clientId;
+            query.client_id = clientId;
         }
 
-        if (slug) {
-            queryObj.slug = slug;
+        if(ObjectId.isValid(key)){
+            query._id = new ObjectId(key);
+        } else {
+            query.slug = key;
         }
-        return queryObj;
+        
+        const match = { $match: query };
+
+        const aggregations = [ 
+            match,
+            roleProject
+        ];
+
+        return Q(this.collection(config.get('databaseConfig:databases:core'), 'role')
+            .aggregate(aggregations).toArray())
+            .then((result) => {
+                if(result.length !== 1) return;
+                
+                this.logger.info('Retrieved the results');
+
+                return {
+                    data: result[0]
+                }
+            });
     }
 }
 
