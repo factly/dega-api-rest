@@ -2,6 +2,7 @@ const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const MongoPaging = require('mongo-cursor-pagination');
 const utils = require('../lib/utils');
+const ObjectId = require('mongodb').ObjectID;
 
 const addFields = {
     $addFields: {
@@ -189,8 +190,25 @@ class UserModel extends MongoBase {
             });
     }
 
-    getUserBySlug(config, clientId, slug) {
+    getUserBySlug(config, clientId, key) {
+        const query = {}
+
+        if(ObjectId.isValid(key)){
+            query._id = new ObjectId(key);
+        } else {
+            query.slug= key;
+        }
+        
+        if (clientId) {
+            query.roleMappings.organization = {
+                $elemMatch: { slug : clientId}
+            }
+        }
+
         const aggregations = [
+            {
+                $match: query
+            },
             addFields,
             {
                 $addFields: {
@@ -201,11 +219,6 @@ class UserModel extends MongoBase {
             { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
             roleMappingLookup,
             userProject,
-            {
-                $match: {
-                    slug: slug
-                }
-            },
         ];
 
         // get database from env config
@@ -216,12 +229,12 @@ class UserModel extends MongoBase {
             .aggregate(aggregations).toArray())
             .then((result) => {
                 this.logger.info('Retrieved the results');
-                if(result && result.length === 1) 
-                    return {
-                        data: result[0]
-                    };
-
-                return;
+                
+                if(result.length !== 1) return
+                
+                return {
+                    data: result[0]
+                };
             });
     }
 }
