@@ -384,7 +384,7 @@ class FactcheckModel extends MongoBase {
                 for(let factcheck of factchecks){
                     if(factcheck.claims){
                         for(let claim of factcheck.claims){
-                            ratingMediaIds = ratingMediaIds.concat(claim.rating.media)
+                            ratingMediaIds = ratingMediaIds.concat(claim.rating.media);
                         }
                     }
                 }
@@ -421,7 +421,7 @@ class FactcheckModel extends MongoBase {
                         $match: {
                             id : { $in : ratingMediaIds }
                         }
-                    }
+                    },
                 ];
 
                 //Retrieving all media in mediaIds
@@ -432,7 +432,7 @@ class FactcheckModel extends MongoBase {
                         const ratingMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
                         //Traveling through all the factchecks and replacing DBref media with full media object                        
-                        return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.rating ? { ...claim, rating: {...claim.rating, media: ratingMediaObject[claim.rating.media]}} : claim) } : factcheck )
+                        return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.rating ? { ...claim, rating: {...claim.rating, media: ratingMediaObject[claim.rating.media]}} : claim) } : factcheck );
                     });
             })
             .then ( factchecks => {
@@ -441,7 +441,7 @@ class FactcheckModel extends MongoBase {
                 for(let factcheck of factchecks){
                     if(factcheck.claims){
                         for(let claim of factcheck.claims){
-                            claimntsMediaIds = claimntsMediaIds.concat(claim.claimant.media)
+                            claimntsMediaIds = claimntsMediaIds.concat(claim.claimant.media);
                         }
                     }
                 }
@@ -478,7 +478,7 @@ class FactcheckModel extends MongoBase {
                         $match: {
                             id : { $in : claimntsMediaIds }
                         }
-                    }
+                    },
                 ];
 
                 //Retrieving all media in mediaIds
@@ -489,7 +489,7 @@ class FactcheckModel extends MongoBase {
                         const claimantMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
                         //Traveling through all the factchecks and replacing DBref media with full media object
-                        return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.claimant ? { ...claim, claimant: {...claim.claimant, media: claimantMediaObject[claim.claimant.media]}} : claim) } : factcheck )
+                        return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.claimant ? { ...claim, claimant: {...claim.claimant, media: claimantMediaObject[claim.claimant.media]}} : claim) } : factcheck );
                     });
             })
             .then( factchecks => {
