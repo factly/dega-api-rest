@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getTag(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'tags', 'getTag', req.query.client, null);
+    utils.setLogTokens(logger, 'tags', 'getTag', req.headers.client, null);
     const model = new TagModel(logger);
     return model.getTag(
         req.app.kraken, 
-        req.query.client, 
+        req.headers.client, 
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
@@ -24,11 +24,11 @@ function getTag(req, res, next) {
 
 function getTagByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'tags', 'getTagByKey', req.query.client, null);
+    utils.setLogTokens(logger, 'tags', 'getTagByKey', req.headers.client, null);
     const model = new TagModel(logger);
     return model.getTagByKey(
         req.app.kraken, 
-        req.query.client, 
+        req.headers.client, 
         req.params.key
     ).then((result) => {
         if (result) {

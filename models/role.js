@@ -18,7 +18,7 @@ const roleProject = {
         createdDate: '$created_date',
         lastUpdatedDate: '$last_updated_date'
     }
-}
+};
 
 class RoleModel extends MongoBase {
     /**
@@ -33,11 +33,11 @@ class RoleModel extends MongoBase {
 
     getRole(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
         
-        const query = {}
+        const query = {};
 
-        if (clientId) {
-            query.client_id = clientId;
-        }
+        query.client_id = {
+            $in: [clientId, 'default']
+        };
 
         if (slug) {
             query.slug = slug;
@@ -47,7 +47,7 @@ class RoleModel extends MongoBase {
 
         const aggregations = [
             match,
-            roleProject
+            roleProject,
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
@@ -68,9 +68,10 @@ class RoleModel extends MongoBase {
     getRoleByKey(config, clientId, key) {
         const query = {};
 
-        if (clientId) {
-            query.client_id = clientId;
-        }
+        query.client_id = {
+            $in: [clientId, 'default']
+        };
+        
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
@@ -82,7 +83,7 @@ class RoleModel extends MongoBase {
 
         const aggregations = [ 
             match,
-            roleProject
+            roleProject,
         ];
 
         return Q(this.collection(config.get('databaseConfig:databases:core'), 'role')
@@ -94,7 +95,7 @@ class RoleModel extends MongoBase {
 
                 return {
                     data: result[0]
-                }
+                };
             });
     }
 }

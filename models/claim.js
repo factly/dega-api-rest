@@ -159,10 +159,10 @@ class ClaimModel extends MongoBase {
                 return aggResult.results;
             })
             .then( claims => {
-                let allMediaIds = []  
+                let allMediaIds = [];  
 
-                allMediaIds = claims.filter(claim => claim.rating.media).map( claim => claim.rating.media.oid )
-                allMediaIds = allMediaIds.concat(claims.filter(claim => claim.claimant.media).map( claim => claim.claimant.media.oid ))
+                allMediaIds = claims.filter(claim => claim.rating.media).map( claim => claim.rating.media.oid );
+                allMediaIds = allMediaIds.concat(claims.filter(claim => claim.claimant.media).map( claim => claim.claimant.media.oid ));
                 
                 if(allMediaIds.length === 0) return claims;
                 
@@ -174,8 +174,8 @@ class ClaimModel extends MongoBase {
 
                 const mediaAggregation = [
                     match,
-                    mediaProject
-                ]
+                    mediaProject,
+                ];
 
                 return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaAggregation).toArray())
@@ -186,9 +186,9 @@ class ClaimModel extends MongoBase {
                         //Traveling through all the factchecks and replacing DBref media with full media object
                         return {
                             data: claims.map( claim => claim.rating.media ? { ...claim, rating: { ...claim.rating, media: mediaObject[claim.rating.media.oid]}} : claim )
-                                    .map( claim => claim.claimant.media ? { ...claim, claimant: { ...claim.claimant, media: mediaObject[claim.claimant.media.oid]}} : claim ),
+                                .map( claim => claim.claimant.media ? { ...claim, claimant: { ...claim.claimant, media: mediaObject[claim.claimant.media.oid]}} : claim ),
                             paging: pagingNew
-                        }
+                        };
                     });
             });
     }
@@ -214,7 +214,7 @@ class ClaimModel extends MongoBase {
         return queryObj;
     }
     getClaimByKey(config, clientId, key) {
-        const query = {}
+        const query = {};
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
@@ -225,7 +225,6 @@ class ClaimModel extends MongoBase {
         if (clientId) {
             query.client_id = clientId;
         }
-        console.log(query)
 
         const match = { $match: query };
 
@@ -252,26 +251,26 @@ class ClaimModel extends MongoBase {
             .then( claims => {
                 this.logger.info('Retrieved the claims');
 
-                if(claims.length !== 1) return
-                const claim = claims[0]
+                if(claims.length !== 1) return;
+                const claim = claims[0];
                 
-                if(!claim.rating.media && !claim.claimant.media) return
+                if(!claim.rating.media && !claim.claimant.media) return;
                 
-                let allMediaIds = []
+                let allMediaIds = [];
 
-                if(claim.rating.media) allMediaIds.push(claim.rating.media.oid)
-                if(claim.claimant.media) allMediaIds.push(claim.claimant.media.oid)
+                if(claim.rating.media) allMediaIds.push(claim.rating.media.oid);
+                if(claim.claimant.media) allMediaIds.push(claim.claimant.media.oid);
                 
                 const match = {
                     $match: {
-                       _id : { $in : allMediaIds }
+                        _id : { $in : allMediaIds }
                     }
                 };
 
                 const mediaAggregation = [
                     match,
-                    mediaProject
-                ]
+                    mediaProject,
+                ];
 
                 return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaAggregation).toArray())
@@ -280,12 +279,12 @@ class ClaimModel extends MongoBase {
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
                         //Traveling through all the factchecks and replacing DBref media with full media object
-                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media]
-                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media]
+                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media];
+                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media];
 
-                        return { data: claim }
+                        return { data: claim };
                     });
-            })
+            });
     }
 }
 

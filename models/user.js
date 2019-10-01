@@ -191,7 +191,7 @@ class UserModel extends MongoBase {
     }
 
     getUserBySlug(config, clientId, key) {
-        const query = {}
+        const query = {};
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
@@ -202,7 +202,7 @@ class UserModel extends MongoBase {
         if (clientId) {
             query.roleMappings.organization = {
                 $elemMatch: { slug : clientId}
-            }
+            };
         }
 
         const aggregations = [
@@ -230,7 +230,7 @@ class UserModel extends MongoBase {
             .then((result) => {
                 this.logger.info('Retrieved the results');
                 
-                if(result.length !== 1) return
+                if(result.length !== 1) return;
                 
                 return {
                     data: result[0]

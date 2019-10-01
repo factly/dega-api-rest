@@ -3,10 +3,10 @@ const utils = require('../../../lib/utils');
 
 function getRole(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'roles', 'getRole', req.query.client, null);
+    utils.setLogTokens(logger, 'roles', 'getRole', req.headers.client, null);
     const model = new RoleModel(logger);
     return model.getRole(req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.query.slug,
         req.query.sortBy,
         req.query.sortAsc,
@@ -25,11 +25,11 @@ function getRole(req, res, next) {
 
 function getRoleByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'roles', 'getRoleByKey', req.query.client, null);
+    utils.setLogTokens(logger, 'roles', 'getRoleByKey', req.headers.client, null);
     const model = new RoleModel(logger);
     return model.getRoleByKey(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.params.key)
         .then((result) => {
             if (result) {

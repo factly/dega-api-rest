@@ -60,7 +60,9 @@ class RatingModel extends MongoBase {
         const query = {};
 
         if (clientId) {
-            query.client_id = clientId;
+            query.client_id = {
+                $in: [clientId, 'default']
+            };
         }
 
         const match = { $match: query };
@@ -106,7 +108,9 @@ class RatingModel extends MongoBase {
         const query = {};
 
         if (clientId) {
-            query.client_id = clientId;
+            query.client_id = {
+                $in: [clientId, 'default']
+            };
         }
 
         if(ObjectId.isValid(key)){

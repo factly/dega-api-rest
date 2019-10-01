@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getCategory(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'categories', 'getCategory', req.query.client, null);
+    utils.setLogTokens(logger, 'categories', 'getCategory', req.headers.client, null);
     const model = new CategoryModel(logger);
     return model.getCategory(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
@@ -24,11 +24,11 @@ function getCategory(req, res, next) {
 
 function getCategoryByParam(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'categories', 'getCategoryBySlug', req.query.client, null);
+    utils.setLogTokens(logger, 'categories', 'getCategoryBySlug', req.headers.client, null);
     const model = new CategoryModel(logger);
     return model.getCategoryByParam(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.params.key
     ).then((result) => {
         if (result) {

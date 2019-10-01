@@ -6,10 +6,10 @@ const Q = require('q');
 
 function getFactcheck(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.query.client, null);
+    utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.headers.client, null);
     const model = new FactcheckModel(logger);
     const orgModel = new OrganizationModel(logger);
-    const clientId = req.query.client;
+    const clientId = req.headers.client;
     const conf = req.app.kraken;
     let paging = {};
     return model.getFactcheck(

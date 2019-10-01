@@ -34,8 +34,8 @@ class FormatModel extends MongoBase {
         const match = { $match: query };
 
         const aggregations = [
-            formatProject,
             match,
+            formatProject,
         ];
         
         const database = config.get('databaseConfig:databases:core');
@@ -51,9 +51,10 @@ class FormatModel extends MongoBase {
 
     getQueryObject(clientId, slug) {
         const queryObj = {};
-        if (clientId) {
-            queryObj.clientId = clientId;
-        }
+
+        queryObj.client_id = {
+            $in: [clientId, 'default']
+        };
 
         if (slug) {
             queryObj.slug = slug;
@@ -65,9 +66,9 @@ class FormatModel extends MongoBase {
         // get query object
         const query = {};
 
-        if(clientId){
-            query.client_id = clientId; 
-        }
+        query.client_id = {
+            $in: [clientId, 'default']
+        };
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);

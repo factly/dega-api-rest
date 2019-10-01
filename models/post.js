@@ -380,7 +380,7 @@ class PostsModel extends MongoBase {
     getPostByKey(config, clientId, key) {
         const query = {
             'status.name': 'Publish'
-        }
+        };
 
         if(ObjectId.isValid(key)){
             query.id = new ObjectId(key);
@@ -411,7 +411,7 @@ class PostsModel extends MongoBase {
             postsProject,
             {
                 $match: query
-            }
+            },
         ];
 
         this.logger.info(`Query Object ${JSON.stringify(query)}`);
@@ -420,7 +420,7 @@ class PostsModel extends MongoBase {
         return Q(this.collection(database, 'post')
             .aggregate(aggregations).toArray())
             .then((result) => {
-                if(result.length !== 1) return
+                if(result.length !== 1) return;
                 this.logger.info('Retrieved the results');
                 
                 return { data: result[0] };

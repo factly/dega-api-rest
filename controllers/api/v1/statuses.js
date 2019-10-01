@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getStatus(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'statuses', 'getStatus', req.query.client, null);
+    utils.setLogTokens(logger, 'statuses', 'getStatus', req.headers.client, null);
     const model = new StatusModel(logger);
     return model.getStatus(
         req.app.kraken, 
-        req.query.client)
+        req.headers.client)
         .then((result) => {
             if (result) {
                 res.status(200).json(result);
@@ -19,11 +19,11 @@ function getStatus(req, res, next) {
 
 function getStatusByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'statuses', 'getStatusByKey', req.query.client, null);
+    utils.setLogTokens(logger, 'statuses', 'getStatusByKey', req.headers.client, null);
     const model = new StatusModel(logger);
     return model.getStatusByKey(
         req.app.kraken, 
-        req.query.client,
+        req.headers.client,
         req.params.key)
         .then((result) => {
             if (result) {

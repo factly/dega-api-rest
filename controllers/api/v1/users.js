@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getUser(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
+    utils.setLogTokens(logger, 'users', 'getUser', req.headers.client, null);
     const model = new UserModel(logger);
     return model.getUser(
         req.app.kraken, 
-        req.query.client,
+        req.headers.client,
         req.query.role, 
         req.query.sortBy,
         req.query.sortAsc,
@@ -25,11 +25,11 @@ function getUser(req, res, next) {
 
 function getUserByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'users', 'getUserByKey', req.query.client, null);
+    utils.setLogTokens(logger, 'users', 'getUserByKey', req.headers.client, null);
     const model = new UserModel(logger);
     return model.getUserBySlug(
         req.app.kraken, 
-        req.query.client,
+        req.headers.client,
         req.params.key
     ).then((result) => {
         if (result) {

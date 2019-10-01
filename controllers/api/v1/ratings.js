@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getRating(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'ratings', 'getRating', req.query.client, null);
+    utils.setLogTokens(logger, 'ratings', 'getRating', req.headers.client, null);
     const model = new RatingModel(logger);
     return model.getRating(
         req.app.kraken, 
-        req.query.client
+        req.headers.client
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
@@ -19,11 +19,11 @@ function getRating(req, res, next) {
 
 function getRatingByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'ratings', 'getRatingByKey', req.query.client, null);
+    utils.setLogTokens(logger, 'ratings', 'getRatingByKey', req.headers.client, null);
     const model = new RatingModel(logger);
     return model.getRatingByKey(
         req.app.kraken, 
-        req.query.client,
+        req.headers.client,
         req.params.key
     ).then((result) => {
         if (result) {

@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getPosts(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'posts', 'getPosts', req.query.client, null);
+    utils.setLogTokens(logger, 'posts', 'getPosts', req.headers.client, null);
     const model = new PostsModel(logger);
     return model.getPosts(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.query.id,
         req.query.slug,
         req.query.category,
@@ -31,12 +31,12 @@ function getPosts(req, res, next) {
 
 function getPostByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'posts', 'getPostByKey', req.query.client, null);
+    utils.setLogTokens(logger, 'posts', 'getPostByKey', req.headers.client, null);
     const model = new PostsModel(logger);
     return model.getPostByKey(
         req.app.kraken,
-        req.query.client,
-        req.params.key,
+        req.headers.client,
+        req.params.key
     ).then((result) => {
         if (result) {
             res.status(200).json(result);

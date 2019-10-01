@@ -82,7 +82,7 @@ class TagModel extends MongoBase {
         return Q(this.collection(database)
             .aggregate(aggregations).toArray())
             .then((result) => {
-                if(result.length !== 1) return
+                if(result.length !== 1) return;
                 this.logger.info('Retrieved the results');
                 
                 return { data: result[0] };

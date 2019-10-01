@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getClaimant(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'claimants', 'getClaimant', req.query.client, null);
+    utils.setLogTokens(logger, 'claimants', 'getClaimant', req.headers.client, null);
     const model = new ClaimantModel(logger);
     return model.getClaimant(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
@@ -25,11 +25,11 @@ function getClaimant(req, res, next) {
 
 function getClaimantByParam(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'claimants', 'getClaimantByParam', req.query.client, null);
+    utils.setLogTokens(logger, 'claimants', 'getClaimantByParam', req.headers.client, null);
     const model = new ClaimantModel(logger);
     return model.getClaimantByParam(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.params.key
     ).then((result) => {
         if (result) {

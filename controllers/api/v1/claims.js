@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getClaim(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'claims', 'getClaim', req.query.client, null);
+    utils.setLogTokens(logger, 'claims', 'getClaim', req.headers.client, null);
     const model = new ClaimModel(logger);
     return model.getClaim(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.query.rating,
         req.query.claimant,
         req.query.sortBy,
@@ -25,11 +25,11 @@ function getClaim(req, res, next) {
 
 function getClaimByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'claims', 'getClaimByKey', req.query.client, null);
+    utils.setLogTokens(logger, 'claims', 'getClaimByKey', req.headers.client, null);
     const model = new ClaimModel(logger);
     return model.getClaimByKey(
         req.app.kraken,
-        req.query.client,
+        req.headers.client,
         req.params.key
     ).then((result) => {
         if (result) {
@@ -42,5 +42,5 @@ function getClaimByKey(req, res, next) {
 
 module.exports = function routes(router) {
     router.get('/', getClaim);
-    router.get('/:key', getClaimByKey)
+    router.get('/:key', getClaimByKey);
 };

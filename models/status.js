@@ -30,9 +30,9 @@ class StatusModel extends MongoBase {
     getStatus(config, clientId) {
         const query = {};
 
-        if (clientId) {
-            query.client_id = clientId;
-        }
+        query.client_id = {
+            $in: [clientId, 'default']
+        };
 
         const match = { $match: query };
 
@@ -55,9 +55,10 @@ class StatusModel extends MongoBase {
     getStatusByKey(config, clientId, key){
         const query = {};
 
-        if (clientId) {
-            query.client_id = clientId;
-        }
+        query.client_id = {
+            $in: [clientId, 'default']
+        };
+        
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
