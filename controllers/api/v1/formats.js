@@ -17,7 +17,23 @@ function getFormat(req, res, next) {
     }).catch(next);
 }
 
+function getFormatByKey(req, res, next) {
+    const {logger} = req;
+    utils.setLogTokens(logger, 'formats', 'getFormatByKey', req.query.client, null);
+    const model = new FormatModel(logger);
+    return model.getFormatByKey(
+        req.app.kraken,
+        req.query.client,
+        req.params.key).then((result) => {
+        if (result) {
+            res.status(200).json(result);
+            return;
+        }
+        res.sendStatus(404);
+    }).catch(next);
+}
+
 module.exports = function routes(router) {
     router.get('/', getFormat);
-    router.get('/:slug', getFormat);
+    router.get('/:key', getFormatByKey);
 };
