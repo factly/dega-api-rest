@@ -17,6 +17,24 @@ function getStatus(req, res, next) {
         }).catch(next);
 }
 
+function getStatusByKey(req, res, next) {
+    const {logger} = req;
+    utils.setLogTokens(logger, 'statuses', 'getStatusByKey', req.query.client, null);
+    const model = new StatusModel(logger);
+    return model.getStatusByKey(
+        req.app.kraken, 
+        req.query.client,
+        req.params.key)
+        .then((result) => {
+            if (result) {
+                res.status(200).json(result);
+                return;
+            }
+            res.sendStatus(404);
+        }).catch(next);
+}
+
 module.exports = function routes(router) {
     router.get('/', getStatus);
+    router.get('/:key', getStatusByKey);
 };
