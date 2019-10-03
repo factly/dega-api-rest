@@ -190,20 +190,16 @@ class UserModel extends MongoBase {
             });
     }
 
-    getUserBySlug(config, clientId, key) {
+    getUserByKey(config, clientId, key) {
         const query = {};
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
         } else {
-            query.slug= key;
+            query.slug = key;
         }
-        
-        if (clientId) {
-            query.roleMappings.organization = {
-                $elemMatch: { slug : clientId}
-            };
-        }
+
+        this.logger.info(`Query Object ${JSON.stringify(query)}`);
 
         const aggregations = [
             {
@@ -220,6 +216,7 @@ class UserModel extends MongoBase {
             roleMappingLookup,
             userProject,
         ];
+
 
         // get database from env config
         const database = config.get('databaseConfig:databases:core');

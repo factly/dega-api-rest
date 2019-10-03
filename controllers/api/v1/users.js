@@ -27,7 +27,7 @@ function getUserByKey(req, res, next) {
     const {logger} = req;
     utils.setLogTokens(logger, 'users', 'getUserByKey', req.headers.client, null);
     const model = new UserModel(logger);
-    return model.getUserBySlug(
+    return model.getUserByKey(
         req.app.kraken, 
         req.headers.client,
         req.params.key

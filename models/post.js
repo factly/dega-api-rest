@@ -377,7 +377,7 @@ class PostsModel extends MongoBase {
     getPostByKey(config, clientId, key) {
         const query = {
             'status.name': 'Publish',
-            client_id: clientId
+            clientId: clientId
         };
 
         if(ObjectId.isValid(key)){

@@ -194,7 +194,7 @@ class ClaimModel extends MongoBase {
     }
     getQueryObject(clientId, ratingSlug, claimantSlug) {
         const queryObj = {
-            client_id: clientId
+            clientId: clientId
         };
 
         if (ratingSlug) {
@@ -273,10 +273,10 @@ class ClaimModel extends MongoBase {
                     .then((media) => {  
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
-
+                        
                         //Traveling through all the factchecks and replacing DBref media with full media object
-                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media];
-                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media];
+                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media.oid];
+                        if(claim.claimant.media) claim.claimant.media = mediaObject[claim.claimant.media.oid];
 
                         return { data: claim };
                     });
