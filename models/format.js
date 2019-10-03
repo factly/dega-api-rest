@@ -50,10 +50,10 @@ class FormatModel extends MongoBase {
     }
 
     getQueryObject(clientId, slug) {
-        const queryObj = {};
-
-        queryObj.client_id = {
-            $in: [clientId, 'default']
+        const queryObj = {
+            client_id: {
+                $in: [clientId, 'default']
+            }
         };
 
         if (slug) {
@@ -64,10 +64,10 @@ class FormatModel extends MongoBase {
 
     getFormatByKey(config, clientId, key) {
         // get query object
-        const query = {};
-
-        query.client_id = {
-            $in: [clientId, 'default']
+        const query = {
+            client_id: {
+                $in: [clientId, 'default']
+            }
         };
 
         if(ObjectId.isValid(key)){

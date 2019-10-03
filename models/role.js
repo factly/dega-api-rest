@@ -33,11 +33,12 @@ class RoleModel extends MongoBase {
 
     getRole(config, clientId, slug, sortBy, sortAsc, limit, next, previous) {
         
-        const query = {};
-
-        query.client_id = {
-            $in: [clientId, 'default']
+        const query = {
+            client_id: {
+                $in: [clientId, 'default']
+            }
         };
+
 
         if (slug) {
             query.slug = slug;
@@ -66,13 +67,12 @@ class RoleModel extends MongoBase {
             });
     }
     getRoleByKey(config, clientId, key) {
-        const query = {};
-
-        query.client_id = {
-            $in: [clientId, 'default']
+        const query = {
+            client_id: {
+                $in: [clientId, 'default']
+            }
         };
         
-
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
         } else {

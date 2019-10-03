@@ -327,12 +327,9 @@ class PostsModel extends MongoBase {
     getQueryObject(clientId, slug, categorySlug, tagSlug, authorSlug, id) {
         // always filter publish only posts
         const queryObj = {
-            'status.name': 'Publish'
+            'status.name': 'Publish',
+            clientId: clientId
         };
-
-        if (clientId) {
-            queryObj.clientId = clientId;
-        }
 
         if (authorSlug) {
             let authorSlugQuery = Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug;
@@ -379,17 +376,14 @@ class PostsModel extends MongoBase {
     }
     getPostByKey(config, clientId, key) {
         const query = {
-            'status.name': 'Publish'
+            'status.name': 'Publish',
+            client_id: clientId
         };
 
         if(ObjectId.isValid(key)){
             query.id = new ObjectId(key);
         } else {
             query.slug= key;
-        }
-        
-        if (clientId) {
-            query.client_id = clientId;
         }
 
         const aggregations = [

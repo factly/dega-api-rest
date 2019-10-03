@@ -57,13 +57,12 @@ class RatingModel extends MongoBase {
     }
 
     getRating(config, clientId) {
-        const query = {};
-
-        if (clientId) {
-            query.client_id = {
+        const query = {
+            client_id: {
                 $in: [clientId, 'default']
-            };
-        }
+            }
+        };
+
 
         const match = { $match: query };
 
@@ -105,13 +104,11 @@ class RatingModel extends MongoBase {
             });
     }
     getRatingByKey(config, clientId, key){
-        const query = {};
-
-        if (clientId) {
-            query.client_id = {
+        const query = {
+            client_id: {
                 $in: [clientId, 'default']
-            };
-        }
+            }
+        };
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);

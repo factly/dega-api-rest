@@ -193,11 +193,9 @@ class ClaimModel extends MongoBase {
             });
     }
     getQueryObject(clientId, ratingSlug, claimantSlug) {
-        const queryObj = {};
-
-        if (clientId) {
-            queryObj.client_id = clientId;
-        }
+        const queryObj = {
+            client_id: clientId
+        };
 
         if (ratingSlug) {
             queryObj.rating = {
@@ -214,7 +212,9 @@ class ClaimModel extends MongoBase {
         return queryObj;
     }
     getClaimByKey(config, clientId, key) {
-        const query = {};
+        const query = {
+            client_id: clientId
+        };
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
@@ -222,10 +222,6 @@ class ClaimModel extends MongoBase {
             query.slug= key;
         }
         
-        if (clientId) {
-            query.client_id = clientId;
-        }
-
         const match = { $match: query };
 
         const aggregations = [

@@ -658,9 +658,7 @@ class FactcheckModel extends MongoBase {
                 return query;
             })
             .then( query => {
-                if (clientId) {
-                    query.clientId = clientId;
-                }
+                query.clientId = clientId;
                 return query;
             })
             .then( query => {

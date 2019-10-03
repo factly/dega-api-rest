@@ -201,11 +201,9 @@ class OrganizationModel extends MongoBase {
     }
 
     getOrganization(config, clientId) {
-        const query = {};
-
-        if (clientId) {
-            query.slug = clientId;
-        }
+        const query = {
+            slug: clientId
+        };
 
         const match = { $match: query };
 
@@ -235,7 +233,9 @@ class OrganizationModel extends MongoBase {
             .aggregate(aggregations).toArray())
             .then((results) => {
                 this.logger.info('Retrieved the results');
-                return results;
+                return {
+                    data: results[0]
+                }
             });
     }
 }

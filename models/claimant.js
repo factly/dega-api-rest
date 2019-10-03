@@ -57,11 +57,10 @@ class ClaimantModel extends MongoBase {
     }
 
     getClaimant(config, clientId, sortBy, sortAsc, limit, next, previous) {
-        const query = {};
+        const query = {
+            client_id: clientId
+        };
 
-        if (clientId) {
-            query.client_id = clientId;
-        }
         const match = { $match: query };
 
         const aggregations = [
@@ -108,16 +107,14 @@ class ClaimantModel extends MongoBase {
     }
 
     getClaimantByParam(config, clientId, param) {
-        const query = {};
+        const query = {
+            client_id: clientId
+        };
 
         if(ObjectId.isValid(param)){
             query._id = new ObjectId(param);
         } else {
             query.slug= param;
-        }
-
-        if (clientId) {
-            query.client_id = clientId;
         }
 
         const match = { $match: query };
