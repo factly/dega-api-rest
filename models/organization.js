@@ -235,7 +235,7 @@ class OrganizationModel extends MongoBase {
                 this.logger.info('Retrieved the results');
                 return {
                     data: results[0]
-                }
+                };
             });
     }
 }

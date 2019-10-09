@@ -99,7 +99,7 @@ function getFactcheck(req, res, next) {
                 });
 
                 factcheck.schemas = claimSchemas;
-                delete factcheck.currentOrganization
+                delete factcheck.currentOrganization;
                 return factcheck;
             });
             return factchecksWithSchemas;
@@ -124,7 +124,7 @@ function getFactcheckByKey(req, res, next) {
     const orgModel = new OrganizationModel(logger);
     const clientId = req.headers.client;
     const config = req.app.kraken;
-    const currentOrganization = null
+    let currentOrganization = null;
     return model.getFactcheck(
         config,
         clientId,
@@ -139,67 +139,66 @@ function getFactcheckByKey(req, res, next) {
                         currentOrganization = org[0];
                     }
                     return factcheck;
-                });
-            
+                }); 
         })
         .then((factcheck) => {
 
-                // add claim review schema here for every claim
-                const claimSchemas = (factcheck.claims || []).map((c) => {
+            // add claim review schema here for every claim
+            const claimSchemas = (factcheck.claims || []).map((c) => {
 
-                    // our schema from claim evolves here
-                    const currentSchema = {
-                        reviewRating: {
-                            '@type': 'Rating'
-                        },
-                        itemReviewed: {
-                            '@type': 'CreativeWork',
-                            author: {
-                                '@type': 'Organization'
-                            }
-                        },
-                        claimReviewed: c.claim,
+                // our schema from claim evolves here
+                const currentSchema = {
+                    reviewRating: {
+                        '@type': 'Rating'
+                    },
+                    itemReviewed: {
+                        '@type': 'CreativeWork',
                         author: {
                             '@type': 'Organization'
-
                         }
-                    };
+                    },
+                    claimReviewed: c.claim,
+                    author: {
+                        '@type': 'Organization'
 
-                    if (currentOrganization) {
-                        currentSchema.url = `${currentOrganization.siteAddress}/factcheck/${factcheck.slug}`;
-                        currentSchema.author.url = currentOrganization.siteAddress;
-                        currentSchema.author.image = currentOrganization.mediaLogo.sourceUR;
-                        currentSchema.author.name = currentOrganization.name;
                     }
+                };
 
-                    // date
-                    currentSchema.datePublished = factcheck.publishedDate;
+                if (currentOrganization) {
+                    currentSchema.url = `${currentOrganization.siteAddress}/factcheck/${factcheck.slug}`;
+                    currentSchema.author.url = currentOrganization.siteAddress;
+                    currentSchema.author.image = currentOrganization.mediaLogo.sourceURL;
+                    currentSchema.author.name = currentOrganization.name;
+                }
 
-                    if (c.rating && c.rating.numericValue) {
-                        currentSchema.reviewRating.ratingValue = c.rating.numericValue;
-                    }
+                // date
+                currentSchema.datePublished = factcheck.publishedDate;
 
-                    currentSchema.reviewRating.bestRating = 5;
-                    currentSchema.reviewRating.worstRating = 1;
+                if (c.rating && c.rating.numericValue) {
+                    currentSchema.reviewRating.ratingValue = c.rating.numericValue;
+                }
 
-                    if (c.rating) {
-                        currentSchema.reviewRating.alternateName = c.rating.name;
-                        currentSchema.reviewRating.image = c.rating.media.sourceURL;
-                    }
+                currentSchema.reviewRating.bestRating = 5;
+                currentSchema.reviewRating.worstRating = 1;
 
-                    if (c.claimant) {
-                        currentSchema.itemReviewed.author.name = c.claimant.name;
-                        currentSchema.itemReviewed.author.image = c.claimant.media.sourceURL;
-                    }
-                    currentSchema.itemReviewed.datePublished = c.claimDate;
-                    currentSchema.itemReviewed.name = c.claim;
+                if (c.rating) {
+                    currentSchema.reviewRating.alternateName = c.rating.name;
+                    currentSchema.reviewRating.image = c.rating.media.sourceURL;
+                }
 
-                    const mergedObject = Object.assign(schemaTemplate, currentSchema);
-                    return mergedObject;
-                });
+                if (c.claimant) {
+                    currentSchema.itemReviewed.author.name = c.claimant.name;
+                    currentSchema.itemReviewed.author.image = c.claimant.media.sourceURL;
+                }
+                currentSchema.itemReviewed.datePublished = c.claimDate;
+                currentSchema.itemReviewed.name = c.claim;
 
-                factcheck.schemas = claimSchemas;
-                return factcheck;
+                const mergedObject = Object.assign(schemaTemplate, currentSchema);
+                return mergedObject;
+            });
+
+            factcheck.schemas = claimSchemas;
+            return factcheck;
         })
         .then((factcheckWithSchemas) => {
             const result = {};
