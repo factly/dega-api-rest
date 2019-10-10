@@ -30,6 +30,8 @@ class SitemapModel extends MongoBase {
                     id: '$_id',
                     _id: 0,
                     slug: 1,
+                    createdDate: '$created_date',
+                    lastUpdatedDate: '$last_updated_date',
                 }
             },
         ]
