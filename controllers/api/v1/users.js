@@ -1,13 +1,13 @@
 const UserModel = require('../../../models/user');
 const utils = require('../../../lib/utils');
 
-function getUser(req, res, next) {
+function getUsers(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
+    utils.setLogTokens(logger, 'users', 'getUsers', req.headers.client, null);
     const model = new UserModel(logger);
     return model.getUser(
         req.app.kraken, 
-        req.query.client,
+        req.headers.client,
         req.query.role, 
         req.query.sortBy,
         req.query.sortAsc,
@@ -23,14 +23,14 @@ function getUser(req, res, next) {
     }).catch(next);
 }
 
-function getUserBySlug(req, res, next) {
+function getUserByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'users', 'getUser', req.query.client, null);
+    utils.setLogTokens(logger, 'users', 'getUserByKey', req.headers.client, null);
     const model = new UserModel(logger);
-    return model.getUserBySlug(
+    return model.getUserByKey(
         req.app.kraken, 
-        req.query.client,
-        req.params.slug
+        req.headers.client,
+        req.params.key
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
@@ -41,6 +41,6 @@ function getUserBySlug(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getUser);
-    router.get('/:slug', getUserBySlug);
+    router.get('/', getUsers);
+    router.get('/:key', getUserByKey);
 };

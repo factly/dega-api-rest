@@ -327,12 +327,9 @@ class PostsModel extends MongoBase {
     getQueryObject(clientId, slug, categorySlug, tagSlug, authorSlug, id) {
         // always filter publish only posts
         const queryObj = {
-            'status.name': 'Publish'
+            'status.name': 'Publish',
+            clientId: clientId
         };
-
-        if (clientId) {
-            queryObj.clientId = clientId;
-        }
 
         if (authorSlug) {
             let authorSlugQuery = Array.isArray(authorSlug) ? { $in : authorSlug } : authorSlug;
@@ -376,6 +373,52 @@ class PostsModel extends MongoBase {
             }
         }
         return queryObj;
+    }
+    getPostByKey(config, clientId, key) {
+        const query = {
+            'status.name': 'Publish',
+            clientId: clientId
+        };
+
+        if(ObjectId.isValid(key)){
+            query.id = new ObjectId(key);
+        } else {
+            query.slug= key;
+        }
+
+        const aggregations = [
+            addFields,
+            {
+                $addFields: { status: '$status.v', format: '$format.v', media: '$media.v' }
+            },
+            statusLookup,
+            { $unwind: '$status' },
+            formatLookup,
+            { $unwind: '$format' },
+            // Another type of lookup where we provide it it's own aggregate pipline to mutate and filter the returned results
+            mediaLookup,
+            // Media is nullable, let's not filter out records that don't have the media option
+            { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
+            tagLookup,
+            categoryLookup,
+            degaUserLookup,
+            postsProject,
+            {
+                $match: query
+            },
+        ];
+
+        this.logger.info(`Query Object ${JSON.stringify(query)}`);
+        // get paging object
+        const database = config.get('databaseConfig:databases:core');
+        return Q(this.collection(database, 'post')
+            .aggregate(aggregations).toArray())
+            .then((result) => {
+                if(result.length !== 1) return;
+                this.logger.info('Retrieved the results');
+                
+                return { data: result[0] };
+            });
     }
 }
 

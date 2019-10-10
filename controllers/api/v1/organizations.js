@@ -3,11 +3,11 @@ const utils = require('../../../lib/utils');
 
 function getOrganization(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'organizations', 'getOrganization', req.query.client, null);
+    utils.setLogTokens(logger, 'organizations', 'getOrganization', req.headers.clientt, null);
     const model = new OrganizationModel(logger);
     return model.getOrganization(
         req.app.kraken, 
-        req.query.client
+        req.headers.client
     ).then((result) => {
         if (result) {
             res.status(200).json(result);

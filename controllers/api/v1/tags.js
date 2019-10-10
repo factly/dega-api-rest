@@ -1,13 +1,13 @@
 const TagModel = require('../../../models/tag');
 const utils = require('../../../lib/utils');
 
-function getTag(req, res, next) {
+function getTags(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'tags', 'getTag', req.query.client, null);
+    utils.setLogTokens(logger, 'tags', 'getTags', req.headers.client, null);
     const model = new TagModel(logger);
     return model.getTag(
         req.app.kraken, 
-        req.query.client, 
+        req.headers.client, 
         req.query.sortBy,
         req.query.sortAsc,
         req.query.limit,
@@ -22,14 +22,14 @@ function getTag(req, res, next) {
     }).catch(next);
 }
 
-function getTagBySlug(req, res, next) {
+function getTagByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'tags', 'getTagBySlug', req.query.client, null);
+    utils.setLogTokens(logger, 'tags', 'getTagByKey', req.headers.client, null);
     const model = new TagModel(logger);
-    return model.getTagBySlug(
+    return model.getTagByKey(
         req.app.kraken, 
-        req.query.client, 
-        req.params.slug
+        req.headers.client, 
+        req.params.key
     ).then((result) => {
         if (result) {
             res.status(200).json(result);
@@ -40,6 +40,6 @@ function getTagBySlug(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getTag);
-    router.get('/:slug', getTagBySlug);
+    router.get('/', getTags);
+    router.get('/:key', getTagByKey);
 };

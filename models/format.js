@@ -1,5 +1,21 @@
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
+const ObjectId = require('mongodb').ObjectID;
+
+const formatProject = {
+    $project : {
+        id: '$_id',
+        _id: 0,
+        class: '$_class',
+        name: 1,
+        slug: 1,
+        isDefault: '$is_default',
+        clientId: '$client_id',
+        createdDate: '$created_date',
+        lastUpdatedDate: '$last_updated_date'
+    }
+};
+
 class FormatModel extends MongoBase {
     /**
      * Creates a new FormatModel.
@@ -18,20 +34,8 @@ class FormatModel extends MongoBase {
         const match = { $match: query };
 
         const aggregations = [
-            {
-                $project : {
-                    id: '$_id',
-                    _id: 0,
-                    class: '$_class',
-                    name: 1,
-                    slug: 1,
-                    isDefault: '$is_default',
-                    clientId: '$client_id',
-                    createdDate: '$created_date',
-                    lastUpdatedDate: '$last_updated_date'
-                }
-            },
             match,
+            formatProject,
         ];
         
         const database = config.get('databaseConfig:databases:core');
@@ -46,15 +50,49 @@ class FormatModel extends MongoBase {
     }
 
     getQueryObject(clientId, slug) {
-        const queryObj = {};
-        if (clientId) {
-            queryObj.clientId = clientId;
-        }
+        const queryObj = {
+            client_id: {
+                $in: [clientId, 'default']
+            }
+        };
 
         if (slug) {
             queryObj.slug = slug;
         }
         return queryObj;
+    }
+
+    getFormatByKey(config, clientId, key) {
+        // get query object
+        const query = {
+            client_id: {
+                $in: [clientId, 'default']
+            }
+        };
+
+        if(ObjectId.isValid(key)){
+            query._id = new ObjectId(key);
+        } else {
+            query.slug= key;
+        }
+
+        const match = { $match: query };
+
+        const aggregations = [
+            match,
+            formatProject,
+        ];
+        
+        const database = config.get('databaseConfig:databases:core');
+        return Q(this.collection(database)
+            .aggregate(aggregations).toArray())
+            .then((results) => {
+                if (results.length !== 1) return;
+                this.logger.info('Retrieved the results');
+                return {
+                    data: results[0]
+                };
+            });
     }
 }
 

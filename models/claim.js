@@ -2,6 +2,7 @@ const MongoPaging = require('mongo-cursor-pagination');
 const MongoBase = require('../lib/MongoBase');
 const Q = require('q');
 const utils = require('../lib/utils');
+const ObjectId = require('mongodb').ObjectID;
 
 const addFields = {
     $addFields: {
@@ -53,6 +54,7 @@ const claimantLookup = {
                     slug: 1,
                     clientId: '$client_id',
                     description: 1,
+                    media: 1,
                     createdDate: '$created_date',
                     lastUpdatedDate: '$last_updated_date'
                 }
@@ -85,6 +87,30 @@ const project = {
     }
 };
 
+const mediaProject = {
+    $project: {
+        id: '$_id',
+        _id: 0,
+        class:'$_class',
+        name: 1,
+        type: 1,
+        url: 1,
+        fileSize: '$file_size',
+        dimensions: 1,
+        title: 1,
+        caption: 1,
+        altText: '$alt_text',
+        description: 1,
+        uploadedBy: '$uploaded_by',
+        publishedDate: '$published_date',
+        lastUpdatedDate: '$last_updated_date',
+        slug: 1,
+        clientId: '$client_id',
+        createdDate: '$created_date',
+        relativeURL: '$relative_url',
+        sourceURL: '$source_url'
+    }
+};
 
 class ClaimModel extends MongoBase {
     /**
@@ -118,29 +144,72 @@ class ClaimModel extends MongoBase {
         this.logger.info(`Query Object ${JSON.stringify(queryObj)}`);
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
-        const database = config.get('databaseConfig:databases:factcheck');
-        const pagingNew = {};
+        const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
+        const coreDatabase = config.get('databaseConfig:databases:core');
+        let pagingNew = {};
 
-        return Q(MongoPaging.aggregate(this.collection(database), pagingObj))
+        return Q(MongoPaging.aggregate(this.collection(factcheckDatabase), pagingObj))
             .then((aggResult) => {
-                const {results} = aggResult;
                 this.logger.info('Retrieved the claims');
-                const claims = {};
                 pagingNew.next = aggResult.next;
                 pagingNew.hasNext = aggResult.hasNext;
                 pagingNew.previous = aggResult.previous;
                 pagingNew.hasPrevious = aggResult.hasPrevious;
-                claims.data = results;
-                claims.paging = pagingNew;
-                return claims;
+                
+                return aggResult.results;
+            })
+            .then( claims => {
+                let allMediaIds = [];  
+                /*
+                    (1) - filter all claims which has media in rating 
+                    (2) - get media id of all rating media
+                */
+                allMediaIds = claims.filter(claim => claim.rating.media).map( claim => claim.rating.media.oid );
+                /*
+                    (1) - conact rating media with claimant media
+                    (1) - filter all claims which has media in claimant 
+                    (2) - get media id of all claimant media
+                */
+                allMediaIds = allMediaIds.concat(claims.filter(claim => claim.claimant.media).map( claim => claim.claimant.media.oid ));
+                
+                if(allMediaIds.length === 0) return claims;
+                
+                const query = {
+                    _id : { $in : allMediaIds }
+                };
+
+                const mediaAggregation = [
+                    {
+                        $match: query
+                    },
+                    mediaProject,
+                ];
+
+                return Q(this.collection(coreDatabase, 'media')
+                    .aggregate(mediaAggregation).toArray())
+                    .then((media) => {
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
+                        const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+
+                        /*
+                            (1) - traversal through all claims and replace rating media DBref object with media object
+                            (2) - traversal through all claims and replace claimant media DBref object with media object
+                        */
+                        return claims.map( claim => claim.rating.media ? { ...claim, rating: { ...claim.rating, media: mediaObject[claim.rating.media.oid]}} : claim )
+                            .map( claim => claim.claimant.media ? { ...claim, claimant: { ...claim.claimant, media: mediaObject[claim.claimant.media.oid]}} : claim );
+                        
+                    });
+            }).then( claims => {
+                return {
+                    data: claims,
+                    paging: pagingNew
+                };
             });
     }
     getQueryObject(clientId, ratingSlug, claimantSlug) {
-        const queryObj = {};
-
-        if (clientId) {
-            queryObj.client_id = clientId;
-        }
+        const queryObj = {
+            clientId: clientId
+        };
 
         if (ratingSlug) {
             queryObj.rating = {
@@ -155,6 +224,76 @@ class ClaimModel extends MongoBase {
         }
 
         return queryObj;
+    }
+    getClaimByKey(config, clientId, key) {
+        const query = {
+            client_id: clientId
+        };
+
+        if(ObjectId.isValid(key)){
+            query._id = new ObjectId(key);
+        } else {
+            query.slug= key;
+        }
+        
+        const match = { $match: query };
+
+        const aggregations = [
+            match,
+            addFields,
+            {
+                $addFields: { rating: '$rating.v', claimant: '$claimant.v' }
+            },
+            ratingLookup,
+            { $unwind: { path: '$rating', preserveNullAndEmptyArrays: true } },
+            claimantLookup,
+            { $unwind: { path: '$claimant', preserveNullAndEmptyArrays: true } },
+            project,
+        ];
+
+        this.logger.info(`Query Object ${JSON.stringify(query)}`);
+
+        const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
+        const coreDatabase = config.get('databaseConfig:databases:core');
+
+        return Q(this.collection(factcheckDatabase)
+            .aggregate(aggregations).toArray())
+            .then( claims => {
+                this.logger.info('Retrieved the claims');
+
+                if(claims.length !== 1) return;
+                const claim = claims[0];
+                
+                if(!claim.rating.media && !claim.claimant.media) return;
+                
+                let allMediaIds = [];
+
+                if(claim.rating.media) allMediaIds.push(claim.rating.media.oid);
+                if(claim.claimant.media) allMediaIds.push(claim.claimant.media.oid);
+                
+                const match = {
+                    $match: {
+                        _id : { $in : allMediaIds }
+                    }
+                };
+
+                const mediaAggregation = [
+                    match,
+                    mediaProject,
+                ];
+
+                return Q(this.collection(coreDatabase, 'media')
+                    .aggregate(mediaAggregation).toArray())
+                    .then((media) => {  
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
+                        const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
+                        
+                        if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media.oid];
+                        if(claim.claimant.media) claim.claimant.media = mediaObject[claim.claimant.media.oid];
+
+                        return { data: claim };
+                    });
+            });
     }
 }
 

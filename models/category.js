@@ -31,11 +31,9 @@ class CategoryModel extends MongoBase {
     }
 
     getCategory(config, clientId, sortBy, sortAsc, limit, next, previous) {
-        const query = {};
-
-        if (clientId) {
-            query.client_id = clientId;
-        }
+        const query = {
+            client_id: clientId
+        };
 
         const match = { $match: query };
 
@@ -51,31 +49,21 @@ class CategoryModel extends MongoBase {
                 this.logger.info('Retrieved the results');
                 const response = {};
                 response.data = result.results;
-                response.paging = {};
-                response.paging.next = result.next;
-                response.paging.hasNext = result.hasNext;
-                response.paging.previous = result.previous;
-                response.paging.hasPrevious = result.hasPrevious;
+                response.paging = { ...result, results: undefined};
                 return response;
             });
     }
 
-    getCategoryByParam(config, clientId, param, paramType){
-        const query = {};
+    getCategoryByParam(config, clientId, param){
+        const query = {
+            client_id: clientId
+        };
 
-        if (paramType==='id' && param) {
+        if(ObjectId.isValid(param)){
             query._id = new ObjectId(param);
-        }
-
-        if (paramType==='slug' && param) {
+        } else {
             query.slug= param;
         }
-
-        if (clientId) {
-            query.client_id = clientId;
-        }
-
-        console.log(query);
 
         const match = { $match: query };
         const aggregations = [
