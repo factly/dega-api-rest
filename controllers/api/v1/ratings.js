@@ -1,9 +1,9 @@
 const RatingModel = require('../../../models/rating');
 const utils = require('../../../lib/utils');
 
-function getRating(req, res, next) {
+function getRatings(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'ratings', 'getRating', req.headers.client, null);
+    utils.setLogTokens(logger, 'ratings', 'getRatings', req.headers.client, null);
     const model = new RatingModel(logger);
     return model.getRating(
         req.app.kraken, 
@@ -35,6 +35,6 @@ function getRatingByKey(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getRating);
+    router.get('/', getRatings);
     router.get('/:key', getRatingByKey);
 };

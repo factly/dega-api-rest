@@ -1,9 +1,9 @@
 const UserModel = require('../../../models/user');
 const utils = require('../../../lib/utils');
 
-function getUser(req, res, next) {
+function getUsers(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'users', 'getUser', req.headers.client, null);
+    utils.setLogTokens(logger, 'users', 'getUsers', req.headers.client, null);
     const model = new UserModel(logger);
     return model.getUser(
         req.app.kraken, 
@@ -41,6 +41,6 @@ function getUserByKey(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getUser);
+    router.get('/', getUsers);
     router.get('/:key', getUserByKey);
 };

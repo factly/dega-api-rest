@@ -1,9 +1,9 @@
 const FormatModel = require('../../../models/format');
 const utils = require('../../../lib/utils');
 
-function getFormat(req, res, next) {
+function getFormats(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'formats', 'getFormat', req.headers.client, null);
+    utils.setLogTokens(logger, 'formats', 'getFormats', req.headers.client, null);
     const model = new FormatModel(logger);
     return model.getFormat(
         req.app.kraken,
@@ -34,6 +34,6 @@ function getFormatByKey(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getFormat);
+    router.get('/', getFormats);
     router.get('/:key', getFormatByKey);
 };

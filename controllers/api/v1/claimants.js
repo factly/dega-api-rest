@@ -1,9 +1,9 @@
 const ClaimantModel = require('../../../models/claimant');
 const utils = require('../../../lib/utils');
 
-function getClaimant(req, res, next) {
+function getClaimants(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'claimants', 'getClaimant', req.headers.client, null);
+    utils.setLogTokens(logger, 'claimants', 'getClaimants', req.headers.client, null);
     const model = new ClaimantModel(logger);
     return model.getClaimant(
         req.app.kraken,
@@ -23,9 +23,9 @@ function getClaimant(req, res, next) {
         .catch(next);
 }
 
-function getClaimantByParam(req, res, next) {
+function getClaimantByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'claimants', 'getClaimantByParam', req.headers.client, null);
+    utils.setLogTokens(logger, 'claimants', 'getClaimantByKey', req.headers.client, null);
     const model = new ClaimantModel(logger);
     return model.getClaimantByParam(
         req.app.kraken,
@@ -42,6 +42,6 @@ function getClaimantByParam(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getClaimant);
-    router.get('/:key', getClaimantByParam);
+    router.get('/', getClaimants);
+    router.get('/:key', getClaimantByKey);
 };

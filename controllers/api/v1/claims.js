@@ -1,9 +1,9 @@
 const ClaimModel = require('../../../models/claim');
 const utils = require('../../../lib/utils');
 
-function getClaim(req, res, next) {
+function getClaims(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'claims', 'getClaim', req.headers.client, null);
+    utils.setLogTokens(logger, 'claims', 'getClaims', req.headers.client, null);
     const model = new ClaimModel(logger);
     return model.getClaim(
         req.app.kraken,
@@ -41,6 +41,6 @@ function getClaimByKey(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getClaim);
+    router.get('/', getClaims);
     router.get('/:key', getClaimByKey);
 };

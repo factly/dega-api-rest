@@ -292,10 +292,9 @@ class FactcheckModel extends MongoBase {
 
     getFactcheck(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug, sortBy, sortAsc, limit, next, previous) {
 
-        let pagingNew = {};
-
         const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
+        let pagingNew = {};
         // get query object
         return this.getQueryObject(config, clientId, id, slug, tagSlug, categorySlug, claimantSlug, authorSlug)
             .then((queryObj) => {

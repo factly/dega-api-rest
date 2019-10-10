@@ -5,9 +5,9 @@ const schemaTemplate = require('../../../static/schema/factcheck');
 const Q = require('q');
 const ObjectId = require('mongodb').ObjectID;
 
-function getFactcheck(req, res, next) {
+function getFactchecks(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'factchecks', 'getFactcheck', req.headers.client, null);
+    utils.setLogTokens(logger, 'factchecks', 'getFactchecks', req.headers.client, null);
     const model = new FactcheckModel(logger);
     const orgModel = new OrganizationModel(logger);
     const clientId = req.headers.client;
@@ -213,6 +213,6 @@ function getFactcheckByKey(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getFactcheck);
+    router.get('/', getFactchecks);
     router.get('/:key', getFactcheckByKey);
 };
