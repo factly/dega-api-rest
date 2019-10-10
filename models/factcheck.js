@@ -330,7 +330,10 @@ class FactcheckModel extends MongoBase {
             .then( factchecks => {
                 const mediaAggregation = utils.mediaPipeline;
                 let mediaIds = [];
-                //Collecting media ID from all factchecks
+                /*
+                    (1) - filter all factcheck which has media 
+                    (2) - get media id of all factcheck
+                */
                 mediaIds = factchecks.filter(factcheck => factcheck.media).map( factcheck => factcheck.media.oid );
 
                 //If none of factchecks has media then directly return factchecks
@@ -344,22 +347,29 @@ class FactcheckModel extends MongoBase {
 
                 mediaAggregation.push(match);
 
-                //Retrieving all media in mediaIds
                 return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaAggregation).toArray())
                     .then((media) => {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
-                        //Traveling through all the factchecks and replacing DBref media with full media object
+                        /*
+                            (1) - traversal through all factcheck and replace media DBref object with media object
+                        */
                         return factchecks.map( factcheck => factcheck.media ? { ...factcheck, media: mediaObject[factcheck.media.oid]} : factcheck );
                     });
             })
             .then( factchecks => {
-                //following same logic as media
                 const statusAggregation = utils.statusPipeline;
+                let statusIds = [];
+                /*
+                    (1) - filter all factcheck which has status 
+                    (2) - get status id of all factcheck
+                */
+                statusIds = factchecks.filter(factcheck => factcheck.status).map( factcheck => factcheck.status.oid );
 
-                let statusIds = factchecks.filter(factcheck => factcheck.status).map( factcheck => factcheck.status.oid );
+                //If none of factchecks has status then directly return factchecks
+                if(statusIds.length === 0) return factchecks;
 
                 const match = {
                     $match: {
@@ -372,14 +382,19 @@ class FactcheckModel extends MongoBase {
                 return Q(this.collection(coreDatabase, 'status')
                     .aggregate(statusAggregation).toArray())
                     .then((statuses) => {
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const statusesObject = statuses.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
+                        /*
+                            (1) - traversal through all factcheck and replace status DBref object with status object
+                        */
                         return factchecks.map( factcheck => factcheck.status ? { ...factcheck, status: statusesObject[factcheck.status.oid]} : factcheck );
                     });
             })
             .then ( factchecks => {
                 
                 let ratingMediaIds = [];
+                /* traversal through each claim of all factcheck and collect rating media ID*/
                 for(let factcheck of factchecks){
                     if(factcheck.claims){
                         for(let claim of factcheck.claims){
@@ -388,8 +403,8 @@ class FactcheckModel extends MongoBase {
                     }
                 }
 
+                //If none of factchecks has rating media then directly return factchecks
                 if(ratingMediaIds.length === 0) return factchecks;
-
 
                 const mediaRatingAggregation = [
                     {
@@ -423,20 +438,22 @@ class FactcheckModel extends MongoBase {
                     },
                 ];
 
-                //Retrieving all media in mediaIds
                 return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaRatingAggregation).toArray())
                     .then((media) => {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const ratingMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
-                        //Traveling through all the factchecks and replacing DBref media with full media object                        
+                        /*
+                            (1) - traversal through each claims of all factcheck and replace rating media DBref object with media object
+                        */
                         return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.rating ? { ...claim, rating: {...claim.rating, media: ratingMediaObject[claim.rating.media]}} : claim) } : factcheck );
                     });
             })
             .then ( factchecks => {
                 
                 let claimntsMediaIds = [];
+                /* traversal through each claim of all factcheck and collect claimant media ID*/
                 for(let factcheck of factchecks){
                     if(factcheck.claims){
                         for(let claim of factcheck.claims){
@@ -445,8 +462,8 @@ class FactcheckModel extends MongoBase {
                     }
                 }
 
+                //If none of factchecks has claimant media then directly return factchecks
                 if(claimntsMediaIds.length === 0) return factchecks;
-
 
                 const mediaClaimantAggregation = [
                     {
@@ -480,22 +497,22 @@ class FactcheckModel extends MongoBase {
                     },
                 ];
 
-                //Retrieving all media in mediaIds
                 return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaClaimantAggregation).toArray())
                     .then((media) => {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const claimantMediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
-                        //Traveling through all the factchecks and replacing DBref media with full media object
+                        /*
+                            (1) - traversal through each claims of all factcheck and replace claimant media DBref object with media object
+                        */
                         return factchecks.map(factcheck => factcheck.claims && factcheck.claims.length > 0 ? { ...factcheck, claims: factcheck.claims.map(claim => claim.claimant ? { ...claim, claimant: {...claim.claimant, media: claimantMediaObject[claim.claimant.media]}} : claim) } : factcheck );
                     });
             })
             .then( factchecks => {
 
                 let categoryIds = [];
-
-                //Collecting all category ID from all the factchecks into 1-D array
+                /* traversal through all factcheck and collect each category ID*/
                 for(let factcheck of factchecks){
                     if(factcheck.categories && factcheck.categories.length > 0)
                         categoryIds = categoryIds.concat(factcheck.categories);
@@ -537,20 +554,23 @@ class FactcheckModel extends MongoBase {
 
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const categoriesObject = categories.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
-
-                        //Traveling through all the factchecks categories array and replacing DBref category with full category object
+                        
+                        /*
+                            (1) - traversal through each category of all factcheck and replace category DBref object with cateogry object
+                        */
                         return factchecks.map( factcheck => factcheck.categories && factcheck.categories.length > 0 ?  { ...factcheck, categories: factcheck.categories.map(category => categoriesObject[category] ? categoriesObject[category] : undefined ) } : factcheck );
                     });
             })
             .then( factchecks => {
 
                 let tagIds = [];
-
+                /* traversal through all factcheck and collect each tag ID*/
                 for(let factcheck of factchecks){
                     if(factcheck.tags && factcheck.tags.length > 0)
                         tagIds = tagIds.concat(factcheck.tags);
                 }
 
+                //If none of factchecks has category then directly return factchecks
                 if(tagIds.length === 0) return factchecks;
 
                 const match = {
@@ -579,22 +599,29 @@ class FactcheckModel extends MongoBase {
                 return Q(this.collection(coreDatabase, 'tag')
                     .aggregate(aggregations).toArray())
                     .then( tags => {
+                        //if nothing return from query then return factchecks
+                        //case:- when all IDs in tagIds are not available
                         if(tags.length < 1) return factchecks;
 
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const tagsObject = tags.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
+                        /*
+                            (1) - traversal through each tag of all factcheck and replace tag DBref object with tag object
+                        */
                         return factchecks.map( factcheck => factcheck.tags && factcheck.tags.length > 0 ?  { ...factcheck, tags: factcheck.tags.map(tag => tagsObject[tag] ? tagsObject[tag] : undefined ) } : factcheck );
                     });
             })
             .then( factchecks => {
 
                 let userIds = [];
-
+                /* traversal through all factcheck and collect each user ID*/
                 for(let factcheck of factchecks){
                     if(factcheck.users && factcheck.users.length > 0)
                         userIds = userIds.concat(factcheck.users);
                 }
 
+                //If none of factchecks has user then directly return factchecks
                 if(userIds.length === 0) return factchecks;
 
                 const match = {
@@ -620,10 +647,16 @@ class FactcheckModel extends MongoBase {
                 return Q(this.collection(coreDatabase, 'dega_user')
                     .aggregate(aggregations).toArray())
                     .then( users => {
+                        //if nothing return from query then return factchecks
+                        //case:- when all IDs in userIds are not available
                         if(users.length < 0) return factchecks;
-
+                        
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const usersObject = users.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
+                        /*
+                            (1) - traversal through each user of all factcheck and replace user DBref object with user object
+                        */
                         return factchecks.map( factcheck => factcheck.users && factcheck.users.length > 0 ?  { ...factcheck, users: factcheck.users.map(user => usersObject[user] ? usersObject[user] : undefined ) } : factcheck );
                     });
             })
