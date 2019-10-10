@@ -234,7 +234,7 @@ class OrganizationModel extends MongoBase {
             .then((results) => {
                 this.logger.info('Retrieved the results');
                 
-                if(results.length !== 1) return
+                if(results.length !== 1) return;
                 
                 return {
                     data: results[0]

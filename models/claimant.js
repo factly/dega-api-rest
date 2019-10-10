@@ -86,7 +86,7 @@ class ClaimantModel extends MongoBase {
             .then((claimants) => {
                 let mediaIds = claimants.filter(claimant => claimant.media).map(claimant => claimant.media.oid);
 
-                if(mediaIds.length < 1) return claimants
+                if(mediaIds.length < 1) return claimants;
 
                 const query = {
                     _id : { $in : mediaIds }

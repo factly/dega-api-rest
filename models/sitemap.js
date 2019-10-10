@@ -31,10 +31,10 @@ class SitemapModel extends MongoBase {
                     _id: 0,
                     slug: 1,
                     createdDate: '$created_date',
-                    lastUpdatedDate: '$last_updated_date',
+                    lastUpdatedDate: '$last_updated_date'
                 }
             },
-        ]
+        ];
 
         return Q.all([
             Q(this.collection(coreDatabase, 'category').aggregate(aggregations).toArray()),
@@ -48,13 +48,13 @@ class SitemapModel extends MongoBase {
             Q(this.collection(factcheckDatabase, 'rating').aggregate(aggregations).toArray()),
             Q(this.collection(factcheckDatabase, 'factcheck').aggregate(aggregations).toArray()),
         ]).then( collections => {
-            const collectionList = ['categories', 'users', 'formats', 'posts', 'statuses', 'tags', 'claims', 'claimants', 'ratings', 'factcheck']
-            const allSlugs = {}
+            const collectionList = ['categories', 'users', 'formats', 'posts', 'statuses', 'tags', 'claims', 'claimants', 'ratings', 'factcheck'];
+            const allSlugs = {};
             collections.forEach((value, index) => {
-                allSlugs[collectionList[index]] = value
-            })
-            return allSlugs
-        })
+                allSlugs[collectionList[index]] = value;
+            });
+            return { data: allSlugs };
+        });
     }
 }
 

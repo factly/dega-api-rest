@@ -196,14 +196,14 @@ class ClaimModel extends MongoBase {
                             (2) - traversal through all claims and replace claimant media DBref object with media object
                         */
                         return claims.map( claim => claim.rating.media ? { ...claim, rating: { ...claim.rating, media: mediaObject[claim.rating.media.oid]}} : claim )
-                                .map( claim => claim.claimant.media ? { ...claim, claimant: { ...claim.claimant, media: mediaObject[claim.claimant.media.oid]}} : claim );
+                            .map( claim => claim.claimant.media ? { ...claim, claimant: { ...claim.claimant, media: mediaObject[claim.claimant.media.oid]}} : claim );
                         
                     });
             }).then( claims => {
                 return {
                     data: claims,
                     paging: pagingNew
-                }
+                };
             });
     }
     getQueryObject(clientId, ratingSlug, claimantSlug) {

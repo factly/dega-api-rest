@@ -79,7 +79,7 @@ class RatingModel extends MongoBase {
                 */
                 let mediaIds = ratings.filter(rating => rating.media).map( rating => rating.media.oid );
                 
-                if(mediaIds.length < 1) return mediaIds
+                if(mediaIds.length < 1) return mediaIds;
 
                 const match = {
                     $match: {
