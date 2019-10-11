@@ -63,7 +63,6 @@ class RatingModel extends MongoBase {
             }
         };
 
-
         const match = { $match: query };
 
         const aggregations = [
@@ -74,9 +73,14 @@ class RatingModel extends MongoBase {
         return Q(this.collection(config.get('databaseConfig:databases:factcheck'))
             .aggregate(aggregations).toArray())
             .then((ratings) => {
-
+                /*
+                    (1) - filter all rating which has media
+                    (2) - get object id of all rating media
+                */
                 let mediaIds = ratings.filter(rating => rating.media).map( rating => rating.media.oid );
                 
+                if(mediaIds.length < 1) return mediaIds;
+
                 const match = {
                     $match: {
                         _id : { $in : mediaIds }
@@ -91,8 +95,12 @@ class RatingModel extends MongoBase {
                 return Q(this.collection(config.get('databaseConfig:databases:core'), 'media')
                     .aggregate(mediaAggregation).toArray())
                     .then((media) => {
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
                         
+                        /*
+                            (1) - traversal through all ratings and replace media DBref object with media object
+                        */
                         return ratings.map( rating => rating.media ? { ...rating, media: mediaObject[rating.media.oid]} : rating );
                     });
             })

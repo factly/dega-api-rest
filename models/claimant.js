@@ -69,11 +69,25 @@ class ClaimantModel extends MongoBase {
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
-        const database = config.get('databaseConfig:databases:factcheck');
-        return Q(MongoPaging.find(this.collection(database), pagingObj))
-            .then((claimants) => {
-                let mediaIds = claimants.results.filter(claimant => claimant.media).map(claimant => claimant.media.oid);
+        const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
+        const coreDatabase = config.get('databaseConfig:databases:core');
+        let pagingNew = {};
+
+        return Q(MongoPaging.find(this.collection(factcheckDatabase), pagingObj))
+            .then((aggResult) => {
+                this.logger.info('Retrieved the claims');
+                pagingNew.next = aggResult.next;
+                pagingNew.hasNext = aggResult.hasNext;
+                pagingNew.previous = aggResult.previous;
+                pagingNew.hasPrevious = aggResult.hasPrevious;
                 
+                return aggResult.results;
+            })
+            .then((claimants) => {
+                let mediaIds = claimants.filter(claimant => claimant.media).map(claimant => claimant.media.oid);
+
+                if(mediaIds.length < 1) return claimants;
+
                 const query = {
                     _id : { $in : mediaIds }
                 };
@@ -85,24 +99,23 @@ class ClaimantModel extends MongoBase {
                     mediaProject,
                 ];
                 
-                return Q(this.collection(config.get('databaseConfig:databases:core'), 'media')
+                return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaAggregation).toArray())
                     .then((media) => {
+                        //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
-                        const claimantMedia =  claimants.results.map( rating => rating.media ? { ...rating, media: mediaObject[rating.media.oid]} : rating );
-                        return { ...claimants, results: claimantMedia };
+
+                        /*
+                            (1) - traversal through all claimant and replace media DBref object with media object
+                        */
+                        return claimants.map( claimant => claimant.media ? { ...claimant, media: mediaObject[claimant.media.oid]} : claimant );  
                     });
             })
-            .then((result) => {
-                this.logger.info('Retrieved the results');
-                const response = {};
-                response.data = result.results;
-                response.paging = {};
-                response.paging.next = result.next;
-                response.paging.hasNext = result.hasNext;
-                response.paging.previous = result.previous;
-                response.paging.hasPrevious = result.hasPrevious;
-                return response;
+            .then((claimants) => {
+                return {
+                    data: claimants,
+                    paging: pagingNew
+                };
             });
     }
 

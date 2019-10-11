@@ -146,7 +146,7 @@ class ClaimModel extends MongoBase {
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
         const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
-        const pagingNew = {};
+        let pagingNew = {};
 
         return Q(MongoPaging.aggregate(this.collection(factcheckDatabase), pagingObj))
             .then((aggResult) => {
@@ -160,20 +160,28 @@ class ClaimModel extends MongoBase {
             })
             .then( claims => {
                 let allMediaIds = [];  
-
+                /*
+                    (1) - filter all claims which has media in rating 
+                    (2) - get media id of all rating media
+                */
                 allMediaIds = claims.filter(claim => claim.rating.media).map( claim => claim.rating.media.oid );
+                /*
+                    (1) - conact rating media with claimant media
+                    (1) - filter all claims which has media in claimant 
+                    (2) - get media id of all claimant media
+                */
                 allMediaIds = allMediaIds.concat(claims.filter(claim => claim.claimant.media).map( claim => claim.claimant.media.oid ));
                 
                 if(allMediaIds.length === 0) return claims;
                 
-                const match = {
-                    $match: {
-                        _id : { $in : allMediaIds }
-                    }
+                const query = {
+                    _id : { $in : allMediaIds }
                 };
 
                 const mediaAggregation = [
-                    match,
+                    {
+                        $match: query
+                    },
                     mediaProject,
                 ];
 
@@ -183,13 +191,19 @@ class ClaimModel extends MongoBase {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
-                        //Traveling through all the factchecks and replacing DBref media with full media object
-                        return {
-                            data: claims.map( claim => claim.rating.media ? { ...claim, rating: { ...claim.rating, media: mediaObject[claim.rating.media.oid]}} : claim )
-                                .map( claim => claim.claimant.media ? { ...claim, claimant: { ...claim.claimant, media: mediaObject[claim.claimant.media.oid]}} : claim ),
-                            paging: pagingNew
-                        };
+                        /*
+                            (1) - traversal through all claims and replace rating media DBref object with media object
+                            (2) - traversal through all claims and replace claimant media DBref object with media object
+                        */
+                        return claims.map( claim => claim.rating.media ? { ...claim, rating: { ...claim.rating, media: mediaObject[claim.rating.media.oid]}} : claim )
+                            .map( claim => claim.claimant.media ? { ...claim, claimant: { ...claim.claimant, media: mediaObject[claim.claimant.media.oid]}} : claim );
+                        
                     });
+            }).then( claims => {
+                return {
+                    data: claims,
+                    paging: pagingNew
+                };
             });
     }
     getQueryObject(clientId, ratingSlug, claimantSlug) {
@@ -274,7 +288,6 @@ class ClaimModel extends MongoBase {
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
                         
-                        //Traveling through all the factchecks and replacing DBref media with full media object
                         if(claim.rating.media) claim.rating.media = mediaObject[claim.rating.media.oid];
                         if(claim.claimant.media) claim.claimant.media = mediaObject[claim.claimant.media.oid];
 

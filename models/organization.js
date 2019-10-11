@@ -233,9 +233,12 @@ class OrganizationModel extends MongoBase {
             .aggregate(aggregations).toArray())
             .then((results) => {
                 this.logger.info('Retrieved the results');
+                
+                if(results.length !== 1) return;
+                
                 return {
                     data: results[0]
-                }
+                };
             });
     }
 }

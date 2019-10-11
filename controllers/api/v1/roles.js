@@ -1,7 +1,7 @@
 const RoleModel = require('../../../models/role');
 const utils = require('../../../lib/utils');
 
-function getRole(req, res, next) {
+function getRoles(req, res, next) {
     const {logger} = req;
     utils.setLogTokens(logger, 'roles', 'getRole', req.headers.client, null);
     const model = new RoleModel(logger);
@@ -42,6 +42,6 @@ function getRoleByKey(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getRole);
+    router.get('/', getRoles);
     router.get('/:key', getRoleByKey);
 };

@@ -1,9 +1,9 @@
 const CategoryModel = require('../../../models/category');
 const utils = require('../../../lib/utils');
 
-function getCategory(req, res, next) {
+function getCategories(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'categories', 'getCategory', req.headers.client, null);
+    utils.setLogTokens(logger, 'categories', 'getCategories', req.headers.client, null);
     const model = new CategoryModel(logger);
     return model.getCategory(
         req.app.kraken,
@@ -22,9 +22,9 @@ function getCategory(req, res, next) {
     }).catch(next);
 }
 
-function getCategoryByParam(req, res, next) {
+function getCategoryByKey(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'categories', 'getCategoryBySlug', req.headers.client, null);
+    utils.setLogTokens(logger, 'categories', 'getCategoryByKey', req.headers.client, null);
     const model = new CategoryModel(logger);
     return model.getCategoryByParam(
         req.app.kraken,
@@ -40,6 +40,6 @@ function getCategoryByParam(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getCategory);
-    router.get('/:key', getCategoryByParam);
+    router.get('/', getCategories);
+    router.get('/:key', getCategoryByKey);
 };

@@ -1,9 +1,9 @@
 const StatusModel = require('../../../models/status');
 const utils = require('../../../lib/utils');
 
-function getStatus(req, res, next) {
+function getStatuses(req, res, next) {
     const {logger} = req;
-    utils.setLogTokens(logger, 'statuses', 'getStatus', req.headers.client, null);
+    utils.setLogTokens(logger, 'statuses', 'getStatuses', req.headers.client, null);
     const model = new StatusModel(logger);
     return model.getStatus(
         req.app.kraken, 
@@ -35,6 +35,6 @@ function getStatusByKey(req, res, next) {
 }
 
 module.exports = function routes(router) {
-    router.get('/', getStatus);
+    router.get('/', getStatuses);
     router.get('/:key', getStatusByKey);
 };

@@ -32,7 +32,7 @@ class TagModel extends MongoBase {
     getTag(config, clientId, sortBy, sortAsc, limit, next, previous) {
         const query = {
             client_id: clientId
-        }
+        };
 
         const match = { $match: query };
 
@@ -60,7 +60,7 @@ class TagModel extends MongoBase {
     getTagByKey(config, clientId, key){
         const query = {
             client_id: clientId
-        }
+        };
 
         if(ObjectId.isValid(key)){
             query._id = new ObjectId(key);
