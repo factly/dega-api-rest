@@ -72,8 +72,7 @@ class ClaimantModel extends MongoBase {
         const factcheckDatabase = config.get('databaseConfig:databases:factcheck');
         const coreDatabase = config.get('databaseConfig:databases:core');
         let pagingNew = {};
-
-        return Q(MongoPaging.find(this.collection(factcheckDatabase), pagingObj))
+        return Q(MongoPaging.aggregate(this.collection(factcheckDatabase), pagingObj))
             .then((aggResult) => {
                 this.logger.info('Retrieved the claims');
                 pagingNew.next = aggResult.next;
