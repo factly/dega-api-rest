@@ -48,7 +48,7 @@ class SitemapModel extends MongoBase {
             Q(this.collection(factcheckDatabase, 'rating').aggregate(aggregations).toArray()),
             Q(this.collection(factcheckDatabase, 'factcheck').aggregate(aggregations).toArray()),
         ]).then( collections => {
-            const collectionList = ['categories', 'users', 'formats', 'posts', 'statuses', 'tags', 'claims', 'claimants', 'ratings', 'factcheck'];
+            const collectionList = ['categories', 'users', 'formats', 'posts', 'statuses', 'tags', 'claims', 'claimants', 'ratings', 'factchecks'];
             const allSlugs = {};
             collections.forEach((value, index) => {
                 allSlugs[collectionList[index]] = value;
