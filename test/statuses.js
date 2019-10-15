@@ -44,8 +44,8 @@ describe('/api/v1/statuses', () => {
             .expect('Content-Type', /json/)
             .then((res) => {
                 const statuses = JSON.parse(res.text);
-                expect(statuses.length).eq(7);
-                const status = statuses[0];
+                expect(statuses.data.length).eq(7);
+                const status = statuses.data[0];
                 // check for fields inside statuses document
                 expect(status).to.have.property('_id').eq('5c2691852308247c7669a51a');
                 expect(status).to.have.property('client_id').eq('Factly');

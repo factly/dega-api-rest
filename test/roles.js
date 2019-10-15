@@ -43,8 +43,17 @@ describe('/api/v1/roles', () => {
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(6);
+                const roles = JSON.parse(res.text);
+                expect(roles.data.length).eq(6);
+                const role = roles.data[0];
+                // check for fields inside roles document
+                expect(role).to.have.property('name').eq('Subscriber');
+                expect(role).to.have.property('id').eq('5d791792bf1bce0001eda469');
+                expect(role).to.have.property('isDefault').eq(true);
+                expect(role).to.have.property('clientId').eq('default');
+                expect(role).to.have.property('slug').eq('subscriber');
+                expect(role).to.have.property('createdDate').eq('2019-09-11T15:49:38.555Z');
+                expect(role).to.have.property('lastUpdatedDate').eq('2019-09-11T15:49:38.555Z');
 
             });
     });
@@ -56,35 +65,28 @@ describe('/api/v1/roles', () => {
             .expect('Content-Type', /json/)
             .then((res) => {
                 const result = JSON.parse(res.text);
-                expect(result.length).eq(6);
+                expect(result.data.length).eq(6);
 
             });
     });
 
     it('Should get role by slug', () => {
         return request(mock)
-            .get('/api/v1/roles?slug=super-admin')
+            .get('/api/v1/roles/super-admin')
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const roles = JSON.parse(res.text);
-                expect(roles.length).eq(1);
-                const superAdminRole = roles[0];
-                expect(superAdminRole).to.have.property('name');
-                expect(superAdminRole).to.have.property('name').eq('Super Admin');
-                const role = roles[0];
+                const result = JSON.parse(res.text);
+                const role = result.data;
                 // check for fields inside roles document
-                //expect(role).to.have.property('_id').eq('ObjectId("5ce2626339954523f9e638a9")');
-                //expect(role).to.have.property('is_default').eq('true');
-                expect(role).to.have.property('client_id').eq('default');
-                expect(role).to.have.property('slug').eq('super-admin');
+                expect(role).to.have.property('name');
                 expect(role).to.have.property('name').eq('Super Admin');
-                expect(role).to.have.property('created_date').eq('2018-12-10T07:00:00.000Z');
-                expect(role).to.have.property('last_updated_date').eq('2018-12-10T07:00:00.000Z');
-                //degaUser
-                expect(role).to.have.property('degaUser');
-                const dega = role.degaUser;
-                expect(dega.length).eq(0);
+                expect(role).to.have.property('id').eq('5d791760bf1bce0001eda455');
+                expect(role).to.have.property('isDefault').eq(true);
+                expect(role).to.have.property('clientId').eq('default');
+                expect(role).to.have.property('slug').eq('super-admin');
+                expect(role).to.have.property('createdDate').eq('2019-09-11T15:48:48.242Z');
+                expect(role).to.have.property('lastUpdatedDate').eq('2019-09-11T15:48:48.242Z');
             });
     });
 });

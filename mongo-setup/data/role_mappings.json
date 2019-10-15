@@ -1,0 +1,41 @@
+[
+    {
+        "name": "Factly - Administrator",
+        "_id": "5d792544bf1bce0001eda478",
+        "_class": "com.factly.dega.domain.RoleMapping",
+        "role": {
+            "$ref": "role",
+            "$id": "5d79176abf1bce0001eda459"
+            },
+        "organization": {
+            "$ref": "organization",
+            "$id": "5c1fbe8141e7c425ed54c82b"
+        }
+    },
+    {
+        "name": "Factly - Author",
+        "_id": "5d792544bf1bce0001eda47a",
+        "class": "com.factly.dega.domain.RoleMapping",
+        "role": {
+            "$ref": "role",
+            "$id": "5d79177ebf1bce0001eda461"
+        },
+        "organization": {
+            "$ref": "organization",
+            "$id": "5c1fbe8141e7c425ed54c82b"
+        }
+    },
+    {
+        "name": "Factly - Editor",
+        "_id": "5d792544bf1bce0001eda479",
+        "class": "com.factly.dega.domain.RoleMapping",
+        "role": {
+            "$ref": "role",
+            "$id": "5d791774bf1bce0001eda45d"
+        },
+        "organization": {
+            "$ref": "organization",
+            "$id": "5c1fbe8141e7c425ed54c82b"
+        }
+    }
+]
