@@ -132,11 +132,11 @@ function getFactcheckByKey(req, res, next) {
         !ObjectId.isValid(req.params.key) ? req.params.key : undefined)
         .then(({ data }) => {
             const factcheck = data[0];
-            const clientId = factcheck.client_id;
+            const clientId = factcheck.clientId;
             return orgModel.getOrganization(config, clientId)
                 .then((org) => {
-                    if (org && org.length === 1) {
-                        currentOrganization = org[0];
+                    if (org && org.data) {
+                        currentOrganization = org.data;
                     }
                     return factcheck;
                 }); 
