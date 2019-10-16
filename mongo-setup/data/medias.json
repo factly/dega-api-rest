@@ -167,7 +167,7 @@
         "url": "https://storage.degacms.com/dega-content/factly/2019/9/1569676519335-government-of-india.png",
         "title": "government-of-india",
         "slug": "government-of-india1",
-        "_id": "ObjectId('5d8f5ce993ace2000112a8c6')",
+        "_id": "5d8f5ce993ace2000112a8c6",
         "class": "com.factly.dega.domain.Media",
         "file_size": "112448",
         "alt_text": "government-of-india",

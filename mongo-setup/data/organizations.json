@@ -1,14 +1,16 @@
-[{
-    "_id": "5c1fbe8141e7c425ed54c82b",
-    "name": "Factly",
-    "site_title": "Factly",
-    "client_id": "Factly",
-    "slug": "factly",
-    "email": "hi@factly.in",
-    "created_date": "2018-12-23T16:57:37.464Z",
-    "last_updated_date": "2018-12-23T16:57:37.465Z",
-    "degaUsers": [],
-    "degaUserDefault": [],
-    "degaUserCurrent": [],
-    "_class": "com.factly.dega.domain.Organization"
-}]
+[
+    {
+        "name": "Factly",
+        "description": "FACTLY is one of the well known Data Journalism/Public Information portals in India. Each news story on FACTLY is backed by factual evidence/data from official sources that is either available in the public domain or that is collated/gathered/collected using tools such as the Right to Information (RTI).",
+        "slug": "factly",
+        "email": "admin@factly.in",
+        "_id": "5d792544bf1bce0001eda477",
+        "_class": "com.factly.dega.domain.Organization",
+        "site_title": "Factly",
+        "tag_line": "Making Public Data Meaningful",
+        "client_id": "factly",
+        "created_date": "2019-09-11T16:48:00.000Z",
+        "last_updated_date": "2019-09-26T20:44:36.458Z",
+        "site_address": "https://factcheck.factly.in"
+    }
+]

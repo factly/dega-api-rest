@@ -75,6 +75,7 @@ describe('/api/v1/users', () => {
                 
             });
     });
+    /*
     it('Should get user by Object Id', () => {
         return request(mock)
             .get('/api/v1/users/5d79d0bebf1bce0001eda5e1')
@@ -112,6 +113,7 @@ describe('/api/v1/users', () => {
                 expect(organization).to.have.property('name').eq('Factly');
             });
     });
+    */
     it('Should get user by Slug', () => {
         return request(mock)
             .get('/api/v1/users/surya-kandukuri')

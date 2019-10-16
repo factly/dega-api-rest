@@ -14,7 +14,7 @@
     {
         "name": "Contributor",
         "slug": "contributor",
-        "_id": "5d791789bf1bce0001eda465",
+        "$id": "5d791789bf1bce0001eda465",
         "_class": "com.factly.dega.domain.Role",
         "is_default": true,
         "client_id": "default",

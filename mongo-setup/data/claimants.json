@@ -1,0 +1,43 @@
+[
+    {    
+        "_id" : "5c3e3517569ed47d9451940f",
+        "name": "Government of India",
+        "description": "This is the description for Govt of India",
+        "client_id": "factly",
+        "slug": "government-of-india",
+        "media" : {
+            "oid" : "5d8f5ce993ace2000112a8c6"
+        },
+        "created_date": "2019-01-15T19:31:35.627Z",
+        "last_updated_date": "2019-01-15T19:31:35.627Z",
+        "_class": "com.factly.dega.domain.Claimant"
+    },
+    {
+        "_id": "4d3e3517545ed47d9451944f",
+        "name": "Narendra Modi",
+        "tag_line": "Prime Minister of India",
+        "description": "Narendra Modi is the Prime Minister of India",
+        "client_id": "factly",
+        "slug": "narendra-modi",
+        "media" : {
+            "oid" : "5d8f5ce993ace2000112a8c8"
+        },
+        "created_date": "2019-01-15T19:32:05.664Z",
+        "last_updated_date": "2019-01-15T19:32:05.664Z",
+        "_class": "com.factly.dega.domain.Claimant"
+    },
+    {
+        "_id": "6e3e3ji7545ed47d9451940f",
+        "name": "Rahul Gandhi",
+        "tag_line": "President of Indian National Congress",
+        "description": "Rahul Gandhi is the President of Indian National Congress",
+        "client_id": "factly",
+        "slug": "rahul-gandhi-12345",
+        "media" : {
+            "oid" : "5d8f5ce993ace2000112a8d8"
+        },
+        "created_date": "2019-01-15T19:34:52.423Z",
+        "last_updated_date": "2019-01-15T19:34:52.423Z",
+        "_class": "com.factly.dega.domain.Claimant"
+    }
+]
