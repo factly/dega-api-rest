@@ -372,9 +372,6 @@ class FactcheckModel extends MongoBase {
                 //If none of factchecks has status then directly return factchecks
                 if(statusIds.length === 0) return factchecks;
 
-
-                console.log(statusIds)
-
                 const match = {
                     $match: {
                         id : { $in : statusIds }
