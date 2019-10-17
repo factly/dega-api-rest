@@ -20,7 +20,6 @@ const addFields = {
             }
         },
         status: { $arrayElemAt: [{ $objectToArray: '$status' }, 1] },
-        media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] },
         categories: {
             $map: {
                 input: {
@@ -305,7 +304,7 @@ class FactcheckModel extends MongoBase {
                 const aggregations = [
                     addFields,
                     {
-                        $addFields: { status: '$status.v', media: '$media.v' }
+                        $addFields: { status: '$status.v' }
                     },
                     claimsLookup,
                     factcheckLookup,
@@ -335,7 +334,7 @@ class FactcheckModel extends MongoBase {
                     (1) - filter all factcheck which has media 
                     (2) - get media id of all factcheck
                 */
-                mediaIds = factchecks.filter(factcheck => factcheck.media).map( factcheck => factcheck.media );
+                mediaIds = factchecks.filter(factcheck => factcheck.media).map( factcheck => factcheck.media.oid );
 
                 //If none of factchecks has media then directly return factchecks
                 if(mediaIds.length === 0) return factchecks;
@@ -357,7 +356,7 @@ class FactcheckModel extends MongoBase {
                         /*
                             (1) - traversal through all factcheck and replace media DBref object with media object
                         */
-                        return factchecks.map( factcheck => factcheck.media ? { ...factcheck, media: mediaObject[factcheck.media]} : factcheck );
+                        return factchecks.map( factcheck => factcheck.media ? { ...factcheck, media: mediaObject[factcheck.media.oid]} : factcheck );
                     });
             })
             .then( factchecks => {
