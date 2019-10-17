@@ -37,6 +37,12 @@ describe('/api/v1/claims', () => {
         mock.close(done);
     });
 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/claims')
+            .expect(422)
+    });
+
     it('Should get all claims', () => {
         return request(mock)
             .get('/api/v1/claims')
@@ -46,7 +52,7 @@ describe('/api/v1/claims', () => {
             .then((res) => {
                 const claims = JSON.parse(res.text);
                 expect(claims).to.have.property('data');
-                expect(claims.data.length).eq(3);
+                expect(claims.data.length).eq(4);
                 const claim = claims.data[0];
                 // check for fields inside claims document
                 expect(claim).to.have.property('id').eq('5ce2682c682a3b2e077845ba');

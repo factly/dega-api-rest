@@ -67,5 +67,29 @@
             "$id" : "5c3e3517569ed47d9451940f"
         },
         "_class": "com.factly.dega.domain.Claim"
+    },
+    {
+        "claim": "There was a shortfall in government earnings in 2018-19 to the tune of Rs.1.7 lakh crores and the shortfall was compensated by taking money from RBI",
+        "description": "<h3><strong style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">What is the difference in Central government’s estimates &amp; actuals of revenue receipts for 2018-19?</strong></h3><p><br></p><p><span style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">Prior to the budget presentation for 2019-20, the Ministry of Finance has released </span><a href=\"https://www.indiabudget.gov.in/economicsurvey/\" target=\"_blank\" style=\"color: rgb(229, 78, 83); background-color: rgb(255, 255, 255);\">Economic Survey 2018-19</a><span style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">report. In this report, the </span><a href=\"https://www.indiabudget.gov.in/economicsurvey/doc/vol2chapter/echap02_vol2.pdf#page=2\" target=\"_blank\" style=\"color: rgb(229, 78, 83); background-color: rgb(255, 255, 255);\">Provisional Actuals&nbsp;of revenue receipts for 2018-19</a><span style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">stand at Rs. 15.6 lakh crores. Meanwhile, the budget for 2019-20 provides the </span><a href=\"https://www.indiabudget.gov.in/doc/rec/ar.pdf\" target=\"_blank\" style=\"color: rgb(229, 78, 83); background-color: rgb(255, 255, 255);\">Revised Estimate of government Revenue receipts</a><span style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">at Rs. 17.3 lakh crores.</span></p><p><br></p><p class=\"ql-align-center\"><img src=\"https://images.degacms.com/dega-content/factly/2019/9/1569673841449-shortfall-in-government-earnings_central-govt-fiscal-claims-1078x516.jpg\"></p><p class=\"ql-align-center\"><br></p><p><img src=\"https://images.degacms.com/dega-content/factly/2019/9/1569673872465-shortfall-in-government-earnings_abstract-of-receipts.jpg\"></p><p><br></p><p><span style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">Revised estimates provided in budget is a projection of how much the government is expected to earn, whereas the Provisional actuals are a more accurate estimate of the government earnings during that specified period since it comes from the ‘Controller General of Accounts (CGA)’. The difference between these provisional actuals and the revised estimates for revenue receipts of the government amounts to Rs. 1.7 lakh crores which is considered to be a deficit in the government earnings, compared to the estimates. While the actual earnings for 2018-19 will only be known when the budget for 2020-21 is presented, the Provisional actuals do point to a shortfall in the government’s earnings. The Economic Survey 2018-19 cites </span><a href=\"https://www.indiabudget.gov.in/economicsurvey/doc/vol2chapter/echap02_vol2.pdf#page=4\" target=\"_blank\" style=\"color: rgb(229, 78, 83); background-color: rgb(255, 255, 255);\">lower Gross Tax Revenue</a><span style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">(GTR) as the reason for the fall in revenue receipts. So the claim that there is a shortfall in government revenue receipts is </span><strong style=\"color: rgb(59, 59, 59); background-color: rgb(255, 255, 255);\">TRUE.</strong></p>",
+        "slug": "there-was-a-shortfall-in-government-earnings-in-201819-to-the-tune-of-rs17-lakh-crores-and-the-shortfall-was-compensated-by-taking-money-from-rbi",
+        "_id": "5d8f5d53f4f39f0001e419ec",
+        "_class": "com.factly.dega.domain.Claim",
+        "client_id": "factly",
+        "claim_date": "2019-09-19T00:00:00.000Z",
+        "claim_source": "https://twitter.com/INCIndia/status/1175386695757230080",
+        "checked_date": "2019-09-27T00:00:00.000Z",
+        "review_sources": "https://www.indiabudget.gov.in/economicsurvey/",
+        "review": "<p>There is a difference which amounted to Rs. 1.7 lakh crores between the ‘Provisional Actuals’ of revenue receipts provided in the Economic Survey of India and the ‘Revised Estimates’ of revenue receipts as reported by the government for 2018-19. Since provisional actuals (PA) may be a better estimate of the actual figures, there could well be a shortfall in government earnings for 2018-19. Hence the claim isTRUE. Further, RBI has transferred Rs. 1.76 lakh cores to the government, the purpose and utility of which the government has not been clarified. This transfer is based on recommendations of an expert committee, hence the claim of terming the transfer as a ‘loot’ is MISLEADING.</p>",
+        "review_tag_line": "",
+        "created_date": "2019-09-28T13:17:07.009Z",
+        "last_updated_date": "2019-09-28T14:54:44.449Z",
+        "rating": {
+            "ref": "rating",
+            "id": "5d791140e10bf00001fad893"
+        },
+        "claimant": {
+            "ref": "claimant",
+            "id": "5c3e3517569ed47d9451940f"
+        }
     }
 ]

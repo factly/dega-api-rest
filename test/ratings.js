@@ -37,9 +37,16 @@ describe('/api/v1/ratings', () => {
         mock.close(done);
     });
 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/ratings')
+            .expect(422)
+    });
+
     it('Should get all ratings', () => {
         return request(mock)
             .get('/api/v1/ratings')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
@@ -65,6 +72,7 @@ describe('/api/v1/ratings', () => {
     /*it('Should get ratings by Object Id', () => {
         return request(mock)
             .get('/api/v1/ratings/5d7911a8e10bf00001fad8a0')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
@@ -90,6 +98,7 @@ describe('/api/v1/ratings', () => {
     it('Should get ratings by slug', () => {
         return request(mock)
             .get('/api/v1/ratings/misleading')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {

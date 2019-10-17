@@ -11,6 +11,10 @@
         "client_id": "factly",
         "created_date": "2019-09-11T16:48:00.000Z",
         "last_updated_date": "2019-09-26T20:44:36.458Z",
-        "site_address": "https://factcheck.factly.in"
+        "site_address": "https://factcheck.factly.in",
+        "mediaLogo" : {
+            "$id" : "5d8f5ce993ace2000112a8c8",
+            "$ref" : "media"
+        }
     }
 ]

@@ -37,9 +37,16 @@ describe('/api/v1/users', () => {
         mock.close(done);
     });
 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/users')
+            .expect(422)
+    });
+
     it('Should get all users', () => {
         return request(mock)
             .get('/api/v1/users')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
@@ -79,11 +86,11 @@ describe('/api/v1/users', () => {
     it('Should get user by Object Id', () => {
         return request(mock)
             .get('/api/v1/users/5d79d0bebf1bce0001eda5e1')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
                 const result = JSON.parse(res.text);
-                console.log(res.text);
                 const user = result.data;
                 expect(user).to.have.property('id').eq('5d79d0bebf1bce0001eda5e1');
                 expect(user).to.have.property('class').eq('com.factly.dega.domain.DegaUser');
@@ -117,6 +124,7 @@ describe('/api/v1/users', () => {
     it('Should get user by Slug', () => {
         return request(mock)
             .get('/api/v1/users/surya-kandukuri')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {

@@ -37,6 +37,13 @@ describe('/api/v1/categories', () => {
         mock.close(done);
     });
 
+ 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/categories')
+            .expect(422)
+    });
+    
     it('Should get all categories', () => {
         return request(mock)
             .get('/api/v1/categories')
@@ -46,8 +53,8 @@ describe('/api/v1/categories', () => {
             .then((res) => {
                 const categories = JSON.parse(res.text);
                 expect(categories).to.have.property('data');
-                expect(categories.data.length).eq(6);
-                const category = categories.data[5];
+                expect(categories.data.length).eq(8);
+                const category = categories.data[7];
                 // check for fields inside categories document
                 expect(category).to.have.property('id').eq('5c38f470569ed47e00c7002b');
                 expect(category).to.have.property('clientId').eq('factly');
@@ -84,7 +91,7 @@ describe('/api/v1/categories', () => {
             });
             
     });
-    
+   
     /*it('Should get individual category by id', () => {
         return request(mock)
             .get('/api/v1/categories/5c38f470569ed47e00c7002c')

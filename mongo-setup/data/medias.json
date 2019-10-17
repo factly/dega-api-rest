@@ -214,5 +214,23 @@
         "created_date": "2019-09-28T14:15:21.348Z",
         "relative_url": "dega-content/factly/2019/9/1569676519335-rahul-gandhi.png",
         "source_url": "https://images.degacms.com/dega-content/factly/2019/9/1569676519335-rahul-gandhi.png"
+    },
+    {
+        "name": "https://storage.degacms.com/dega-content/factly/2019/9/1569676848222-shortfall-in-government-earnings_featured-image.jpg",
+        "type": "image/jpeg",
+        "url": "https://storage.degacms.com/dega-content/factly/2019/9/1569676848222-shortfall-in-government-earnings_featured-image.jpg",
+        "title": "shortfall-in-government-earnings_Featured-Image",
+        "slug": "shortfall-in-government-earnings_featured-image",
+        "_id": "5d8f5e3093ace2000112a8d4",
+        "_class": "com.factly.dega.domain.Media",
+        "file_size": "62885",
+        "alt_text": "shortfall-in-government-earnings_Featured-Image",
+        "uploaded_by": "shashi@factly.in",
+        "published_date": "2019-09-28T13:20:48.654Z",
+        "last_updated_date": "2019-09-28T13:20:48.654Z",
+        "client_id": "factly",
+        "created_date": "2019-09-28T13:20:48.654Z",
+        "relative_url": "dega-content/factly/2019/9/1569676848222-shortfall-in-government-earnings_featured-image.jpg",
+        "source_url": "https://images.degacms.com/dega-content/factly/2019/9/1569676848222-shortfall-in-government-earnings_featured-image.jpg"
     }   
 ]

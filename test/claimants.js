@@ -37,6 +37,12 @@ describe('/api/v1/claimants', () => {
         mock.close(done);
     });
 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/claimants')
+            .expect(422)
+    });
+
     it('Should get all claimants', () => {
         return request(mock)
             .get('/api/v1/claimants')
@@ -83,7 +89,6 @@ describe('/api/v1/claimants', () => {
                 const claim = claimant.claim;
                 expect(claim.length).eq(0);
                 //media
-                console.log(claimant);
                 expect(claimant).to.have.property('media');
                 const media = claimant.media;
                 expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-narendra-modi.png');              

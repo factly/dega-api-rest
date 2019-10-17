@@ -1,179 +1,135 @@
 [
     {
-        "_id": "5c71d32bfd3c00900fae209c",
-        "title": "test 02232019",
-        "client_id": "factly",
-        "introduction": "<p>test intro\t</p>",
-        "summary": "test summary",
-        "published_date": "2019-02-23T23:11:39.223Z",
-        "last_updated_date": "2019-02-23T23:11:39.223Z",
-        "featured": false,
-        "sticky": false,
-        "slug": "test-02232019",
-        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
-        "created_date": "2019-02-23T23:11:39.223Z",
-        "claims" : [
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3988569ed47d94519432"
-            },
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3762569ed47d9451942b"
-            }
-        ],
-        "tags" : [
-            {
-                "$ref" : "tag",
-                "$id" : "5c38f4f5569ed47e00c70045",
-                "$db" : "degaUnit"
-            }
-        ],
-        "categories" : [
-            {
-                "$ref" : "category",
-                "$id" : "5c38f470569ed47e00c7002b",
-                "$db" : "degaUnit"
-            }
-        ],
-        "degaUsers" : [
-            {
-                "$ref" : "dega_user",
-                "$id" : "5c24fa70d654062b1dcf96d2",
-                "$db" : "degaUnit"
-            }
-        ],
-        "status" : {
-            "$ref" : "status",
-            "$id" : "5c2691852308247c7669a51a",
-            "$db" : "degaUnit"
-        },
-        "_class" : "com.factly.dega.domain.Factcheck"
+    "_id" : "5d717fcddf047986a5830098",
+    "title" : "Test Factcheck title",
+    "client_id" : "factly",
+    "introduction" : "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>",
+    "summary" : "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>",
+    "excerpt" : "Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor.",
+    "last_updated_date" : "2019-09-05T22:51:55.181Z",
+    "featured" : false,
+    "sticky" : false,
+    "updates" : "",
+    "slug" : "test-factcheck-title",
+    "featured_media" : "",
+    "sub_title" : "",
+    "created_date" : "2019-09-05T21:36:13.541Z",
+    "claims" : [ 
+        {
+            "$ref" : "claim",
+            "$id" : "5d8f5d53f4f39f0001e419ec"
+        }
+    ],
+    "tags" : [],
+    "media" : {
+        "$ref" : "media",
+        "$id" : "5d8f5ce993ace2000112a8c8"
     },
-    {
-        "_id": "5c71d32bfd3c00900fae2091",
-        "title": "test 02232019",
-        "client_id": "factly",
-        "introduction": "<p>test intro\t</p>",
-        "summary": "test summary",
-        "published_date": "2019-02-23T23:11:39.223Z",
-        "last_updated_date": "2019-02-23T23:11:39.223Z",
-        "featured": false,
-        "sticky": false,
-        "slug": "test-02232019",
-        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
-        "created_date": "2019-02-23T23:11:39.223Z",
-        "claims" : [
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3988569ed47d94519432"
-            },
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3762569ed47d9451942b"
-            }
-        ],
-        "degaUsers" : [
-            {
-                "$ref" : "dega_user",
-                "$id" : "5c24fa70d654062b1dcf96d2",
-                "$db" : "degaUnit"
-            }
-        ],
-        "status" : {
-            "$ref" : "status",
-            "$id" : "5c2691852308247c7669a51a",
-            "$db" : "degaUnit"
-        },
-        "_class" : "com.factly.dega.domain.Factcheck"
+    "categories" : [ 
+        {
+            "$ref" : "category",
+            "$id" : "5d79818bbf1bce0001eda4e2"
+        }
+    ],
+    "degaUsers" : [ 
+        {
+            "$ref" : "dega_user",
+            "$id" : "5d79d0bebf1bce0001eda5e1"
+        }
+    ],
+    "status" : {
+        "$ref" : "status",
+        "$id" : "5c2691852308247c7669a51a"
     },
-    {
-        "_id": "5c71d32bfd3c00900fae2092",
-        "title": "test 02232019",
-        "client_id": "factly",
-        "introduction": "<p>test intro\t</p>",
-        "summary": "test summary",
-        "published_date": "2019-02-23T23:11:39.223Z",
-        "last_updated_date": "2019-02-23T23:11:39.223Z",
-        "featured": false,
-        "sticky": false,
-        "slug": "test-02232019",
-        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
-        "created_date": "2019-02-23T23:11:39.223Z",
-        "claims" : [
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3988569ed47d94519432"
-            },
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3762569ed47d9451942b"
-            }
-        ],
-        "degaUsers" : [
-            {
-                "$ref" : "dega_user",
-                "$id" : "5c24fa70d654062b1dcf96d2",
-                "$db" : "degaUnit"
-            }
-        ],
-        "_class" : "com.factly.dega.domain.Factcheck"
+    "_class" : "com.factly.dega.domain.Factcheck",
+    "published_date" : "2019-09-23T12:25:43.689Z"
+},
+{
+    "_id": "5d718b016f5f0b0fc31d64d4",
+    "_class": "com.factly.dega.domain.Factcheck",
+    "client_id": "factly",
+    "published_date": "2019-09-05T22:24:01.451Z",
+    "sub_title": "",
+    "created_date": "2019-09-05T22:24:01.451Z",
+    "last_updated_date": "2019-09-23T13:14:13.255Z",
+    "title": "Test Factcheck title - 2",
+    "introduction": "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>",
+    "summary": "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>",
+    "excerpt": "Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor.",
+    "featured": false,
+    "sticky": false,
+    "updates": "",
+    "slug": "test-factcheck-title-2",
+    "claims": [
+        {
+            "$ref" : "claim",
+            "$id" : "5c3e3762569ed47d9451942b"
+        }
+    ],
+    "tags": [],
+    "categories": [
+        {
+            "$ref" : "category",
+            "_id" : "5d79818bbf1bce0001eda4e2"
+        }
+    ],
+    "status": {
+        "$ref" : "status",
+        "$id" : "5c2691852308247c7669a51a"
     },
-    {
-        "_id": "5c71d32bfd3c00900fae2093",
-        "title": "test 02232019",
-        "client_id": "factly",
-        "introduction": "<p>test intro\t</p>",
-        "summary": "test summary",
-        "published_date": "2019-02-23T23:11:39.223Z",
-        "last_updated_date": "2019-02-23T23:11:39.223Z",
-        "featured": false,
-        "sticky": false,
-        "slug": "test-02232019",
-        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
-        "created_date": "2019-02-23T23:11:39.223Z",
-        "claims" : [
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3988569ed47d94519432"
-            },
-            {
-                "$ref" : "claim",
-                "$id" : "5c3e3762569ed47d9451942b"
-            }
-        ],
-        "status" : {
-            "$ref" : "status",
-            "$id" : "5c2691852308247c7669a51a",
-            "$db" : "degaUnit"
-        },
-        "_class" : "com.factly.dega.domain.Factcheck"
+    "media": {
+        "$ref" : "media",
+        "$id" : "5d8f5ce993ace2000112a8c8"
     },
-    {
-        "_id": "5c71d32bfd3c00900fae2094",
-        "title": "test 02232019",
-        "client_id": "factly",
-        "introduction": "<p>test intro\t</p>",
-        "summary": "test summary",
-        "published_date": "2019-02-23T23:11:39.223Z",
-        "last_updated_date": "2019-02-23T23:11:39.223Z",
-        "featured": false,
-        "sticky": false,
-        "slug": "test-02232019",
-        "featured_media": "http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png",
-        "created_date": "2019-02-23T23:11:39.223Z",
-        "degaUsers" : [
-            {
-                "$ref" : "dega_user",
-                "$id" : "5c24fa70d654062b1dcf96d2",
-                "$db" : "degaUnit"
-            }
-        ],
-        "status" : {
-            "$ref" : "status",
-            "$id" : "5c2691852308247c7669a51a",
-            "$db" : "degaUnit"
-        },
-        "_class" : "com.factly.dega.domain.Factcheck"
+    "degaUsers": [
+        {
+            "$ref" : "dega_user",
+            "$id" : "5d79d0bebf1bce0001eda5e1"
+        }
+    ]
+},
+{
+    "_id": "5d718fb06f5f0b1816b3249c",
+    "_class": "com.factly.dega.domain.Factcheck",
+    "client_id": "factly",
+    "published_date": "2019-09-05T22:44:00.915Z",
+    "sub_title": "",
+    "created_date": "2019-09-05T22:44:00.915Z",
+    "last_updated_date": "2019-09-05T22:44:00.915Z",
+    "title": "Test Factcheck title",
+    "introduction": "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>",
+    "summary": "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>",
+    "excerpt": "Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. ",
+    "featured": false,
+    "sticky": false,
+    "updates": "",
+    "slug": "test-factcheck-title",
+    "claims": [
+        {
+            "$ref" : "claim",
+            "$id" : "5ce2682c682a3b2e077845ba"
+        }
+    ],
+    "tags": [],
+    "categories": [
+        {
+            "$ref" : "category",
+            "$id" : "5d79818bbf1bce0001eda4e2"
+        }
+    ],
+    "status": {
+        "$ref" : "status",
+        "$id" : "5c2691852308247c7669a51a"
+    },
+    "degaUsers": [
+        {
+            "$ref" : "dega_user",
+            "$id" : "5d79d0bebf1bce0001eda5e1"
+        }
+    ],
+    "media" : {
+        "$ref" : "media",
+        "$id" : "5d8f5ce993ace2000112a8c8"
     }
+}
 ]

@@ -37,6 +37,12 @@ describe('/api/v1/statuses', () => {
         mock.close(done);
     });
 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/statuses')
+            .expect(422)
+    });
+
     it('Should get all statuses', () => {
         return request(mock)
             .get('/api/v1/statuses')
