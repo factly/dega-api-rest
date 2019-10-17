@@ -1,26 +1,26 @@
 const app = require('./index');
 const http = require('http');
-const { MongoClient } = require('mongodb')
+const { MongoClient } = require('mongodb');
 const { createTerminus } = require('@godaddy/terminus');
 
-let client
-let db
+let client;
+let db;
 
 function onHealthCheck () {
-    return db.command({ ping: 1 })
+    return db.command({ ping: 1 });
 }
 
 function onSignal () {
-    console.log('server is starting cleanup')
+    console.log('server is starting cleanup');
     return client.close().then(() => console.log('client has disconnected'))
-      .catch(err => console.error('error during disconnection', err.stack))
+        .catch(err => console.error('error during disconnection', err.stack));
 }
   
 async function startServer () {
-    client = await MongoClient.connect(process.env.MONGODB_URI)
-    db = client.db('terminus')
+    client = await MongoClient.connect(process.env.MONGODB_URI);
+    db = client.db('terminus');
   
-    console.log('db connected')
+    console.log('db connected');
   
     let port = process.env.PORT || 8000;
 
@@ -31,8 +31,8 @@ async function startServer () {
         },
     
         onSignal
-    }).listen(port)
+    }).listen(port);
 }
   
 startServer()
-    .catch(err => console.error('connection error', err.stack))
+    .catch(err => console.error('connection error', err.stack));

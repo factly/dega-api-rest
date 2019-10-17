@@ -213,13 +213,13 @@ class ClaimModel extends MongoBase {
 
         if (ratingSlug) {
             queryObj.rating = {
-                $elemMatch: {slug: ratingSlug}
+                $elemMatch: { 'slug': 'partly-true' }
             };
         }
 
         if (claimantSlug) {
             queryObj.claimant = {
-                $elemMatch: {slug: claimantSlug}
+                $elemMatch: {'slug': claimantSlug}
             };
         }
 
