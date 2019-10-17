@@ -23,13 +23,6 @@
                     }
                 ]
             }
-        },
-        "clientHeader": {
-            "enabled": true,
-            "priority": 119, 
-            "module": {
-              "name": "path:./lib/validateClientHeader.js" 
-            }
         }
     }
 }
