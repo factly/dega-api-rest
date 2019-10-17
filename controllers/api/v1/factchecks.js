@@ -68,7 +68,7 @@ function getFactchecks(req, res, next) {
                     if (factcheck.currentOrganization) {
                         currentSchema.url = `${factcheck.currentOrganization.siteAddress}/factcheck/${factcheck.slug}`;
                         currentSchema.author.url = factcheck.currentOrganization.siteAddress;
-                        currentSchema.author.image = factcheck.currentOrganization.mediaLogo.sourceURL;
+                        currentSchema.author.image = factcheck.currentOrganization.mediaLogo ? factcheck.currentOrganization.mediaLogo.sourceURL : undefined;
                         currentSchema.author.name = factcheck.currentOrganization.name;
                     }
 
@@ -84,12 +84,12 @@ function getFactchecks(req, res, next) {
 
                     if (c.rating) {
                         currentSchema.reviewRating.alternateName = c.rating.name;
-                        currentSchema.reviewRating.image = c.rating.media.sourceURL;
+                        currentSchema.reviewRating.image = c.rating.media ? c.rating.media.sourceURL : undefined;
                     }
 
                     if (c.claimant) {
                         currentSchema.itemReviewed.author.name = c.claimant.name;
-                        currentSchema.itemReviewed.author.image = c.claimant.media.sourceURL;
+                        currentSchema.itemReviewed.author.image = c.claimant.media ? c.claimant.media.sourceURL : undefined;
                     }
                     currentSchema.itemReviewed.datePublished = c.claimDate;
                     currentSchema.itemReviewed.name = c.claim;
@@ -167,7 +167,7 @@ function getFactcheckByKey(req, res, next) {
                 if (currentOrganization) {
                     currentSchema.url = `${currentOrganization.siteAddress}/factcheck/${factcheck.slug}`;
                     currentSchema.author.url = currentOrganization.siteAddress;
-                    currentSchema.author.image = currentOrganization.mediaLogo.sourceURL;
+                    currentSchema.author.image = currentOrganization.mediaLogo ? currentOrganization.mediaLogo.sourceURL : undefined;
                     currentSchema.author.name = currentOrganization.name;
                 }
 
@@ -183,12 +183,12 @@ function getFactcheckByKey(req, res, next) {
 
                 if (c.rating) {
                     currentSchema.reviewRating.alternateName = c.rating.name;
-                    currentSchema.reviewRating.image = c.rating.media.sourceURL;
+                    currentSchema.reviewRating.image = c.rating.media ? c.rating.media.sourceURL : undefined;
                 }
 
                 if (c.claimant) {
                     currentSchema.itemReviewed.author.name = c.claimant.name;
-                    currentSchema.itemReviewed.author.image = c.claimant.media.sourceURL;
+                    currentSchema.itemReviewed.author.image = c.claimant.media ? c.claimant.media.sourceURL : undefined;
                 }
                 currentSchema.itemReviewed.datePublished = c.claimDate;
                 currentSchema.itemReviewed.name = c.claim;
