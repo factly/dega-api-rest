@@ -47,7 +47,10 @@
         "es6": true
     },
     "parserOptions": {
-        "ecmaVersion": "es2016"
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+          "experimentalObjectRestSpread": true
+        }
     },
     "extends": "eslint:recommended"
 }
