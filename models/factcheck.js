@@ -20,6 +20,7 @@ const addFields = {
             }
         },
         status: { $arrayElemAt: [{ $objectToArray: '$status' }, 1] },
+        media: { $arrayElemAt: [{ $objectToArray: '$media' }, 1] },
         categories: {
             $map: {
                 input: {
@@ -304,7 +305,7 @@ class FactcheckModel extends MongoBase {
                 const aggregations = [
                     addFields,
                     {
-                        $addFields: { status: '$status.v' }
+                        $addFields: { status: '$status.v', media: '$media.v' }
                     },
                     claimsLookup,
                     factcheckLookup,
@@ -334,7 +335,7 @@ class FactcheckModel extends MongoBase {
                     (1) - filter all factcheck which has media 
                     (2) - get media id of all factcheck
                 */
-                mediaIds = factchecks.filter(factcheck => factcheck.media).map( factcheck => factcheck.media.oid );
+                mediaIds = factchecks.filter(factcheck => factcheck.media).map( factcheck => factcheck.media );
 
                 //If none of factchecks has media then directly return factchecks
                 if(mediaIds.length === 0) return factchecks;
@@ -356,7 +357,7 @@ class FactcheckModel extends MongoBase {
                         /*
                             (1) - traversal through all factcheck and replace media DBref object with media object
                         */
-                        return factchecks.map( factcheck => factcheck.media ? { ...factcheck, media: mediaObject[factcheck.media.oid]} : factcheck );
+                        return factchecks.map( factcheck => factcheck.media ? { ...factcheck, media: mediaObject[factcheck.media]} : factcheck );
                     });
             })
             .then( factchecks => {
@@ -366,10 +367,13 @@ class FactcheckModel extends MongoBase {
                     (1) - filter all factcheck which has status 
                     (2) - get status id of all factcheck
                 */
-                statusIds = factchecks.filter(factcheck => factcheck.status).map( factcheck => factcheck.status.oid );
+                statusIds = factchecks.filter(factcheck => factcheck.status).map( factcheck => factcheck.status );
 
                 //If none of factchecks has status then directly return factchecks
                 if(statusIds.length === 0) return factchecks;
+
+
+                console.log(statusIds)
 
                 const match = {
                     $match: {
@@ -388,7 +392,7 @@ class FactcheckModel extends MongoBase {
                         /*
                             (1) - traversal through all factcheck and replace status DBref object with status object
                         */
-                        return factchecks.map( factcheck => factcheck.status ? { ...factcheck, status: statusesObject[factcheck.status.oid]} : factcheck );
+                        return factchecks.map( factcheck => factcheck.status ? { ...factcheck, status: statusesObject[factcheck.status]} : factcheck );
                     });
             })
             .then ( factchecks => {
