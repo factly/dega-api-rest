@@ -158,5 +158,19 @@ describe('/api/v1/users', () => {
                 expect(organization).to.have.property('name').eq('Factly');
                 
             });
-    });    
+    }); 
+    
+    it('Should get users by query param role', () => {
+        return request(mock)
+            .get('/api/v1/users?role=editor')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const users = JSON.parse(res.text).data;
+                expect(users.length).eq(1);
+                expect(users[0]).to.have.property('slug').eq('naresh-dubbudu');
+            });
+    });
+
 });

@@ -64,7 +64,7 @@
         },
         "claimant" : {
             "$ref" : "claimant",
-            "$id" : "5c3e3517569ed47d9451940f"
+            "$id" : "4d3e3517545ed47d9451944f"
         },
         "_class": "com.factly.dega.domain.Claim"
     },
@@ -85,7 +85,7 @@
         "last_updated_date": "2019-09-28T14:54:44.449Z",
         "rating": {
             "ref": "rating",
-            "id": "5d791140e10bf00001fad893"
+            "id": "5d7911a8e10bf00001fad8a0"
         },
         "claimant": {
             "ref": "claimant",

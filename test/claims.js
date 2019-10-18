@@ -134,7 +134,41 @@ describe('/api/v1/claims', () => {
                 expect(claim.rating).to.have.property('slug').eq('partly-true');
                 // claimant
                 expect(claim).to.have.property('claimant');
-                expect(claim.claimant).to.have.property('slug').eq('government-of-india');
+                expect(claim.claimant).to.have.property('slug').eq('narendra-modi');
             });
     });
+
+    it('Should get claims by query param rating', () => {
+        return request(mock)
+            .get('/api/v1/claims?rating=false')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const claims = JSON.parse(res.text).data;
+                expect(claims.length).eq(2);
+                // check for fields inside claims document
+                expect(claims[0]).to.have.property('slug').eq('broad-gauge-line-commissioned-between-the-years-2009-and-2014-is-7600-kms-where-as-it-is-9528-kms-between-2014-and-2018');
+                expect(claims[1]).to.have.property('slug').eq('there-was-a-shortfall-in-government-earnings-in-201819-to-the-tune-of-rs17-lakh-crores-and-the-shortfall-was-compensated-by-taking-money-from-rbi');
+                
+            });
+    });
+
+    it('Should get claims by query param claimant', () => {
+        return request(mock)
+            .get('/api/v1/claims?claimant=government-of-india')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const claims = JSON.parse(res.text).data;
+                expect(claims.length).eq(3)
+                // check for fields inside claims document
+                expect(claims[0]).to.have.property('slug').eq('broad-gauge-line-commissioned-between-the-years-2009-and-2014-is-7600-kms-where-as-it-is-9528-kms-between-2014-and-2018');
+                expect(claims[1]).to.have.property('slug').eq('broad-gauge-line-commissioned-between-the-years-2009-and-2014-is-7600-kms-where-as-it-is-9528-kms-between-2014-and-20181');
+                expect(claims[2]).to.have.property('slug').eq('there-was-a-shortfall-in-government-earnings-in-201819-to-the-tune-of-rs17-lakh-crores-and-the-shortfall-was-compensated-by-taking-money-from-rbi');
+                
+            });
+    });
+
 });

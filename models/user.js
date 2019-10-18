@@ -159,10 +159,10 @@ class UserModel extends MongoBase {
 
         let query = {
             'roleMappings.organization.slug' : clientId
-        }
+        };
 
         if(roleSlug) {
-            query['roleMappings.role.slug'] = roleSlug
+            query['roleMappings.role.slug'] = roleSlug;
         }
 
         const aggregations = [

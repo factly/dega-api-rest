@@ -8,7 +8,7 @@
         "last_updated_date" : "2019-01-30T12:20:38.282Z",
         "featured" : true,
         "sticky" : false,
-        "slug" : "why-are-discounted-sms-rates-not-valid-on-certain-days",
+        "slug" : "post1-tags-bad-loans-categories-politics-users-shashi-deshetti-rakesh-dubbudu",
         "created_date" : "2019-01-14T17:21:00.000Z",
         "tags" : [
             {
@@ -26,9 +26,9 @@
             "$ref" : "status",
             "$id" : "5c2691852308247c7669a51a"
         },
-        "format" : {
-            "$ref" : "format",
-            "$id" : "5c2a71152308247c7669a60f"
+        "format": {
+            "$ref": "format",
+            "$id": "5d791062e5c62900019d784d"
         },
         "degaUsers" : [
             {
@@ -40,6 +40,10 @@
                 "$id" : "5d79d0bebf1bce0001eda5e1"
             }
         ],
+        "media": {
+            "$ref": "media",
+            "id": "5d8f5e3093ace2000112a8d4"
+        },
         "_class" : "com.factly.dega.domain.Post"
     },
     {
@@ -56,8 +60,13 @@
         "featured": false,
         "sticky": false,
         "updates": "",
-        "slug": "between-2016-2018,-more-than-100-crore-paid-in-compensation-for-complaints-against-airlines",
-        "tags": [],
+        "slug": "post2-tags-black-money-categories-india-stories-business-finance-users-shashi-deshetti",
+        "tags": [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f509569ed47e00c7004a"
+            }
+        ],
         "categories": [
             {
                 "$ref" : "category",
@@ -94,5 +103,302 @@
                 "$id" : "5d792589bf1bce0001eda484"
             }
         ]
+    },
+    {
+        "_id" : "5d4aa7e494e10a0a035082ed",
+        "title" : "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+        "client_id" : "factly",
+        "content" : "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. Nam posuere lorem auctor ipsum maximus scelerisque. Duis sit amet gravida dui, ut euismod risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sit amet risus suscipit, condimentum libero eget, ultrices tellus.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Nam vehicula lobortis lacus porttitor bibendum. Pellentesque laoreet pretium odio, sit amet semper tortor feugiat vel. Sed dignissim justo quis neque rhoncus elementum. Curabitur interdum, dolor non sodales rutrum, risus nisl porta ligula, nec malesuada sem ex in augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas ullamcorper turpis est, a interdum mi euismod nec. Proin placerat hendrerit purus, ac lobortis ante interdum eget. Vivamus a dolor vitae nisi hendrerit interdum. Phasellus ullamcorper lectus sit amet tellus elementum, eget pulvinar augue ultrices. Etiam aliquet vulputate magna vitae euismod.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam pulvinar vestibulum dictum. Etiam dapibus lectus eu neque sollicitudin sollicitudin. Donec ornare dignissim risus, ac auctor purus posuere eget. Suspendisse faucibus rhoncus neque, sit amet sagittis odio. Fusce quis nibh eget lectus convallis congue. Nullam ut orci lacus. Nam in tincidunt sapien, vel varius libero. Etiam in libero id nunc faucibus vulputate vitae laoreet nunc. Cras et porta lorem. Phasellus fringilla lectus vel magna auctor ultricies. Integer sed diam nec magna rhoncus posuere eu sed odio. Praesent lorem est, aliquet convallis libero nec, semper facilisis elit. Vestibulum luctus rutrum viverra. Vestibulum ut leo aliquam, posuere nisi eu, dignissim ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Maecenas sit amet rutrum ex, ut cursus libero. Curabitur condimentum finibus libero sit amet pellentesque. Aenean varius nulla at nibh tincidunt mattis. Mauris rhoncus ligula nulla, eget tempus urna tincidunt lobortis. Nunc diam nunc, ultrices in leo vel, congue ullamcorper justo. Nullam non sem quis augue ultricies sollicitudin. Etiam dolor dui, egestas quis semper eget, iaculis sit amet eros. Mauris tristique eros a arcu euismod, vel bibendum velit lacinia. Maecenas commodo justo a elit ornare, eget tempus nunc egestas. Fusce orci sapien, imperdiet et dolor quis, eleifend iaculis ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Nullam a libero eleifend, bibendum nibh et, fermentum lacus. Mauris vestibulum at lectus eu sodales. Nulla arcu ligula, mollis in enim nec, varius eleifend massa. Donec id sapien nec dolor rutrum tempor in mollis dolor. Ut faucibus vulputate nunc quis mollis. Nulla ligula felis, congue suscipit metus et, mattis hendrerit massa. Donec in consectetur purus, id congue ligula. Sed aliquam nunc ligula, in interdum dolor blandit eu. Fusce urna tortor, tempus eu scelerisque in, finibus vel nisl.</span></p><p><br></p>",
+        "excerpt" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. ",
+        "published_date" : "2019-09-19T05:28:38.676Z",
+        "last_updated_date" : "2019-09-19T05:28:38.676Z",
+        "featured" : false,
+        "sticky" : false,
+        "updates" : "",
+        "slug" : "post3-tags-crude-oil-bad-loans-categories-politics-elections-users-rakesh-dubbudu",
+        "sub_title" : "",
+        "created_date" : "2019-08-07T10:28:52.718Z",
+        "tags" : [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f4f5569ed47e00c70045"
+            },
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f513569ed47e00c7004f"
+            }
+        ],
+        "categories" : [
+            {
+                "$ref" : "category",
+                "$id" : "5c38f470569ed47e00c7002b"
+            },
+            {
+                "$ref" : "category",
+                "$id" : "5da707da6ae80e607432d6b6"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a"
+        },
+        "format": {
+            "$ref": "format",
+            "$id": "5d791062e5c62900019d784d"
+        },
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5d79d0bebf1bce0001eda5e1"
+            }
+        ],
+        "media": {
+            "$ref": "media",
+            "id": "5d8f5e3093ace2000112a8d4"
+        },
+        "_class" : "com.factly.dega.domain.Post"
+    },
+    {
+        "_id" : "5d6ad7681ba208b43ac2714d",
+        "title" : "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...- 2",
+        "client_id" : "factly",
+        "content" : "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. Nam posuere lorem auctor ipsum maximus scelerisque. Duis sit amet gravida dui, ut euismod risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sit amet risus suscipit, condimentum libero eget, ultrices tellus.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Nam vehicula lobortis lacus porttitor bibendum. Pellentesque laoreet pretium odio, sit amet semper tortor feugiat vel. Sed dignissim justo quis neque rhoncus elementum. Curabitur interdum, dolor non sodales rutrum, risus nisl porta ligula, nec malesuada sem ex in augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas ullamcorper turpis est, a interdum mi euismod nec. Proin placerat hendrerit purus, ac lobortis ante interdum eget. Vivamus a dolor vitae nisi hendrerit interdum. Phasellus ullamcorper lectus sit amet tellus elementum, eget pulvinar augue ultrices. Etiam aliquet vulputate magna vitae euismod.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam pulvinar vestibulum dictum. Etiam dapibus lectus eu neque sollicitudin sollicitudin. Donec ornare dignissim risus, ac auctor purus posuere eget. Suspendisse faucibus rhoncus neque, sit amet sagittis odio. Fusce quis nibh eget lectus convallis congue. Nullam ut orci lacus. Nam in tincidunt sapien, vel varius libero. Etiam in libero id nunc faucibus vulputate vitae laoreet nunc. Cras et porta lorem. Phasellus fringilla lectus vel magna auctor ultricies. Integer sed diam nec magna rhoncus posuere eu sed odio. Praesent lorem est, aliquet convallis libero nec, semper facilisis elit. Vestibulum luctus rutrum viverra. Vestibulum ut leo aliquam, posuere nisi eu, dignissim ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Maecenas sit amet rutrum ex, ut cursus libero. Curabitur condimentum finibus libero sit amet pellentesque. Aenean varius nulla at nibh tincidunt mattis. Mauris rhoncus ligula nulla, eget tempus urna tincidunt lobortis. Nunc diam nunc, ultrices in leo vel, congue ullamcorper justo. Nullam non sem quis augue ultricies sollicitudin. Etiam dolor dui, egestas quis semper eget, iaculis sit amet eros. Mauris tristique eros a arcu euismod, vel bibendum velit lacinia. Maecenas commodo justo a elit ornare, eget tempus nunc egestas. Fusce orci sapien, imperdiet et dolor quis, eleifend iaculis ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Nullam a libero eleifend, bibendum nibh et, fermentum lacus. Mauris vestibulum at lectus eu sodales. Nulla arcu ligula, mollis in enim nec, varius eleifend massa. Donec id sapien nec dolor rutrum tempor in mollis dolor. Ut faucibus vulputate nunc quis mollis. Nulla ligula felis, congue suscipit metus et, mattis hendrerit massa. Donec in consectetur purus, id congue ligula. Sed aliquam nunc ligula, in interdum dolor blandit eu. Fusce urna tortor, tempus eu scelerisque in, finibus vel nisl.</span></p><p><br></p>",
+        "excerpt" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. ",
+        "published_date" : "2019-08-31T20:24:08.422Z",
+        "last_updated_date" : "2019-08-31T20:24:08.421Z",
+        "featured" : false,
+        "sticky" : false,
+        "updates" : "",
+        "slug" : "post4-tags-black-money-categories-business-users-naresh-dubbudu",
+        "sub_title" : "",
+        "created_date" : "2019-08-31T20:24:08.421Z",
+        "tags" : [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f509569ed47e00c7004a"
+            }
+        ],
+        "categories" : [
+            {
+                "$ref" : "category",
+                "$id" : "5c38f470569ed47e00c7002c"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a"
+        },
+        "format": {
+            "$ref": "format",
+            "$id": "5d791062e5c62900019d784d"
+        },
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5da59c877ae10d8fc36d94cb"
+            }
+        ],
+        "media": {
+            "$ref": "media",
+            "id": "5d8f5e3093ace2000112a8d4"
+        },
+        "_class" : "com.factly.dega.domain.Post"
+    },
+    {
+        "_id" : "5d6b043292505b05e431039c",
+        "title" : "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...-3",
+        "client_id" : "factly",
+        "content" : "<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255; color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. Nam posuere lorem auctor ipsum maximus scelerisque. Duis sit amet gravida dui, ut euismod risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sit amet risus suscipit, condimentum libero eget, ultrices tellus.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Nam vehicula lobortis lacus porttitor bibendum. Pellentesque laoreet pretium odio, sit amet semper tortor feugiat vel. Sed dignissim justo quis neque rhoncus elementum. Curabitur interdum, dolor non sodales rutrum, risus nisl porta ligula, nec malesuada sem ex in augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas ullamcorper turpis est, a interdum mi euismod nec. Proin placerat hendrerit purus, ac lobortis ante interdum eget. Vivamus a dolor vitae nisi hendrerit interdum. Phasellus ullamcorper lectus sit amet tellus elementum, eget pulvinar augue ultrices. Etiam aliquet vulputate magna vitae euismod.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam pulvinar vestibulum dictum. Etiam dapibus lectus eu neque sollicitudin sollicitudin. Donec ornare dignissim risus, ac auctor purus posuere eget. Suspendisse faucibus rhoncus neque, sit amet sagittis odio. Fusce quis nibh eget lectus convallis congue. Nullam ut orci lacus. Nam in tincidunt sapien, vel varius libero. Etiam in libero id nunc faucibus vulputate vitae laoreet nunc. Cras et porta lorem. Phasellus fringilla lectus vel magna auctor ultricies. Integer sed diam nec magna rhoncus posuere eu sed odio. Praesent lorem est, aliquet convallis libero nec, semper facilisis elit. Vestibulum luctus rutrum viverra. Vestibulum ut leo aliquam, posuere nisi eu, dignissim ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Maecenas sit amet rutrum ex, ut cursus libero. Curabitur condimentum finibus libero sit amet pellentesque. Aenean varius nulla at nibh tincidunt mattis. Mauris rhoncus ligula nulla, eget tempus urna tincidunt lobortis. Nunc diam nunc, ultrices in leo vel, congue ullamcorper justo. Nullam non sem quis augue ultricies sollicitudin. Etiam dolor dui, egestas quis semper eget, iaculis sit amet eros. Mauris tristique eros a arcu euismod, vel bibendum velit lacinia. Maecenas commodo justo a elit ornare, eget tempus nunc egestas. Fusce orci sapien, imperdiet et dolor quis, eleifend iaculis ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Nullam a libero eleifend, bibendum nibh et, fermentum lacus. Mauris vestibulum at lectus eu sodales. Nulla arcu ligula, mollis in enim nec, varius eleifend massa. Donec id sapien nec dolor rutrum tempor in mollis dolor. Ut faucibus vulputate nunc quis mollis. Nulla ligula felis, congue suscipit metus et, mattis hendrerit massa. Donec in consectetur purus, id congue ligula. Sed aliquam nunc ligula, in interdum dolor blandit eu. Fusce urna tortor, tempus eu scelerisque in, finibus vel nisl.</span></p><p><br></p>",
+        "excerpt" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. ",
+        "published_date" : "2019-09-03T19:08:01.255Z",
+        "last_updated_date" : "2019-09-03T19:08:01.255Z",
+        "featured" : false,
+        "sticky" : false,
+        "updates" : "",
+        "slug" : "post5-tags-black-money-categories-elections-users-surya-kandukuri",
+        "sub_title" : "",
+        "created_date" : "2019-08-31T23:35:14.078Z",
+        "tags" : [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f509569ed47e00c7004a"
+            }
+        ],
+        "categories" : [
+            {
+                "$ref" : "category",
+                "$id" : "5da707da6ae80e607432d6b6"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a"
+        },
+        "format": {
+            "$ref": "format",
+            "$id": "5d791062e5c62900019d784d"
+        },
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5d93ee9277b1b80001d5724c"
+            }
+        ],
+        "media": {
+            "$ref": "media",
+            "id": "5d8f5e3093ace2000112a8d4"
+        },
+        "_class" : "com.factly.dega.domain.Post"
+    },
+    {
+        "_id" : "5d6db4c9df0479629ee50868",
+        "title" : "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...-4",
+        "client_id" : "factly",
+        "content" : "<p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. Nam posuere lorem auctor ipsum maximus scelerisque. Duis sit amet gravida dui, ut euismod risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sit amet risus suscipit, condimentum libero eget, ultrices tellus.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><img src=\"http://localhost:8080/core/dega-content/factly/2019/9/0001c---generate-summary-findings-and-final-memo.png\"></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Nam vehicula lobortis lacus porttitor bibendum. Pellentesque laoreet pretium odio, sit amet semper tortor feugiat vel. Sed dignissim justo quis neque rhoncus elementum. Curabitur interdum, dolor non sodales rutrum, risus nisl porta ligula, nec malesuada sem ex in augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas ullamcorper turpis est, a interdum mi euismod nec. Proin placerat hendrerit purus, ac lobortis ante interdum eget. Vivamus a dolor vitae nisi hendrerit interdum. Phasellus ullamcorper lectus sit amet tellus elementum, eget pulvinar augue ultrices. Etiam aliquet vulputate magna vitae euismod.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Etiam pulvinar vestibulum dictum. Etiam dapibus lectus eu neque sollicitudin sollicitudin. Donec ornare dignissim risus, ac auctor purus posuere eget. Suspendisse faucibus rhoncus neque, sit amet sagittis odio. Fusce quis nibh eget lectus convallis congue. Nullam ut orci lacus. Nam in tincidunt sapien, vel varius libero. Etiam in libero id nunc faucibus vulputate vitae laoreet nunc. Cras et porta lorem. Phasellus fringilla lectus vel magna auctor ultricies. Integer sed diam nec magna rhoncus posuere eu sed odio. Praesent lorem est, aliquet convallis libero nec, semper facilisis elit. Vestibulum luctus rutrum viverra. Vestibulum ut leo aliquam, posuere nisi eu, dignissim ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Maecenas sit amet rutrum ex, ut cursus libero. Curabitur condimentum finibus libero sit amet pellentesque. Aenean varius nulla at nibh tincidunt mattis. Mauris rhoncus ligula nulla, eget tempus urna tincidunt lobortis. Nunc diam nunc, ultrices in leo vel, congue ullamcorper justo. Nullam non sem quis augue ultricies sollicitudin. Etiam dolor dui, egestas quis semper eget, iaculis sit amet eros. Mauris tristique eros a arcu euismod, vel bibendum velit lacinia. Maecenas commodo justo a elit ornare, eget tempus nunc egestas. Fusce orci sapien, imperdiet et dolor quis, eleifend iaculis ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Nullam a libero eleifend, bibendum nibh et, fermentum lacus. Mauris vestibulum at lectus eu sodales. Nulla arcu ligula, mollis in enim nec, varius eleifend massa. Donec id sapien nec dolor rutrum tempor in mollis dolor. Ut faucibus vulputate nunc quis mollis. Nulla ligula felis, congue suscipit metus et, mattis hendrerit massa. Donec in consectetur purus, id congue ligula. Sed aliquam nunc ligula, in interdum dolor blandit eu. Fusce urna tortor, tempus eu scelerisque in, finibus vel nisl.</span></p><p><br></p>",
+        "excerpt" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. ",
+        "published_date" : "2019-09-19T03:52:54.035Z",
+        "last_updated_date" : "2019-09-19T03:52:54.035Z",
+        "featured" : false,
+        "sticky" : false,
+        "updates" : "",
+        "slug" : "post6-tags-bad-loans-child-sex-ratio-categories-crime-users-naresh-dubbudu-shashi-deshetti",
+        "sub_title" : "",
+        "created_date" : "2019-09-03T00:33:13.775Z",
+        "tags" : [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f513569ed47e00c7004f"
+            },
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f554569ed47e00c70059"
+            }
+        ],
+        "categories" : [
+            {
+                "$ref" : "category",
+                "$id" : "5da707da6ae80e607432d6b7"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a"
+        },
+        "format": {
+            "$ref": "format",
+            "$id": "5d791062e5c62900019d784d"
+        },
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5da59c877ae10d8fc36d94cb"
+            },
+            {
+                "$ref" : "dega_user",
+                "$id" : "5d792589bf1bce0001eda484"
+            }
+        ],
+        "media": {
+            "$ref": "media",
+            "id": "5d8f5e3093ace2000112a8d4"
+        },
+        "_class" : "com.factly.dega.domain.Post"
+    },
+    {
+        "_id" : "5d7c1c4549c5e277395871ad",
+        "title" : "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...-5",
+        "client_id" : "factly",
+        "content" : "<p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. Nam posuere lorem auctor ipsum maximus scelerisque. Duis sit amet gravida dui, ut euismod risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sit amet risus suscipit, condimentum libero eget, ultrices tellus.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><img src=\"http://localhost:8080/core/dega-content/factly/2019/9/0001c---generate-summary-findings-and-final-memo.png\"></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Nam vehicula lobortis lacus porttitor bibendum. Pellentesque laoreet pretium odio, sit amet semper tortor feugiat vel. Sed dignissim justo quis neque rhoncus elementum. Curabitur interdum, dolor non sodales rutrum, risus nisl porta ligula, nec malesuada sem ex in augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas ullamcorper turpis est, a interdum mi euismod nec. Proin placerat hendrerit purus, ac lobortis ante interdum eget. Vivamus a dolor vitae nisi hendrerit interdum. Phasellus ullamcorper lectus sit amet tellus elementum, eget pulvinar augue ultrices. Etiam aliquet vulputate magna vitae euismod.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Etiam pulvinar vestibulum dictum. Etiam dapibus lectus eu neque sollicitudin sollicitudin. Donec ornare dignissim risus, ac auctor purus posuere eget. Suspendisse faucibus rhoncus neque, sit amet sagittis odio. Fusce quis nibh eget lectus convallis congue. Nullam ut orci lacus. Nam in tincidunt sapien, vel varius libero. Etiam in libero id nunc faucibus vulputate vitae laoreet nunc. Cras et porta lorem. Phasellus fringilla lectus vel magna auctor ultricies. Integer sed diam nec magna rhoncus posuere eu sed odio. Praesent lorem est, aliquet convallis libero nec, semper facilisis elit. Vestibulum luctus rutrum viverra. Vestibulum ut leo aliquam, posuere nisi eu, dignissim ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Maecenas sit amet rutrum ex, ut cursus libero. Curabitur condimentum finibus libero sit amet pellentesque. Aenean varius nulla at nibh tincidunt mattis. Mauris rhoncus ligula nulla, eget tempus urna tincidunt lobortis. Nunc diam nunc, ultrices in leo vel, congue ullamcorper justo. Nullam non sem quis augue ultricies sollicitudin. Etiam dolor dui, egestas quis semper eget, iaculis sit amet eros. Mauris tristique eros a arcu euismod, vel bibendum velit lacinia. Maecenas commodo justo a elit ornare, eget tempus nunc egestas. Fusce orci sapien, imperdiet et dolor quis, eleifend iaculis ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Nullam a libero eleifend, bibendum nibh et, fermentum lacus. Mauris vestibulum at lectus eu sodales. Nulla arcu ligula, mollis in enim nec, varius eleifend massa. Donec id sapien nec dolor rutrum tempor in mollis dolor. Ut faucibus vulputate nunc quis mollis. Nulla ligula felis, congue suscipit metus et, mattis hendrerit massa. Donec in consectetur purus, id congue ligula. Sed aliquam nunc ligula, in interdum dolor blandit eu. Fusce urna tortor, tempus eu scelerisque in, finibus vel nisl.</span></p><p><br></p>",
+        "excerpt" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. ",
+        "published_date" : "2019-09-14T22:07:09.092Z",
+        "last_updated_date" : "2019-09-14T22:07:09.092Z",
+        "featured" : false,
+        "sticky" : false,
+        "updates" : "",
+        "slug" : "post7-tags-child-sex-ratio-categories-finance-users-shashi-deshetti",
+        "sub_title" : "",
+        "created_date" : "2019-09-03T00:33:13.775Z",
+        "tags" : [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f554569ed47e00c70059"
+            }
+        ],
+        "categories" : [
+            {
+                "$ref" : "category",
+                "$id" : "5da707da6ae80e607432d6b8"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a"
+        },
+        "format": {
+            "$ref": "format",
+            "$id": "5d791062e5c62900019d784d"
+        },
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5d792589bf1bce0001eda484"
+            }
+        ],
+        "media": {
+            "$ref": "media",
+            "id": "5d8f5e3093ace2000112a8d4"
+        },
+        "_class" : "com.factly.dega.domain.Post"
+    },
+    {
+        "_id" : "5d7c1c8749c5e277395871ae",
+        "title" : "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...-6",
+        "client_id" : "factly",
+        "content" : "<p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. Nam posuere lorem auctor ipsum maximus scelerisque. Duis sit amet gravida dui, ut euismod risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sit amet risus suscipit, condimentum libero eget, ultrices tellus.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><img src=\"http://localhost:8080/core/dega-content/factly/2019/9/0001c---generate-summary-findings-and-final-memo.png\"></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Nam vehicula lobortis lacus porttitor bibendum. Pellentesque laoreet pretium odio, sit amet semper tortor feugiat vel. Sed dignissim justo quis neque rhoncus elementum. Curabitur interdum, dolor non sodales rutrum, risus nisl porta ligula, nec malesuada sem ex in augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas ullamcorper turpis est, a interdum mi euismod nec. Proin placerat hendrerit purus, ac lobortis ante interdum eget. Vivamus a dolor vitae nisi hendrerit interdum. Phasellus ullamcorper lectus sit amet tellus elementum, eget pulvinar augue ultrices. Etiam aliquet vulputate magna vitae euismod.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Etiam pulvinar vestibulum dictum. Etiam dapibus lectus eu neque sollicitudin sollicitudin. Donec ornare dignissim risus, ac auctor purus posuere eget. Suspendisse faucibus rhoncus neque, sit amet sagittis odio. Fusce quis nibh eget lectus convallis congue. Nullam ut orci lacus. Nam in tincidunt sapien, vel varius libero. Etiam in libero id nunc faucibus vulputate vitae laoreet nunc. Cras et porta lorem. Phasellus fringilla lectus vel magna auctor ultricies. Integer sed diam nec magna rhoncus posuere eu sed odio. Praesent lorem est, aliquet convallis libero nec, semper facilisis elit. Vestibulum luctus rutrum viverra. Vestibulum ut leo aliquam, posuere nisi eu, dignissim ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Maecenas sit amet rutrum ex, ut cursus libero. Curabitur condimentum finibus libero sit amet pellentesque. Aenean varius nulla at nibh tincidunt mattis. Mauris rhoncus ligula nulla, eget tempus urna tincidunt lobortis. Nunc diam nunc, ultrices in leo vel, congue ullamcorper justo. Nullam non sem quis augue ultricies sollicitudin. Etiam dolor dui, egestas quis semper eget, iaculis sit amet eros. Mauris tristique eros a arcu euismod, vel bibendum velit lacinia. Maecenas commodo justo a elit ornare, eget tempus nunc egestas. Fusce orci sapien, imperdiet et dolor quis, eleifend iaculis ante.</span></p><p class=\"ql-align-justify\"><br></p><p class=\"ql-align-justify\"><span style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">Nullam a libero eleifend, bibendum nibh et, fermentum lacus. Mauris vestibulum at lectus eu sodales. Nulla arcu ligula, mollis in enim nec, varius eleifend massa. Donec id sapien nec dolor rutrum tempor in mollis dolor. Ut faucibus vulputate nunc quis mollis. Nulla ligula felis, congue suscipit metus et, mattis hendrerit massa. Donec in consectetur purus, id congue ligula. Sed aliquam nunc ligula, in interdum dolor blandit eu. Fusce urna tortor, tempus eu scelerisque in, finibus vel nisl.</span></p><p><br></p>",
+        "excerpt" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce gravida justo massa, eget fermentum sapien hendrerit congue. Morbi mattis porttitor tellus ullamcorper sagittis. Mauris ac vehicula erat. Proin varius, augue non finibus scelerisque, diam enim tempus ante, eu molestie ante magna in metus. ",
+        "published_date" : "2019-09-11T23:46:51.518Z",
+        "last_updated_date" : "2019-09-11T23:46:51.518Z",
+        "featured" : false,
+        "sticky" : false,
+        "updates" : "",
+        "slug" : "post8-tags-bad-loans-categories-sports-india-users-shashi-deshetti",
+        "sub_title" : "",
+        "created_date" : "2019-09-03T00:33:13.775Z",
+        "tags" : [
+            {
+                "$ref" : "tag",
+                "$id" : "5c38f513569ed47e00c7004f"
+            }
+        ],
+        "categories" : [
+            {
+                "$ref" : "category",
+                "$id" : "5da707da6ae80e607432d6b9"
+            },
+            {
+                "$ref" : "category",
+                "$id" : "5d79818bbf1bce0001eda4e2"
+            }
+        ],
+        "status" : {
+            "$ref" : "status",
+            "$id" : "5c2691852308247c7669a51a"
+        },
+        "format": {
+            "$ref": "format",
+            "$id": "5d791062e5c62900019d784d"
+        },
+        "degaUsers" : [
+            {
+                "$ref" : "dega_user",
+                "$id" : "5d792589bf1bce0001eda484"
+            }
+        ],
+        "media": {
+            "$ref": "media",
+            "id": "5d8f5e3093ace2000112a8d4"
+        },
+        "_class" : "com.factly.dega.domain.Post"
     }
+    
 ]

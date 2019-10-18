@@ -56,7 +56,7 @@ describe('/api/v1/tags', () => {
                 // check for fields inside tags document
                 expect(tag).to.have.property('id').eq('5c38f4f5569ed47e00c70045');
                 expect(tag).to.have.property('clientId').eq('factly');
-                expect(tag).to.have.property('slug').eq('Crude-Oil');
+                expect(tag).to.have.property('slug').eq('crude-oil');
                 expect(tag).to.have.property('name').eq('Crude Oil');
                 expect(tag).to.have.property('createdDate').eq('2019-01-11T19:56:37.736Z');
                 expect(tag).to.have.property('lastUpdatedDate').eq('2019-01-11T19:56:37.736Z');
@@ -77,7 +77,7 @@ describe('/api/v1/tags', () => {
                 // check for fields inside tags document
                 expect(tag).to.have.property('id').eq('5c38f513569ed47e00c7004f');
                 expect(tag).to.have.property('clientId').eq('factly');
-                expect(tag).to.have.property('slug').eq('Bad-Loans');
+                expect(tag).to.have.property('slug').eq('bad-loans');
                 expect(tag).to.have.property('name').eq('Bad Loans');
                 expect(tag).to.have.property('createdDate').eq('2019-01-11T19:57:00.000Z');
                 expect(tag).to.have.property('lastUpdatedDate').eq('2019-01-11T19:58:05.665Z');
@@ -89,7 +89,7 @@ describe('/api/v1/tags', () => {
 
     it('Should get tag by slug', () => {
         return request(mock)
-            .get('/api/v1/tags/Child-Sex-Ratio')
+            .get('/api/v1/tags/child-sex-ratio')
             .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
@@ -99,7 +99,7 @@ describe('/api/v1/tags', () => {
                 // check for fields inside tags document
                 expect(tag).to.have.property('id').eq('5c38f554569ed47e00c70059');
                 expect(tag).to.have.property('clientId').eq('factly');
-                expect(tag).to.have.property('slug').eq('Child-Sex-Ratio');
+                expect(tag).to.have.property('slug').eq('child-sex-ratio');
                 expect(tag).to.have.property('name').eq('Child Sex Ratio');
                 expect(tag).to.have.property('createdDate').eq('2019-01-11T19:58:12.712Z');
                 expect(tag).to.have.property('lastUpdatedDate').eq('2019-01-11T19:58:12.712Z');
