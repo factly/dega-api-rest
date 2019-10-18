@@ -30,11 +30,11 @@
                 ]
             }
         },
-        "clientHeader": {
+        "header": {
             "enabled": true,
-            "priority": 119, 
+            "priority": 30, 
             "module": {
-              "name": "path:./lib/validateClientHeader.js" 
+              "name": "path:middleware/validationHandler" 
             }
         },
         "static": {

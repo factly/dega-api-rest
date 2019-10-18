@@ -43,6 +43,7 @@ module.exports = function (config) {
 
         //if request id is not supplied create one
         if(!req.headers['x-request-id']){
+            console.log("MIDDLEWARE-ID")
             req.headers['x-request-id'] = guid;
         }
         res.set('X-Request-Id', req.headers['x-request-id']);
