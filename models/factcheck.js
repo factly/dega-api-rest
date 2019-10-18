@@ -795,6 +795,12 @@ class FactcheckModel extends MongoBase {
                 return query;
             })
             .then( query => {
+                if(claimantSlug)
+                    query['claims.claimant.slug'] = claimantSlug
+                
+                return query
+            })
+            .then( query => {
                 return query;
             });
     }
