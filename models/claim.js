@@ -211,17 +211,12 @@ class ClaimModel extends MongoBase {
             clientId: clientId
         };
 
-        if (ratingSlug) {
-            queryObj.rating = {
-                $elemMatch: {slug: ratingSlug}
-            };
-        }
+        if (ratingSlug) 
+            queryObj['rating.slug'] = ratingSlug; 
+        
 
-        if (claimantSlug) {
-            queryObj.claimant = {
-                $elemMatch: {slug: claimantSlug}
-            };
-        }
+        if (claimantSlug) 
+            queryObj['claimant.slug'] = claimantSlug;
 
         return queryObj;
     }

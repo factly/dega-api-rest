@@ -366,7 +366,7 @@ class FactcheckModel extends MongoBase {
                     (1) - filter all factcheck which has status 
                     (2) - get status id of all factcheck
                 */
-                statusIds = factchecks.filter(factcheck => factcheck.status).map( factcheck => factcheck.status.oid );
+                statusIds = factchecks.filter(factcheck => factcheck.status).map( factcheck => factcheck.status );
 
                 //If none of factchecks has status then directly return factchecks
                 if(statusIds.length === 0) return factchecks;
@@ -388,7 +388,7 @@ class FactcheckModel extends MongoBase {
                         /*
                             (1) - traversal through all factcheck and replace status DBref object with status object
                         */
-                        return factchecks.map( factcheck => factcheck.status ? { ...factcheck, status: statusesObject[factcheck.status.oid]} : factcheck );
+                        return factchecks.map( factcheck => factcheck.status ? { ...factcheck, status: statusesObject[factcheck.status]} : factcheck );
                     });
             })
             .then ( factchecks => {
@@ -793,6 +793,12 @@ class FactcheckModel extends MongoBase {
                 }
 
                 return query;
+            })
+            .then( query => {
+                if(claimantSlug)
+                    query['claims.claimant.slug'] = claimantSlug
+                
+                return query
             })
             .then( query => {
                 return query;

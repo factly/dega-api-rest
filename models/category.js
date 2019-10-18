@@ -49,7 +49,11 @@ class CategoryModel extends MongoBase {
                 this.logger.info('Retrieved the results');
                 const response = {};
                 response.data = result.results;
-                response.paging = { ...result, results: undefined};
+                response.paging = {};
+                response.paging.next = result.next;
+                response.paging.hasNext = result.hasNext;
+                response.paging.previous = result.previous;
+                response.paging.hasPrevious = result.hasPrevious;
                 return response;
             });
     }

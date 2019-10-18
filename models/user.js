@@ -157,6 +157,14 @@ class UserModel extends MongoBase {
 
     getUser(config, clientId, roleSlug, sortBy, sortAsc, limit, next, previous) {
 
+        let query = {
+            'roleMappings.organization.slug' : clientId
+        }
+
+        if(roleSlug) {
+            query['roleMappings.role.slug'] = roleSlug
+        }
+
         const aggregations = [
             addFields,
             {
@@ -168,6 +176,9 @@ class UserModel extends MongoBase {
             { $unwind: { path: '$media', preserveNullAndEmptyArrays: true } },
             roleMappingLookup,
             userProject,
+            {
+                $match: query
+            }
         ];
 
         const pagingObj = utils.getPagingObject(aggregations, sortBy, sortAsc, limit, next, previous, true);
