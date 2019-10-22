@@ -43,6 +43,20 @@ describe('/api/v1/statuses', () => {
             .expect(422)
     });
 
+    it('Should get status 404 when random id is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/statuses/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/statuses/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
     it('Should get all statuses', () => {
         return request(mock)
             .get('/api/v1/statuses')
@@ -66,7 +80,7 @@ describe('/api/v1/statuses', () => {
             });
     });
 
-    it('Should get status by slug', () => {
+    it('Should get individual status by slug', () => {
         return request(mock)
             .get('/api/v1/statuses/future')
             .set({ client : 'factly'})
@@ -84,6 +98,25 @@ describe('/api/v1/statuses', () => {
                 expect(status).to.have.property('name').eq('Future');
                 expect(status).to.have.property('createdDate').eq('2018-12-28T21:11:47.525Z');
                 expect(status).to.have.property('lastUpdatedDate').eq('2018-12-28T21:11:47.525Z');
+                
+            });
+    });
+    it('Should get individual status by Object Id ', () => {
+        return request(mock)
+            .get('/api/v1/statuses/5da58458fa8d86546411aea1')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const status = JSON.parse(res.text).data;
+                // check for fields inside statuses document
+                expect(status).to.have.property('id').eq('5da58458fa8d86546411aea1');
+                expect(status).to.have.property('clientId').eq('factly');
+                expect(status).to.have.property('slug').eq('trash');
+                expect(status).to.have.property('isDefault').eq(true);
+                expect(status).to.have.property('name').eq('Trash');
+                expect(status).to.have.property('createdDate').eq('2018-12-28T21:12:00.000Z');
+                expect(status).to.have.property('lastUpdatedDate').eq('2019-03-13T11:05:29.305Z');
                 
             });
     });

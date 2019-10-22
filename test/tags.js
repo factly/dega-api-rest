@@ -43,6 +43,20 @@ describe('/api/v1/tags', () => {
             .expect(422)
     });
 
+    it('Should get status 404 when random id is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/tags/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/tags/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
     it('Should get all tags', () => {
         return request(mock)
             .get('/api/v1/tags')
@@ -65,15 +79,14 @@ describe('/api/v1/tags', () => {
             });
     });
 
-    /*it('Should get tag by object id', () => {
+    it('Should get individual tag by object id', () => {
         return request(mock)
             .get('/api/v1/tags/5c38f513569ed47e00c7004f')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const tags = JSON.parse(res.text);
-                expect(tags.data.length).eq(4);
-                const tag = tags.data[0];
+                const tag= JSON.parse(res.text).data;
                 // check for fields inside tags document
                 expect(tag).to.have.property('id').eq('5c38f513569ed47e00c7004f');
                 expect(tag).to.have.property('clientId').eq('factly');
@@ -85,9 +98,9 @@ describe('/api/v1/tags', () => {
 
             });
     });
-    */
+    
 
-    it('Should get tag by slug', () => {
+    it('Should get individual tag by slug', () => {
         return request(mock)
             .get('/api/v1/tags/child-sex-ratio')
             .set({ client : 'factly'})

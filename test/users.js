@@ -43,6 +43,20 @@ describe('/api/v1/users', () => {
             .expect(422)
     });
 
+    it('Should get status 404 when random id is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/users/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/users/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
     it('Should get all users', () => {
         return request(mock)
             .get('/api/v1/users')
@@ -82,8 +96,8 @@ describe('/api/v1/users', () => {
                 
             });
     });
-    /*
-    it('Should get user by Object Id', () => {
+    
+    it('Should get individual user by Object Id', () => {
         return request(mock)
             .get('/api/v1/users/5d79d0bebf1bce0001eda5e1')
             .set({ client : 'factly'})
@@ -120,8 +134,8 @@ describe('/api/v1/users', () => {
                 expect(organization).to.have.property('name').eq('Factly');
             });
     });
-    */
-    it('Should get user by Slug', () => {
+    
+    it('Should get individual user by Slug', () => {
         return request(mock)
             .get('/api/v1/users/surya-kandukuri')
             .set({ client : 'factly'})

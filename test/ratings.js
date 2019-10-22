@@ -43,6 +43,19 @@ describe('/api/v1/ratings', () => {
             .expect(422)
     });
 
+    it('Should get status 404 when random id is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/ratings/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/ratings/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
     it('Should get all ratings', () => {
         return request(mock)
             .get('/api/v1/ratings')
@@ -69,7 +82,7 @@ describe('/api/v1/ratings', () => {
             });
     });
 
-    /*it('Should get ratings by Object Id', () => {
+    it('Should get individual rating by Object Id', () => {
         return request(mock)
             .get('/api/v1/ratings/5d7911a8e10bf00001fad8a0')
             .set({ client : 'factly'})
@@ -93,9 +106,9 @@ describe('/api/v1/ratings', () => {
                 expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1568231061576-false.png');
             });
     });
-    */
+    
 
-    it('Should get ratings by slug', () => {
+    it('Should get individual ratings by slug', () => {
         return request(mock)
             .get('/api/v1/ratings/misleading')
             .set({ client : 'factly'})
@@ -118,16 +131,4 @@ describe('/api/v1/ratings', () => {
                 expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1568230991737-misleading.png');
             });
     });
-
-    /*it('Should get all ratings by client id', () => {
-        return request(mock)
-            .get('/api/v1/ratings?client=default')
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .then((res) => {
-                const ratings = JSON.parse(res.text);
-                expect(ratings.data.length).eq(5);
-            });
-    });
-    */
 });

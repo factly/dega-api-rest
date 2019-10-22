@@ -43,6 +43,13 @@ describe('/api/v1/organizations', () => {
             .expect(422)
     });
 
+    it('Should get status 404 when client id do not match', () => {
+        return request(mock)
+            .get('/api/v1/organizations')
+            .set({ client : 'client'})
+            .expect(404)
+    });
+
     it('Should get all organizations', () => {
         return request(mock)
             .get('/api/v1/organizations')
@@ -53,7 +60,7 @@ describe('/api/v1/organizations', () => {
                 const organizations = JSON.parse(res.text);
                 expect(organizations).to.have.property('data');
                 const organization = organizations.data;
-                // check for fields inside orhanization document
+                // check for fields inside organization document
                 expect(organization).to.have.property('id').eq('5d792544bf1bce0001eda477');
                 expect(organization).to.have.property('clientId').eq('factly');
                 expect(organization).to.have.property('siteTitle').eq('Factly');
@@ -64,6 +71,10 @@ describe('/api/v1/organizations', () => {
                 expect(organization).to.have.property('createdDate').eq('2019-09-11T16:48:00.000Z');
                 expect(organization).to.have.property('lastUpdatedDate').eq('2019-09-26T20:44:36.458Z');
                 expect(organization).to.have.property('class').eq('com.factly.dega.domain.Organization');
+                //MediaLogo
+                expect(organization).to.have.property('mediaLogo');
+                const mediaLogo = organization.mediaLogo;
+                expect(mediaLogo).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-narendra-modi.png');
             });
     });
 });

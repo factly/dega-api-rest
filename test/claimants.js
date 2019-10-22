@@ -68,14 +68,15 @@ describe('/api/v1/claimants', () => {
                 expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-government-of-india.png');              
             });
     });
-    /*it('Should get claimant by Object Id', () => {
+
+    it('Should get individual claimant by Object Id', () => {
         return request(mock)
             .get('/api/v1/claimants/4d3e3517545ed47d9451944f')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                const claimant = result.data[0];
+                const claimant = JSON.parse(res.text).data;
                 // check for fields inside claimants document
                 expect(claimant).to.have.property('id').eq('4d3e3517545ed47d9451944f');
                 expect(claimant).to.have.property('clientId').eq('factly');
@@ -84,18 +85,14 @@ describe('/api/v1/claimants', () => {
                 expect(claimant).to.have.property('name').eq('Narendra Modi');
                 expect(claimant).to.have.property('createdDate').eq('2019-01-15T19:32:05.664Z');
                 expect(claimant).to.have.property('lastUpdatedDate').eq('2019-01-15T19:32:05.664Z');
-                //claim
-                expect(claimant).to.have.property('claim');
-                const claim = claimant.claim;
-                expect(claim.length).eq(0);
                 //media
                 expect(claimant).to.have.property('media');
                 const media = claimant.media;
                 expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-narendra-modi.png');              
             });
     });
-    */
-    it('Should get claimant by Slug', () => {
+
+    it('Should get individual claimant by Slug', () => {
         return request(mock)
             .get('/api/v1/claimants/rahul-gandhi-12345')
             .set({ client : 'factly'})
@@ -106,7 +103,7 @@ describe('/api/v1/claimants', () => {
                 expect(claimants).to.have.property('data');
                 const claimant = claimants.data;
                 // check for fields inside claimants document
-                expect(claimant).to.have.property('id').eq('6e3e3ji7545ed47d9451940f');
+                expect(claimant).to.have.property('id').eq('5d8f5c68f4f39f0001e419e9');
                 expect(claimant).to.have.property('clientId').eq('factly');
                 expect(claimant).to.have.property('description').eq('Rahul Gandhi is the President of Indian National Congress');
                 expect(claimant).to.have.property('slug').eq('rahul-gandhi-12345');
@@ -118,5 +115,19 @@ describe('/api/v1/claimants', () => {
                 const media = claimant.media;
                 expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-rahul-gandhi.png');              
             });
+    });
+
+    it('Should get status 404 when random id is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/claimants/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/claimants/random')
+            .set({ client : 'factly'})
+            .expect(404)         
     });
 });

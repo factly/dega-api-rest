@@ -75,16 +75,15 @@ describe('/api/v1/claims', () => {
                 expect(claim.claimant).to.have.property('slug').eq('government-of-india');
             });
     });
-    /*
-    it('Should get claim by Object Id', () => {
+    
+    it('Should get individual claim by Object Id', () => {
         return request(mock)
             .get('/api/v1/claims/5c3e3762569ed47d9451942b')
             .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const result = JSON.parse(res.text);
-                const claim = result.data[0];
+                const claim = JSON.parse(res.text).data;
                 // check for fields inside claims document
                 expect(claim).to.have.property('id').eq('5c3e3762569ed47d9451942b');
                 expect(claim).to.have.property('claim').eq('Broad Gauge line commissioned between the years 2009 and 2014 is 7,600 kms where as it is 9,528 kms between 2014 and 2018.');
@@ -106,8 +105,8 @@ describe('/api/v1/claims', () => {
                 expect(claim.claimant).to.have.property('slug').eq('government-of-india');
             });
     });
-    */
-    it('Should get claim by Slug', () => {
+    
+    it('Should get individual claim by Slug', () => {
         return request(mock)
             .get('/api/v1/claims/the-number-of-consequential-train-accidents-reduced-to-62-in-201718-compared-to-201314-the-claim-also-states-that-118-accidents-were-recorded-in-201314-whereas-only-72-accidents-were-recorded-in-201718')
             .set({ client : 'factly'})
@@ -171,4 +170,17 @@ describe('/api/v1/claims', () => {
             });
     });
 
+    it('Should get status 404 when random key is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/claims/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/claims/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
 });

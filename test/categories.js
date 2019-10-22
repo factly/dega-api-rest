@@ -87,31 +87,45 @@ describe('/api/v1/categories', () => {
                 expect(category).to.have.property('createdDate').eq('2019-01-11T19:55:00.426Z');
                 expect(category).to.have.property('lastUpdatedDate').eq('2019-01-11T19:55:00.426Z');
                 expect(category).to.have.property('class').eq('com.factly.dega.domain.Category');
-                expect(category).to.have.property('class').eq('com.factly.dega.domain.Category');
             });
             
     });
    
-    /*it('Should get individual category by id', () => {
+    it('Should get individual category by id', () => {
         return request(mock)
             .get('/api/v1/categories/5c38f470569ed47e00c7002c')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const category = JSON.parse(res.text);
+                const category = JSON.parse(res.text).data;
                 // check for fields inside individual category document
-                expect(category.data).to.have.property('id').eq('5c38f470569ed47e00c7002c')
-                expect(category.data).to.have.property('clientId').eq('factly');
-                expect(category.data).to.have.property('slug').eq('bussiness');
-                expect(category.data).to.have.property('name').eq('Bussiness');
-                expect(category).to.have.property('description').eq('Category bussiness');
-                expect(category.data).to.have.property('createdDate').eq('2019-01-11T19:54:24.264Z');
-                expect(category.data).to.have.property('lastUpdatedDate').eq('2019-01-11T19:54:24.264Z');
-                expect(category.data).to.have.property('class').eq('com.factly.dega.domain.Category');
+                expect(category).to.have.property('id').eq('5c38f470569ed47e00c7002c')
+                expect(category).to.have.property('clientId').eq('factly');
+                expect(category).to.have.property('slug').eq('business');
+                expect(category).to.have.property('name').eq('Business');
+                expect(category).to.have.property('description').eq('Category Business');
+                expect(category).to.have.property('createdDate').eq('2019-01-11T19:54:24.264Z');
+                expect(category).to.have.property('lastUpdatedDate').eq('2019-01-11T19:54:24.264Z');
+                expect(category).to.have.property('class').eq('com.factly.dega.domain.Category');
                
             });            
     });
-    */
+
+    it('Should get status 404 when random key is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/categories/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/categories/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
 });
     
 
