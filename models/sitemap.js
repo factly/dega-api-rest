@@ -36,9 +36,74 @@ class SitemapModel extends MongoBase {
             },
         ];
 
+        const userAggregations = [
+            {
+                $addFields: {
+                    roleMappings: {
+                        $map: {
+                            input: {
+                                $map: {
+                                    input: '$roleMappings',
+                                    in: {
+                                        $arrayElemAt: [{ $objectToArray: '$$this' }, 1]
+                                    }
+                                }
+                            },
+                            in: '$$this.v'
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'role_mapping',
+                    let: { roleMappings: '$roleMappings' },
+                    pipeline: [
+                        { $match: { $expr: { $in: ['$_id', { $ifNull: ['$$roleMappings', []] }] } } },
+                        {
+                            $project: {
+                                organization: { $arrayElemAt: [{ $objectToArray: '$organization' }, 1] }
+                            }
+                        },
+                        { $addFields: { organization: '$organization.v' } },
+                        {
+                            $lookup: {
+                                from: 'organization',
+                                let: { organization: '$organization' },
+                                pipeline: [
+                                    { $match: { $expr: { $eq: ['$_id', '$$organization'] } } },
+                                    {
+                                        $project: {
+                                            slug: 1
+                                        }
+                                    },
+                                ],
+                                as: 'organization'
+                            }
+                        },
+                        { $unwind: { path: '$organization', preserveNullAndEmptyArrays: true } },
+                    ],
+                    as: 'roleMappings'
+                }
+            },
+            {
+                $match: {
+                    'roleMappings.organization.slug' : clientId
+                }
+            },
+            {
+                $project: {
+                    id: '$_id',
+                    _id: 0,
+                    slug: 1,
+                    createdDate: '$created_date',
+                }
+            },
+        ];
+
         return Q.all([
             Q(this.collection(coreDatabase, 'category').aggregate(aggregations).toArray()),
-            Q(this.collection(coreDatabase, 'dega_user').aggregate(aggregations).toArray()),
+            Q(this.collection(coreDatabase, 'dega_user').aggregate(userAggregations).toArray()),
             Q(this.collection(coreDatabase, 'format').aggregate(aggregations).toArray()),
             Q(this.collection(coreDatabase, 'post').aggregate(aggregations).toArray()),
             Q(this.collection(coreDatabase, 'status').aggregate(aggregations).toArray()),
