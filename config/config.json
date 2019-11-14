@@ -32,7 +32,7 @@
         },
         "header": {
             "enabled": true,
-            "priority": 30, 
+            "priority": 140, 
             "module": {
               "name": "path:middleware/validationHandler" 
             }
