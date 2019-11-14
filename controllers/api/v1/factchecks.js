@@ -131,6 +131,8 @@ function getFactcheckByKey(req, res, next) {
         ObjectId.isValid(req.params.key) ? req.params.key : undefined,
         !ObjectId.isValid(req.params.key) ? req.params.key : undefined)
         .then(({ data }) => {
+            if(data.length !== 1) return null;
+
             const factcheck = data[0];
             const clientId = factcheck.clientId;
             return orgModel.getOrganization(config, clientId)
@@ -142,7 +144,7 @@ function getFactcheckByKey(req, res, next) {
                 }); 
         })
         .then((factcheck) => {
-
+            if(!factcheck) return null; 
             // add claim review schema here for every claim
             const claimSchemas = (factcheck.claims || []).map((c) => {
 
@@ -201,9 +203,9 @@ function getFactcheckByKey(req, res, next) {
             return factcheck;
         })
         .then((factcheckWithSchemas) => {
-            const result = {};
-            result.data = factcheckWithSchemas;
             if (factcheckWithSchemas) {
+                const result = {};
+                result.data = factcheckWithSchemas;
                 res.status(200).json(result);
                 return;
             }
