@@ -6,5 +6,5 @@ db.dropDatabase();
 db = db.getSiblingDB(dbName);
 
 // Create the tiles collection
-db.createCollection('role');
-db.tiles.createIndex({ slug: 1 }, { unique: true });
+//db.createCollection('role');
+//db.tiles.createIndex({ slug: 1 }, { unique: true });

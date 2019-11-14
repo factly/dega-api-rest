@@ -37,54 +37,110 @@ describe('/api/v1/roles', () => {
         mock.close(done);
     });
 
+    it('Should get status 404 when random id is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/roles/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed as key', () => {
+        return request(mock)
+            .get('/api/v1/roles/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
     it('Should get all roles', () => {
         return request(mock)
             .get('/api/v1/roles')
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(6);
-
-            });
-    });
-
-    it('Should list all roles by client', () => {
-        return request(mock)
-            .get('/api/v1/roles?client=default')
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .then((res) => {
-                const result = JSON.parse(res.text);
-                expect(result.length).eq(6);
-
-            });
-    });
-
-    it('Should get role by slug', () => {
-        return request(mock)
-            .get('/api/v1/roles?slug=super-admin')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
                 const roles = JSON.parse(res.text);
-                expect(roles.length).eq(1);
-                const superAdminRole = roles[0];
-                expect(superAdminRole).to.have.property('name');
-                expect(superAdminRole).to.have.property('name').eq('Super Admin');
-                const role = roles[0];
+                expect(roles.data.length).eq(6);
+                const role = roles.data[0];
                 // check for fields inside roles document
-                //expect(role).to.have.property('_id').eq('ObjectId("5ce2626339954523f9e638a9")');
-                //expect(role).to.have.property('is_default').eq('true');
-                expect(role).to.have.property('client_id').eq('default');
-                expect(role).to.have.property('slug').eq('super-admin');
-                expect(role).to.have.property('name').eq('Super Admin');
-                expect(role).to.have.property('created_date').eq('2018-12-10T07:00:00.000Z');
-                expect(role).to.have.property('last_updated_date').eq('2018-12-10T07:00:00.000Z');
-                //degaUser
-                expect(role).to.have.property('degaUser');
-                const dega = role.degaUser;
-                expect(dega.length).eq(0);
+                expect(role).to.have.property('name').eq('Subscriber');
+                expect(role).to.have.property('id').eq('5d791792bf1bce0001eda469');
+                expect(role).to.have.property('keyclockId').eq('a2fc805b-ef02-41c5-a45a-c9e9081857d4');
+                expect(role).to.have.property('keyclockName').eq('ROLE_SUBSCRIBER');
+                expect(role).to.have.property('isDefault').eq(true);
+                expect(role).to.have.property('clientId').eq('default');
+                expect(role).to.have.property('slug').eq('subscriber');
+                expect(role).to.have.property('createdDate').eq('2019-09-11T15:49:38.555Z');
+                expect(role).to.have.property('lastUpdatedDate').eq('2019-09-11T15:49:38.555Z');
+
             });
     });
+
+    it('Should list all roles by clientId', () => {
+        return request(mock)
+            .get('/api/v1/roles?client=default')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const result = JSON.parse(res.text);
+                expect(result.data.length).eq(6);
+
+            });
+    });
+
+    it('Should list all roles by query param slug', () => {
+        return request(mock)
+            .get('/api/v1/roles?slug=editor')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const result = JSON.parse(res.text);
+                expect(result.data.length).eq(1);
+            });
+    });
+
+    it('Should get individual role by slug', () => {
+        return request(mock)
+            .get('/api/v1/roles/super-admin')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const role = JSON.parse(res.text).data;
+                // check for fields inside roles document
+                expect(role).to.have.property('name').eq('Super Admin');
+                expect(role).to.have.property('id').eq('5d791760bf1bce0001eda455');
+                expect(role).to.have.property('keyclockId').eq('f5563992-526b-4acf-840a-10dedc1936f3');
+                expect(role).to.have.property('keyclockName').eq('ROLE_SUPER_ADMIN');
+                expect(role).to.have.property('isDefault').eq(true);
+                expect(role).to.have.property('clientId').eq('default');
+                expect(role).to.have.property('slug').eq('super-admin');
+                expect(role).to.have.property('createdDate').eq('2019-09-11T15:48:48.242Z');
+                expect(role).to.have.property('lastUpdatedDate').eq('2019-09-11T15:48:48.242Z');
+            });
+    });
+
+    it('Should get individual role by Object Id', () => {
+        return request(mock)
+            .get('/api/v1/roles/5d791774bf1bce0001eda45d')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const role = JSON.parse(res.text).data;
+                // check for fields inside roles document
+                expect(role).to.have.property('name').eq('Editor');
+                expect(role).to.have.property('id').eq('5d791774bf1bce0001eda45d');
+                expect(role).to.have.property('keyclockId').eq('0cc318fb-d290-4438-a240-3dba1757c914');
+                expect(role).to.have.property('keyclockName').eq('ROLE_EDITOR');
+                expect(role).to.have.property('isDefault').eq(true);
+                expect(role).to.have.property('clientId').eq('default');
+                expect(role).to.have.property('slug').eq('editor');
+                expect(role).to.have.property('createdDate').eq('2019-09-11T15:49:08.547Z');
+                expect(role).to.have.property('lastUpdatedDate').eq('2019-09-11T15:49:08.547Z');
+            });
+    });
+
+
 });
