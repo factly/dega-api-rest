@@ -37,30 +37,187 @@ describe('/api/v1/factchecks', () => {
         mock.close(done);
     });
 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/factchecks')
+            .expect(422)
+    });
+/*
+    it('Should get status 404 when random key is passed', () => {
+        return request(mock)
+            .get('/api/v1/factchecks/aaa8f470569ed47e00c7002c')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+
+    it('Should get status 404 when random slug is passed', () => {
+        return request(mock)
+            .get('/api/v1/factchecks/random')
+            .set({ client : 'factly'})
+            .expect(404)         
+    });
+*/
     it('Should get all factchecks', () => {
         return request(mock)
             .get('/api/v1/factchecks')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
                 const factchecks = JSON.parse(res.text);
-                expect(factchecks.length).eq(2);
-                const factcheck = factchecks[0];
+                expect(factchecks).to.have.property('data');
+                expect(factchecks.data.length).eq(6);
+                const factcheck = factchecks.data[0];
 
                 // check for fields inside factcheck document
-                expect(factcheck).to.have.property('_id').eq('5c71d32bfd3c00900fae209c');
-                expect(factcheck).to.have.property('client_id').eq('Factly');
-                expect(factcheck).to.have.property('featured_media').eq('http://localhost:8080/core/dega-content/Factly/2019/2/screen-shot-2019-02-13-at-9.45.40-am.png');
-                expect(factcheck).to.have.property('slug').eq('test-02232019');
-                expect(factcheck).to.have.property('title').eq('test 02232019');
-                expect(factcheck).to.have.property('summary').eq('test summary');
+                expect(factcheck).to.have.property('id').eq('5d717fcddf047986a5830098');
+                expect(factcheck).to.have.property('clientId').eq('factly');
+                expect(factcheck).to.have.property('featured').eq(false);
+                expect(factcheck).to.have.property('introduction').eq('<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>');
+                expect(factcheck).to.have.property('slug').eq('factcheck1-tags-crude-oil-black-money-categories-india-stories-users-rakesh-dubbudu');
+                expect(factcheck).to.have.property('title').eq('Test Factcheck title');
+                expect(factcheck).to.have.property('summary').eq('<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>');
+                expect(factcheck).to.have.property('createdDate').eq('2019-09-21T12:25:43.689Z');
+                expect(factcheck).to.have.property('publishedDate').eq('2019-09-23T12:25:43.689Z');
+                expect(factcheck).to.have.property('lastUpdatedDate').eq('2019-09-23T12:25:43.689Z');
+                expect(factcheck).to.have.property('subTitle').eq('');
+                expect(factcheck).to.have.property('updates').eq('');
+                //expect(factcheck).to.have.property('featuredMedia');
+                expect(factcheck).to.have.property('sticky').eq(false);
+                expect(factcheck).to.have.property('excerpt').eq('Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor.');
 
                 // check for expanded sub documents
-                // authors
-                expect(factcheck).to.have.property('authors');
-                const authors = factcheck.authors;
-                expect(authors.length).eq(1);
-                const author = authors[0];
+                // users
+                expect(factcheck).to.have.property('users');
+                const users = factcheck.users;
+                expect(users.length).eq(1);
+                const author = users[0];
+                expect(author).to.have.property('slug').eq('rakesh-dubbudu');
+
+                // categories
+                expect(factcheck).to.have.property('categories');
+                const categories = factcheck.categories;
+                expect(categories.length).eq(2);
+                const category = categories[0];
+                expect(category).to.have.property('slug').eq('india');
+
+                // claims
+                expect(factcheck).to.have.property('claims');
+                const claims = factcheck.claims;
+                expect(claims.length).eq(1);
+                const claim = claims[0];
+                expect(claim).to.have.property('claimSource').eq('https://twitter.com/INCIndia/status/1175386695757230080');
+
+                // media
+                expect(factcheck).to.have.property('media');
+                const media = factcheck.media;
+                expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-narendra-modi.png');
+
+                // tags
+                expect(factcheck).to.have.property('tags');
+                const tags = factcheck.tags;
+                expect(tags.length).eq(2);
+                expect(tags[0]).to.have.property('slug').eq('crude-oil');
+            });
+    });
+
+    it('Should get individual factcheck by slug', () => {
+        return request(mock)
+            .get('/api/v1/factchecks/factcheck2-tags-black-money-categories-india-crime-users-rakesh-dubbudu')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text);
+                expect(factchecks).to.have.property('data');
+                const factcheck = factchecks.data;
+
+                // check for fields inside factcheck document
+                expect(factcheck).to.have.property('id').eq('5d718b016f5f0b0fc31d64d4');
+                expect(factcheck).to.have.property('clientId').eq('factly');
+                expect(factcheck).to.have.property('featured').eq(false);
+                expect(factcheck).to.have.property('introduction').eq('<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>');
+                expect(factcheck).to.have.property('slug').eq('factcheck2-tags-black-money-categories-india-crime-users-rakesh-dubbudu');
+                expect(factcheck).to.have.property('title').eq('Test Factcheck title - 2');
+                expect(factcheck).to.have.property('summary').eq('<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>');
+                expect(factcheck).to.have.property('createdDate').eq('2019-09-19T11:25:43.689Z');
+                expect(factcheck).to.have.property('publishedDate').eq('2019-09-23T11:25:43.689Z');
+                expect(factcheck).to.have.property('lastUpdatedDate').eq('2019-09-23T11:25:43.689Z');
+                expect(factcheck).to.have.property('subTitle').eq('');
+                expect(factcheck).to.have.property('updates').eq('');
+                //expect(factcheck).to.have.property('featuredMedia');
+                expect(factcheck).to.have.property('sticky').eq(false);
+                expect(factcheck).to.have.property('excerpt').eq('Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor.');
+
+                // check for expanded sub documents
+                // users
+                expect(factcheck).to.have.property('users');
+                const users = factcheck.users;
+                expect(users.length).eq(1);
+                const author = users[0];
+                expect(author).to.have.property('slug').eq('rakesh-dubbudu');
+
+                // categories
+                expect(factcheck).to.have.property('categories');
+                const categories = factcheck.categories;
+                expect(categories.length).eq(2);
+                const category = categories[0];
+                expect(category).to.have.property('slug').eq('india');
+
+                // claims
+                expect(factcheck).to.have.property('claims');
+                const claims = factcheck.claims;
+                expect(claims.length).eq(1);
+                const claim = claims[0];
+                expect(claim).to.have.property('claimSource').eq('https://48months.mygov.in/wp-content/uploads/2018/05/10000000001249737483.png');
+
+                // media
+                expect(factcheck).to.have.property('media');
+                const media = factcheck.media;
+                expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-narendra-modi.png');
+
+                // tags
+                expect(factcheck).to.have.property('tags');
+                const tags = factcheck.tags;
+                expect(tags.length).eq(1);
+                expect(tags[0]).to.have.property('slug').eq('black-money');
+            });
+    });
+
+    it('Should get individual factcheck by Object Id', () => {
+        return request(mock)
+            .get('/api/v1/factchecks/5d7190516f5f0b1816b3249f')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text);
+                expect(factchecks).to.have.property('data');
+                const factcheck = factchecks.data;
+
+                // check for fields inside factcheck document
+                expect(factcheck).to.have.property('id').eq('5d7190516f5f0b1816b3249f');
+                expect(factcheck).to.have.property('clientId').eq('factly');
+                expect(factcheck).to.have.property('featured').eq(false);
+                expect(factcheck).to.have.property('introduction').eq('<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>');
+                expect(factcheck).to.have.property('slug').eq('factcheck5-tags-child-sex-ratio-categories-politics-users-shashi-deshetti');
+                expect(factcheck).to.have.property('title').eq('Test Factcheck title - 5');
+                expect(factcheck).to.have.property('summary').eq('<p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur magna urna, rhoncus nec mi ut, interdum luctus tellus. Ut interdum, nulla non commodo placerat, quam risus pellentesque nulla, non finibus enim nunc et felis. Pellentesque scelerisque est ex. Aliquam eleifend odio tortor, a pellentesque enim imperdiet at. Mauris tincidunt pharetra nisi, vitae tincidunt massa dictum nec. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris sed semper mauris.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Morbi vitae lacus faucibus, iaculis augue id, auctor nisi. Quisque malesuada eleifend dolor, ac posuere felis. Praesent vel risus nunc. Praesent dapibus ante quis sapien cursus suscipit. Etiam pharetra diam quis nisi suscipit, eu fermentum lectus feugiat. Nullam a mollis sem. Pellentesque nec diam erat.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Cras in diam id quam faucibus molestie eu eget tortor. Sed euismod quam ac molestie tincidunt. Maecenas et eros pharetra justo laoreet vehicula. Donec condimentum massa ante, vitae placerat est finibus sit amet. Mauris lacinia elit sed nulla aliquet sagittis. Morbi eros orci, euismod ut aliquet nec, ultrices in risus. Aenean sollicitudin erat nec ex gravida, sed tristique est sagittis. Suspendisse ac bibendum mauris. Etiam rhoncus vestibulum lectus ut feugiat. Cras nec lorem eleifend, efficitur mi lacinia, iaculis ligula. Nam a massa a lectus placerat porta et porttitor mi.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor. Fusce mi dolor, volutpat vel augue quis, efficitur auctor nisi. Aliquam quam augue, malesuada vel tellus in, accumsan efficitur tellus.</span></p><p class=\"ql-align-justify\"><span style=\"background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);\">Etiam finibus dolor volutpat lectus efficitur venenatis. Aliquam vitae porttitor enim. Etiam vel ultricies nibh, quis pellentesque odio. Proin iaculis sodales felis ut commodo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis scelerisque lacinia nisi. Suspendisse mollis diam lacinia sodales faucibus. Quisque at tellus sit amet augue scelerisque tincidunt. Praesent in sollicitudin turpis. Sed convallis aliquam leo volutpat aliquet. Etiam id lectus diam. Morbi in libero eget magna aliquet dictum ut at nisl. Etiam in sem quis sapien bibendum placerat id vel turpis. Maecenas aliquet nunc posuere libero facilisis interdum in id lorem.</span></p><p><br></p>');
+                expect(factcheck).to.have.property('createdDate').eq('2019-08-23T08:25:43.689Z');
+                expect(factcheck).to.have.property('publishedDate').eq('2019-09-23T08:25:43.689Z');
+                expect(factcheck).to.have.property('lastUpdatedDate').eq('2019-09-23T08:25:43.689Z');
+                expect(factcheck).to.have.property('subTitle').eq('');
+                expect(factcheck).to.have.property('updates').eq('');
+                //expect(factcheck).to.have.property('featuredMedia');
+                expect(factcheck).to.have.property('sticky').eq(false);
+                expect(factcheck).to.have.property('excerpt').eq('Proin non justo justo. Vivamus sit amet sagittis elit, vel vestibulum ex. In ut ex in velit molestie cursus. Suspendisse venenatis ultrices nulla a vehicula. Nunc aliquet scelerisque libero eget suscipit. Aenean et mauris imperdiet, commodo lectus ac, sagittis tortor.');
+
+                // check for expanded sub documents
+                // users
+                expect(factcheck).to.have.property('users');
+                const users = factcheck.users;
+                expect(users.length).eq(1);
+                const author = users[0];
                 expect(author).to.have.property('slug').eq('shashi-deshetti');
 
                 // categories
@@ -73,77 +230,116 @@ describe('/api/v1/factchecks', () => {
                 // claims
                 expect(factcheck).to.have.property('claims');
                 const claims = factcheck.claims;
-                expect(claims.length).eq(2);
+                expect(claims.length).eq(1);
                 const claim = claims[0];
-                expect(claim).to.have.property('slug').eq('the-number-of-consequential-train-accidents-reduced-to-62-in-201718-compared-to-201314-the-claim-also-states-that-118-accidents-were-recorded-in-201314-whereas-only-72-accidents-were-recorded-in-201718');
+                expect(claim).to.have.property('claimSource').eq('https://twitter.com/INCIndia/status/1175386695757230080');
 
-                // schemas
-                expect(factcheck).to.have.property('schemas');
-                const schemas = factcheck.schemas;
-                expect(schemas.length).eq(2);
-                const schema = schemas[0];
-                expect(schema).to.have.property('@type').eq('ClaimReview');
-                expect(schema).to.have.property('url').eq('http://www.politifact.com/texas/statements/2014/jul/23/rick-perry/rick-perry-claim-about-3000-homicides-illegal-immi/');
-                expect(schema).to.have.property('claimReviewed').eq('Broad Gauge line commissioned between the years 2009 and 2014 is 7,600 kms where as it is 9,528 kms between 2014 and 2018.');
-                expect(schema).to.have.property('reviewRating');
-                expect(schema.reviewRating).to.have.property('bestRating').eq(5);
-                expect(schema.reviewRating).to.have.property('worstRating').eq(1);
-
-                // status
-                expect(factcheck).to.have.property('status');
-                expect(factcheck.status).to.have.property('slug').eq('Publish');
+                // media
+                expect(factcheck).to.have.property('media');
+                const media = factcheck.media;
+                expect(media).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-narendra-modi.png');
 
                 // tags
                 expect(factcheck).to.have.property('tags');
                 const tags = factcheck.tags;
                 expect(tags.length).eq(1);
-                const tag = tags[0];
-                expect(tag).to.have.property('slug').eq('Crude-Oil');
+                expect(tags[0]).to.have.property('slug').eq('child-sex-ratio');
             });
     });
 
-
-    it('Should get factchecks with only mandatory sub docs', () => {
+    it('Should get factchecks by query param tags', () => {
         return request(mock)
-            .get('/api/v1/factchecks')
+            .get('/api/v1/factchecks?tag=black-money')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const factchecks = JSON.parse(res.text);
+                const factchecks = JSON.parse(res.text).data;
                 expect(factchecks.length).eq(2);
+                // check for fields inside factcheck document
+                expect(factchecks[0]).to.have.property('slug').eq('factcheck1-tags-crude-oil-black-money-categories-india-stories-users-rakesh-dubbudu');
+                expect(factchecks[1]).to.have.property('slug').eq('factcheck2-tags-black-money-categories-india-crime-users-rakesh-dubbudu');
             });
     });
 
-    it('Should skip factcheck on missing status sub doc', () => {
+    it('Should get factchecks when more than one query param tags is passed', () => {
         return request(mock)
-            .get('/api/v1/factchecks')
+            .get('/api/v1/factchecks?tag=crude-oil&tag=bad-loans')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const factchecks = JSON.parse(res.text);
-                expect(factchecks.length).eq(2);
+                const factchecks = JSON.parse(res.text).data;
+                expect(factchecks.length).eq(4);
+                // check for fields inside factcheck document
+                expect(factchecks[0]).to.have.property('slug').eq('factcheck1-tags-crude-oil-black-money-categories-india-stories-users-rakesh-dubbudu');
+                expect(factchecks[1]).to.have.property('slug').eq('factcheck3-tags-bad-loans-categories-india-users-rakesh-dubbudu');
+                expect(factchecks[2]).to.have.property('slug').eq('factcheck4-tags-Bad-Loans-categories-elections-business-users-surya-kandukuri-naresh-dubbudu');
+                expect(factchecks[3]).to.have.property('slug').eq('factcheck6-tags-child-sex-ratio-crude-oil-categories-sports-finance-users-shashi-deshetti');
             });
     });
 
-    it('Should skip factcheck on missing claims sub docs', () => {
+    it('Should get factchecks by query param category', () => {
         return request(mock)
-            .get('/api/v1/factchecks')
+            .get('/api/v1/factchecks?category=finance')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const factchecks = JSON.parse(res.text);
-                expect(factchecks.length).eq(2);
+                const factchecks = JSON.parse(res.text).data;
+                expect(factchecks.length).eq(1);
+                // check for fields inside factcheck document
+                expect(factchecks[0]).to.have.property('slug').eq('factcheck6-tags-child-sex-ratio-crude-oil-categories-sports-finance-users-shashi-deshetti');
             });
     });
 
-    it('Should skip factcheck on missing users sub docs', () => {
+    it('Should get factchecks when more than one query param category is passed', () => {
         return request(mock)
-            .get('/api/v1/factchecks')
+            .get('/api/v1/factchecks?category=india&category=politics')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
-                const factchecks = JSON.parse(res.text);
-                expect(factchecks.length).eq(2);
+                const factchecks = JSON.parse(res.text).data;
+                expect(factchecks.length).eq(4);
+                // check for fields inside factcheck document
+                expect(factchecks[0]).to.have.property('slug').eq('factcheck1-tags-crude-oil-black-money-categories-india-stories-users-rakesh-dubbudu');
+                expect(factchecks[1]).to.have.property('slug').eq('factcheck2-tags-black-money-categories-india-crime-users-rakesh-dubbudu');
+                expect(factchecks[2]).to.have.property('slug').eq('factcheck3-tags-bad-loans-categories-india-users-rakesh-dubbudu');
+                expect(factchecks[3]).to.have.property('slug').eq('factcheck5-tags-child-sex-ratio-categories-politics-users-shashi-deshetti');
             });
     });
+
+    it('Should get factchecks by query param user', () => {
+        return request(mock)
+            .get('/api/v1/factchecks?user=naresh-dubbudu')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text).data;
+                expect(factchecks.length).eq(1);
+                // check for fields inside factcheck document
+                expect(factchecks[0]).to.have.property('slug').eq('factcheck4-tags-Bad-Loans-categories-elections-business-users-surya-kandukuri-naresh-dubbudu');
+            });
+    });
+
+    it('Should get factchecks when more than one query param user is passed', () => {
+        return request(mock)
+            .get('/api/v1/factchecks?user=rakesh-dubbudu&user=shashi-deshetti')
+            .set({ client : 'factly'})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((res) => {
+                const factchecks = JSON.parse(res.text).data;
+                expect(factchecks.length).eq(5);
+                // check for fields inside factcheck document
+                expect(factchecks[0]).to.have.property('slug').eq('factcheck1-tags-crude-oil-black-money-categories-india-stories-users-rakesh-dubbudu');
+                expect(factchecks[1]).to.have.property('slug').eq('factcheck2-tags-black-money-categories-india-crime-users-rakesh-dubbudu');
+                expect(factchecks[2]).to.have.property('slug').eq('factcheck3-tags-bad-loans-categories-india-users-rakesh-dubbudu');
+                expect(factchecks[3]).to.have.property('slug').eq('factcheck5-tags-child-sex-ratio-categories-politics-users-shashi-deshetti');
+                expect(factchecks[4]).to.have.property('slug').eq('factcheck6-tags-child-sex-ratio-crude-oil-categories-sports-finance-users-shashi-deshetti');
+            });
+    });
+    
 });

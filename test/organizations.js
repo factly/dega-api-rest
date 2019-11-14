@@ -37,36 +37,44 @@ describe('/api/v1/organizations', () => {
         mock.close(done);
     });
 
+    it('Should get status 422 when no client id', () => {
+        return request(mock)
+            .get('/api/v1/organizations')
+            .expect(422)
+    });
+
+    it('Should get status 404 when client id do not match', () => {
+        return request(mock)
+            .get('/api/v1/organizations')
+            .set({ client : 'client'})
+            .expect(404)
+    });
+
     it('Should get all organizations', () => {
         return request(mock)
             .get('/api/v1/organizations')
+            .set({ client : 'factly'})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((res) => {
                 const organizations = JSON.parse(res.text);
-                expect(organizations.length).eq(1);
-                const organization = organizations[0];
-                // check for fields inside orhanization document
-                expect(organization).to.have.property('_id').eq('5c1fbe8141e7c425ed54c82b');
-                expect(organization).to.have.property('client_id').eq('Factly');
-                expect(organization).to.have.property('site_title').eq('Factly');
+                expect(organizations).to.have.property('data');
+                const organization = organizations.data;
+                // check for fields inside organization document
+                expect(organization).to.have.property('id').eq('5d792544bf1bce0001eda477');
+                expect(organization).to.have.property('clientId').eq('factly');
+                expect(organization).to.have.property('siteTitle').eq('Factly');
                 expect(organization).to.have.property('slug').eq('factly');
                 expect(organization).to.have.property('name').eq('Factly');
-                expect(organization).to.have.property('email').eq('hi@factly.in');
-                expect(organization).to.have.property('created_date').eq('2018-12-23T16:57:37.464Z');
-                expect(organization).to.have.property('last_updated_date').eq('2018-12-23T16:57:37.465Z');
-                //degaUser
-                expect(organization).to.have.property('degaUsers');
-                const degaUsers = organization.degaUsers;
-                expect(degaUsers.length).eq(0);
-                //degaUser-degaUserDefault
-                expect(organization).to.have.property('degaUserDefault');
-                const degaUserDefault = organization.degaUserDefault;
-                expect(degaUserDefault.length).eq(0);
-                //degaUser-degaUserCurrent
-                expect(organization).to.have.property('degaUserCurrent');
-                const degaUserCurrent = organization.degaUserCurrent;
-                expect(degaUserCurrent.length).eq(0);
+                expect(organization).to.have.property('email').eq('admin@factly.in');
+                expect(organization).to.have.property('description').eq('FACTLY is one of the well known Data Journalism/Public Information portals in India. Each news story on FACTLY is backed by factual evidence/data from official sources that is either available in the public domain or that is collated/gathered/collected using tools such as the Right to Information (RTI).')
+                expect(organization).to.have.property('createdDate').eq('2019-09-11T16:48:00.000Z');
+                expect(organization).to.have.property('lastUpdatedDate').eq('2019-09-26T20:44:36.458Z');
+                expect(organization).to.have.property('class').eq('com.factly.dega.domain.Organization');
+                //MediaLogo
+                expect(organization).to.have.property('mediaLogo');
+                const mediaLogo = organization.mediaLogo;
+                expect(mediaLogo).to.have.property('sourceURL').eq('https://images.degacms.com/dega-content/factly/2019/9/1569676519335-narendra-modi.png');
             });
     });
 });
