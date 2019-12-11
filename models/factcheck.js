@@ -335,7 +335,7 @@ class FactcheckModel extends MongoBase {
                     (2) - get media id of all factcheck
                 */
                 mediaIds = factchecks.filter(factcheck => factcheck.media).map( factcheck => factcheck.media.oid );
-
+                this.logger.info(`factcheck #mediaIDS  ${JSON.stringify(mediaIds)}`);
                 //If none of factchecks has media then directly return factchecks
                 if(mediaIds.length === 0) return factchecks;
 
@@ -350,6 +350,8 @@ class FactcheckModel extends MongoBase {
                 return Q(this.collection(coreDatabase, 'media')
                     .aggregate(mediaAggregation).toArray())
                     .then((media) => {
+                        const afterMediaIDs = media.map(m => m.id)
+                        this.logger.info(`factcheck after #mediaIDs  ${JSON.stringify(afterMediaIDs)}`);
                         //Converting "Array of Object" into "Object of Object" where sub object key is sub object mongodb ObjectId which is used in DRref
                         const mediaObject = media.reduce((obj, item) => Object.assign(obj, { [item.id]: item }), {});
 
